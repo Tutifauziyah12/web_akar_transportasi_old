@@ -168,6 +168,7 @@ export default function Create({
                                             moveRangeOnFirstSelection={false}
                                             ranges={state}
                                             locale={id}
+                                            minDate={new Date()}
                                             startDatePlaceholder={
                                                 "Tanggal Mulai"
                                             }

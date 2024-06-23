@@ -181,6 +181,7 @@ export default function Edit({ auth, kas }) {
                                             date={new Date()}
                                             onChange={handleSelect}
                                             locale={id}
+                                            minDate={new Date()}
                                         />
                                     </div>
                                 )}

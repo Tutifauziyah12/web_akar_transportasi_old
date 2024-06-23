@@ -174,6 +174,7 @@ export default function Create({ auth }) {
                                             date={new Date()}
                                             onChange={handleSelect}
                                             locale={id}
+                                            minDate={new Date()}
                                         />
                                     </div>
                                 )}

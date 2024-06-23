@@ -169,6 +169,7 @@ export default function Edit({ auth, kendaraans, sewaKendaraan, startDate: initi
                                                 setState([item.selection])
                                             }
                                             moveRangeOnFirstSelection={false}
+                                            minDate={new Date()}
                                             ranges={state}
                                             locale={id}
                                             startDatePlaceholder={
