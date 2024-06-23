@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "@inertiajs/react";
 import NavLink from "@/Components/NavLink";
+import { Inertia } from '@inertiajs/inertia';
+
 import {
     IoCubeOutline,
     IoCarSharp,
@@ -10,6 +12,11 @@ import {
 } from "react-icons/io5";
 
 export default function Authenticated({ user, header, children }) {
+    const handleLogout = (e) => {
+        e.preventDefault();
+        Inertia.post(route('logout'));
+    };
+
     return (
         <div className="min-h-screen bg-gray-100">
             <div className="flex w-full bg-slate-100">
@@ -22,7 +29,9 @@ export default function Authenticated({ user, header, children }) {
                         </Link>
                         <div className="text-slate-100 my-10">
                             <nav>
-                                <div className="text-slate-400 py-2 px-4">MENU</div>
+                                <div className="text-slate-400 py-2 px-4">
+                                    MENU
+                                </div>
                                 <NavLink
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
@@ -33,14 +42,32 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink
                                     href={route("sewa_kendaraan.index")}
                                     active={
-                                        (route().current().includes("sewa_kendaraan") &&
-                                            !route().current().includes("kendaraan")) ||
-                                        (route().current().indexOf("sewa_kendaraan.create") !== -1 &&
-                                            !route().current().includes("kendaraan")) ||
-                                        (route().current().includes("sewa_kendaraan") &&
-                                            route().current().includes("edit") &&
-                                            !route().current().includes("kendaraan")) ||
-                                        (route().current().includes("sewa_kendaraan") &&
+                                        (route()
+                                            .current()
+                                            .includes("sewa_kendaraan") &&
+                                            !route()
+                                                .current()
+                                                .includes("kendaraan")) ||
+                                        (route()
+                                            .current()
+                                            .indexOf(
+                                                "sewa_kendaraan.create"
+                                            ) !== -1 &&
+                                            !route()
+                                                .current()
+                                                .includes("kendaraan")) ||
+                                        (route()
+                                            .current()
+                                            .includes("sewa_kendaraan") &&
+                                            route()
+                                                .current()
+                                                .includes("edit") &&
+                                            !route()
+                                                .current()
+                                                .includes("kendaraan")) ||
+                                        (route()
+                                            .current()
+                                            .includes("sewa_kendaraan") &&
                                             !route().current().includes("kas"))
                                     }
                                     icon={IoAnalytics}
@@ -50,8 +77,12 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink
                                     href={route("kas.index")}
                                     active={
-                                        route().current().indexOf("kas.index") !== -1 ||
-                                        route().current().indexOf("kas.create") !== -1 ||
+                                        route()
+                                            .current()
+                                            .indexOf("kas.index") !== -1 ||
+                                        route()
+                                            .current()
+                                            .indexOf("kas.create") !== -1 ||
                                         (route().current().includes("kas") &&
                                             route().current().includes("edit"))
                                     }
@@ -62,13 +93,28 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink
                                     href={route("kendaraan.index")}
                                     active={
-                                        (route().current().includes("kendaraan") &&
-                                            !route().current().includes("sewa_kendaraan")) ||
-                                        (route().current().indexOf("kendaraan.create") !== -1 &&
-                                            !route().current().includes("sewa_kendaraan")) ||
-                                        (route().current().includes("kendaraan") &&
-                                            route().current().includes("edit") &&
-                                            !route().current().includes("sewa_kendaraan"))
+                                        (route()
+                                            .current()
+                                            .includes("kendaraan") &&
+                                            !route()
+                                                .current()
+                                                .includes("sewa_kendaraan")) ||
+                                        (route()
+                                            .current()
+                                            .indexOf("kendaraan.create") !==
+                                            -1 &&
+                                            !route()
+                                                .current()
+                                                .includes("sewa_kendaraan")) ||
+                                        (route()
+                                            .current()
+                                            .includes("kendaraan") &&
+                                            route()
+                                                .current()
+                                                .includes("edit") &&
+                                            !route()
+                                                .current()
+                                                .includes("sewa_kendaraan"))
                                     }
                                     icon={IoCarSharp}
                                 >
@@ -82,6 +128,12 @@ export default function Authenticated({ user, header, children }) {
                             <IoPersonOutline className="text-2xl mr-2" />
                             <span className="text-slate-400">{user.name}</span>
                         </div>
+                        <button
+                            onClick={handleLogout}
+                            className="text-gray-500 hover:text-gray-700"
+                        >
+                            Logout
+                        </button>
                     </div>
                 </div>
                 <div className="w-full m-8">
