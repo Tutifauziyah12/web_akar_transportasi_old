@@ -14,6 +14,8 @@ export default function Create({ auth }) {
         status: "",
     });
 
+    console.log(data)
+
     const storeKendaraan = (e) => {
         e.preventDefault();
         router.post("/kendaraan", data);
@@ -233,13 +235,12 @@ export default function Create({ auth }) {
                                     <span className="text-sm">Tidak Aktif</span>
                                 </label>
                             </div>
-                        </div>
-
-                        {errors.status && (
+                            {errors.status && (
                             <p className="text-red-700 text-xs mt-1 ml-1">
                                 {errors.status}
                             </p>
                         )}
+                        </div>
                     </div>
                     <button
                         type="submit"

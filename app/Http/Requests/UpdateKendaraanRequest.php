@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateKendaraanRequest extends FormRequest
 {
@@ -28,7 +29,7 @@ class UpdateKendaraanRequest extends FormRequest
             'jenis' => 'required|string|max:100|not_regex:/^\s*$/',
             'tahun_pembuatan' => 'required|string|date_format:Y|max:' . date('Y'),
             'warna' => 'required|string|max:50|not_regex:/^\s*$/',
-            'status' => 'required|string|in:Aktif,Perbaikan,Tidak aktif',
+            'status' => ['required', 'string', Rule::in(['Aktif', 'Perbaikan', 'Tidak Aktif'])],
         ];
     }
 
