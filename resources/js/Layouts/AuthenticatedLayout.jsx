@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@inertiajs/react";
 import NavLink from "@/Components/NavLink";
-import { Inertia } from '@inertiajs/inertia';
+import { Inertia } from "@inertiajs/inertia";
 
 import {
     IoCubeOutline,
@@ -9,12 +9,13 @@ import {
     IoAnalytics,
     IoLogoUsd,
     IoPersonOutline,
+    IoExitOutline,
 } from "react-icons/io5";
 
 export default function Authenticated({ user, header, children }) {
     const handleLogout = (e) => {
         e.preventDefault();
-        Inertia.post(route('logout'));
+        Inertia.post(route("logout"));
     };
 
     return (
@@ -124,16 +125,23 @@ export default function Authenticated({ user, header, children }) {
                         </div>
                     </div>
                     <div className="text-slate-100 mt-10">
-                        <div className="flex items-center py-2 px-4">
+                        <NavLink
+                            href={route("profile.edit")}
+                            active={route().current("profile.edit")}
+                        >
                             <IoPersonOutline className="text-2xl mr-2" />
                             <span className="text-slate-400">{user.name}</span>
+                        </NavLink>
+
+                        <div className="flex items-center py-2 px-4">
+                            <button
+                                onClick={handleLogout}
+                                className="flex text-gray-400 hover:text-gray-500"
+                            >
+                                <IoExitOutline className="text-2xl mr-2" />
+                                Logout
+                            </button>
                         </div>
-                        <button
-                            onClick={handleLogout}
-                            className="text-gray-500 hover:text-gray-700"
-                        >
-                            Logout
-                        </button>
                     </div>
                 </div>
                 <div className="w-full m-8">

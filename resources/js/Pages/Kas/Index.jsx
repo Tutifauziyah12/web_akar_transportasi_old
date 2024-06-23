@@ -127,16 +127,6 @@ export default function Index({
 
             <div className="py-8">
                 <div className="flex justify-between mb-4">
-                    {/* <form onSubmit={handleSearch} className="relative">
-                        <input
-                            type="text"
-                            className="w-full border-gray-300 dark:bg-gray-800 dark:text-gray-100 rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
-                            placeholder="Search..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </form> */}
-
                     <form
                         onSubmit={handleSearch}
                         className="flex flex-col w-full space-y-2"
@@ -212,13 +202,14 @@ export default function Index({
                             )}
                         </div>
                     </form>
-
-                    <a
-                        href={route("kas.create")}
-                        className="flex items-center text-xl px-2 py-1 text-slate-900 hover:text-blue-600"
-                    >
-                        <IoAddOutline />
-                    </a>
+                    {!showDateRangePicker && (
+                        <a
+                            href={route("kas.create")}
+                            className="flex items-center text-xl px-2 py-1 text-slate-900 hover:text-blue-600"
+                        >
+                            <IoAddOutline />
+                        </a>
+                    )}
                 </div>
                 <div>
                     {startDate && endDate ? (
@@ -242,135 +233,183 @@ export default function Index({
                         <></>
                     )}
                 </div>
-                <div className="overflow-x-auto">
-                    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead className="sm:text-xs md:text-sm text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" className="px-4 py-3">
-                                        No
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Nama
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Jenis
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Tanggal
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Biaya
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Keterangan
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="py-3 px-1 text-center"
-                                    >
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {kases.data.map((kas, index) => (
-                                    <tr
-                                        key={kas.id}
-                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                    >
-                                        <td className="px-4 py-4">
-                                            {kases.from + index}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {kas.nama}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span
-                                                className={`${
-                                                    kas.jenis === "Masuk"
-                                                        ? "text-green-500"
-                                                        : "text-red-500"
-                                                }`}
+                {!showDateRangePicker && (
+                    <>
+                        <div className="overflow-x-auto">
+                            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    <thead className="sm:text-xs md:text-sm text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
                                             >
-                                                {kas.jenis}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <FormatDateRange
-                                                startDateString={kas.tanggal}
-                                                endDateString={kas.tanggal}
-                                            />
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <RupiahFormat value={kas.biaya} />{" "}
-                                            <br /> ( {kas.pembayaran} )
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {kas.keterangan}
-                                        </td>
-                                        <td className="px-1 py-4 flex justify-center space-x-2">
-                                            <a
-                                                href={route("kas.edit", kas.id)}
-                                                className={`px-2 py-1 text-center hover:text-yellow-600 ${
-                                                    kas.nama.includes(
-                                                        "Sewa Kendaraan"
-                                                    )
-                                                        ? "pointer-events-none text-gray-400"
-                                                        : ""
-                                                }`}
-                                                aria-disabled={kas.nama.includes(
-                                                    "Sewa Kendaraan"
-                                                )}
+                                                No
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3"
                                             >
-                                                <IoPencil />
-                                            </a>
-                                            <button
-                                                onClick={() =>
-                                                    handleDelete(kas.id)
-                                                }
-                                                className={`px-2 py-1 text-center hover:text-red-600 ${
-                                                    kas.nama.includes(
-                                                        "Sewa Kendaraan"
-                                                    )
-                                                        ? "pointer-events-none text-gray-400"
-                                                        : ""
-                                                }`}
-                                                disabled={kas.nama.includes(
-                                                    "Sewa Kendaraan"
-                                                )}
+                                                Nama
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3"
                                             >
-                                                <IoTrash />
-                                            </button>
-                                        </td>
-                                    </tr>
+                                                Jenis
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3"
+                                            >
+                                                Tanggal
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3"
+                                            >
+                                                Biaya
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3"
+                                            >
+                                                Keterangan
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="py-3 px-1 text-center"
+                                            >
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {kases.data.length === 0 ? (
+                                            <tr>
+                                                <td
+                                                    colSpan="8"
+                                                    className="px-6 py-4 text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                >
+                                                    Kas tidak ditemukan
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            kases.data.map((kas, index) => (
+                                                <tr
+                                                    key={kas.id}
+                                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                >
+                                                    <td className="px-4 py-4">
+                                                        {kases.from + index}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {kas.nama}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <span
+                                                            className={`${
+                                                                kas.jenis ===
+                                                                "Masuk"
+                                                                    ? "text-green-500"
+                                                                    : "text-red-500"
+                                                            }`}
+                                                        >
+                                                            {kas.jenis}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <FormatDateRange
+                                                            startDateString={
+                                                                kas.tanggal
+                                                            }
+                                                            endDateString={
+                                                                kas.tanggal
+                                                            }
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <RupiahFormat
+                                                            value={kas.biaya}
+                                                        />{" "}
+                                                        <br /> ({" "}
+                                                        {kas.pembayaran} )
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {kas.keterangan}
+                                                    </td>
+                                                    <td className="px-1 py-4 flex justify-center space-x-2">
+                                                        <a
+                                                            href={route(
+                                                                "kas.edit",
+                                                                kas.id
+                                                            )}
+                                                            className={`px-2 py-1 text-center hover:text-yellow-600 ${
+                                                                kas.nama.includes(
+                                                                    "Sewa Kendaraan"
+                                                                )
+                                                                    ? "pointer-events-none text-gray-400"
+                                                                    : ""
+                                                            }`}
+                                                            aria-disabled={kas.nama.includes(
+                                                                "Sewa Kendaraan"
+                                                            )}
+                                                        >
+                                                            <IoPencil />
+                                                        </a>
+                                                        <button
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    kas.id
+                                                                )
+                                                            }
+                                                            className={`px-2 py-1 text-center hover:text-red-600 ${
+                                                                kas.nama.includes(
+                                                                    "Sewa Kendaraan"
+                                                                )
+                                                                    ? "pointer-events-none text-gray-400"
+                                                                    : ""
+                                                            }`}
+                                                            disabled={kas.nama.includes(
+                                                                "Sewa Kendaraan"
+                                                            )}
+                                                        >
+                                                            <IoTrash />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="mt-4 flex justify-between">
+                            <div>
+                                <p className="text-sm text-gray-700 dark:text-gray-300">
+                                    Menampilkan {kases.from}-{kases.to} dari{" "}
+                                    {kases.total} total data
+                                </p>
+                            </div>
+                            <div>
+                                {kases.links.map((link, index) => (
+                                    <Link
+                                        key={index}
+                                        href={link.url}
+                                        className={`mx-1 px-3 py-1 border rounded ${
+                                            link.active
+                                                ? "bg-blue-500 text-white"
+                                                : "bg-white text-blue-500"
+                                        }`}
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
+                                    />
                                 ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div className="mt-4 flex justify-between">
-                    <div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300">
-                            Menampilkan {kases.from}-{kases.to} dari{" "}
-                            {kases.total} total data
-                        </p>
-                    </div>
-                    <div>
-                        {kases.links.map((link, index) => (
-                            <Link
-                                key={index}
-                                href={link.url}
-                                className={`mx-1 px-3 py-1 border rounded ${
-                                    link.active
-                                        ? "bg-blue-500 text-white"
-                                        : "bg-white text-blue-500"
-                                }`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                            />
-                        ))}
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
                 <ToastContainer autoClose={7000} />
             </div>
         </AuthenticatedLayout>

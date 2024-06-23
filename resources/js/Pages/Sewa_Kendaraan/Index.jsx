@@ -187,163 +187,223 @@ export default function Index({
                                     </div>
 
                                     {showDateRangePicker && (
-                                        <div className="flex">
-                                            <DateRange
-                                                editableDateInputs={false}
-                                                onChange={(item) =>
-                                                    setState([item.selection])
-                                                }
-                                                moveRangeOnFirstSelection={
-                                                    false
-                                                }
-                                                ranges={state}
-                                                locale={id}
-                                                startDatePlaceholder={
-                                                    "Tanggal Mulai"
-                                                }
-                                                endDatePlaceholder={
-                                                    "Tanggal Akhir"
-                                                }
-                                            />
-                                            <div>
-                                                <button
-                                                    type="submit"
-                                                    className="px-4 py-2 mt-3 border rounded-md"
-                                                >
-                                                    <IoSearch className="text-xl" />
-                                                </button>
+                                        <div className="absolute z-10 mt-2 drop-shadow-lg shadow-slate-500">
+                                            <div className="flex">
+                                                <DateRange
+                                                    editableDateInputs={false}
+                                                    onChange={(item) =>
+                                                        setState([
+                                                            item.selection,
+                                                        ])
+                                                    }
+                                                    moveRangeOnFirstSelection={
+                                                        false
+                                                    }
+                                                    ranges={state}
+                                                    locale={id}
+                                                    startDatePlaceholder={
+                                                        "Tanggal Mulai"
+                                                    }
+                                                    endDatePlaceholder={
+                                                        "Tanggal Akhir"
+                                                    }
+                                                />
+                                                <div>
+                                                    <button
+                                                        type="submit"
+                                                        className="px-4 bg-slate-50 py-2 mt-3 ml-4 border rounded-md"
+                                                    >
+                                                        <IoSearch className="text-xl" />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     )}
                                 </div>
                             </form>
                         </div>
-                        <div className="flex items-end">
-                            <a
-                                href={route("sewa_kendaraan.create")}
-                                className=" text-xl px-2 py-1 text-slate-900 hover:text-blue-600"
-                            >
-                                <IoAddOutline />
-                            </a>
-                        </div>
+                        {!showDateRangePicker && (
+                            <div className="flex items-end">
+                                <a
+                                    href={route("sewa_kendaraan.create")}
+                                    className=" text-xl px-2 py-1 text-slate-900 hover:text-blue-600"
+                                >
+                                    <IoAddOutline />
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead className="sm:text-xs md:text-sm text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" className="px-3 py-2">
-                                        No
-                                    </th>
-                                    <th scope="col" className="px-3 py-2">
-                                        Tanggal
-                                    </th>
-                                    <th scope="col" className="px-3 py-2">
-                                        Nama
-                                    </th>
-                                    <th scope="col" className="px-3 py-2">
-                                        Jenis
-                                    </th>
-                                    <th scope="col" className="px-3 py-2">
-                                        Harga
-                                    </th>
-                                    <th scope="col" className="px-3 py-2">
-                                        Keterangan
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="py-3 px-1 text-center"
-                                    >
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sewaKendaraans.data.map((kendaraan, index) => (
-                                    <tr
-                                        key={kendaraan.id}
-                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                    >
-                                        <td className="px-3 py-2">
-                                            {sewaKendaraans.from + index}
-                                        </td>
-                                        <td className="px-3 py-2">
-                                            <FormatDateRange
-                                                startDateString={
-                                                    kendaraan.mulai_tanggal
-                                                }
-                                                endDateString={
-                                                    kendaraan.akhir_tanggal
-                                                }
-                                            />
-                                        </td>
-                                        <td className="px-3 py-2">
-                                            {kendaraan.nama}
-                                        </td>
-                                        <td className="px-3 py-2">
-                                            {kendaraan.kendaraan.nama} <br /> ({" "}
-                                            {kendaraan.kendaraan.no_registrasi}{" "}
+                {!showDateRangePicker && (
+                    <>
+                        <div className="overflow-x-auto">
+                            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    <thead className="sm:text-xs md:text-sm text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th
+                                                scope="col"
+                                                className="px-3 py-2"
+                                            >
+                                                No
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-3 py-2"
+                                            >
+                                                Tanggal
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-3 py-2"
+                                            >
+                                                Nama
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-3 py-2"
+                                            >
+                                                Jenis
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-3 py-2"
+                                            >
+                                                Harga
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-3 py-2"
+                                            >
+                                                Keterangan
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="py-3 px-1 text-center"
+                                            >
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sewaKendaraans.data.length === 0 ? (
+                                            <tr>
+                                                <td
+                                                    colSpan="8"
+                                                    className="px-6 py-4 text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                >
+                                                    Sewa Kendaraan tidak ditemukan
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            sewaKendaraans.data.map(
+                                                (kendaraan, index) => (
+                                                    <tr
+                                                        key={kendaraan.id}
+                                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                    >
+                                                        <td className="px-3 py-2">
+                                                            {sewaKendaraans.from +
+                                                                index}
+                                                        </td>
+                                                        <td className="px-3 py-2">
+                                                            <FormatDateRange
+                                                                startDateString={
+                                                                    kendaraan.mulai_tanggal
+                                                                }
+                                                                endDateString={
+                                                                    kendaraan.akhir_tanggal
+                                                                }
+                                                            />
+                                                        </td>
+                                                        <td className="px-3 py-2">
+                                                            {kendaraan.nama}
+                                                        </td>
+                                                        <td className="px-3 py-2">
+                                                            {
+                                                                kendaraan
+                                                                    .kendaraan
+                                                                    .nama
+                                                            }{" "}
+                                                            <br /> ({" "}
+                                                            {
+                                                                kendaraan
+                                                                    .kendaraan
+                                                                    .no_registrasi
+                                                            }{" "}
+                                                            )
+                                                        </td>
+                                                        <td className="px-3 py-2">
+                                                            <RupiahFormat
+                                                                value={
+                                                                    kendaraan.harga
+                                                                }
+                                                            />{" "}
+                                                            <br /> ({" "}
+                                                            {kendaraan.metode} ){" "}
+                                                        </td>
+                                                        <td className="px-3 py-2">
+                                                            {
+                                                                kendaraan.keterangan
+                                                            }
+                                                        </td>
+                                                        <td className="px-1 py-4 flex justify-center space-x-2">
+                                                            <a
+                                                                href={route(
+                                                                    "sewa_kendaraan.edit",
+                                                                    kendaraan.id
+                                                                )}
+                                                                className="px-2 py-1 text-center hover:text-yellow-600"
+                                                            >
+                                                                <IoPencil />
+                                                            </a>
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleDelete(
+                                                                        kendaraan.id
+                                                                    )
+                                                                }
+                                                                className="px-2 py-1 text-center hover:text-red-600"
+                                                            >
+                                                                <IoTrash />
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                )
                                             )
-                                        </td>
-                                        <td className="px-3 py-2">
-                                            <RupiahFormat
-                                                value={kendaraan.harga}
-                                            />{" "}
-                                            <br /> ( {kendaraan.metode} ){" "}
-                                        </td>
-                                        <td className="px-3 py-2">
-                                            {kendaraan.keterangan}
-                                        </td>
-                                        <td className="px-1 py-4 flex justify-center space-x-2">
-                                            <a
-                                                href={route(
-                                                    "sewa_kendaraan.edit",
-                                                    kendaraan.id
-                                                )}
-                                                className="px-2 py-1 text-center hover:text-yellow-600"
-                                            >
-                                                <IoPencil />
-                                            </a>
-                                            <button
-                                                onClick={() =>
-                                                    handleDelete(kendaraan.id)
-                                                }
-                                                className="px-2 py-1 text-center hover:text-red-600"
-                                            >
-                                                <IoTrash />
-                                            </button>
-                                        </td>
-                                    </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="mt-4 flex justify-between">
+                            <div>
+                                <p className="text-sm text-gray-700 dark:text-gray-300">
+                                    Menampilkan {sewaKendaraans.from}-
+                                    {sewaKendaraans.to} dari{" "}
+                                    {sewaKendaraans.total} total data
+                                </p>
+                            </div>
+                            <div>
+                                {sewaKendaraans.links.map((link, index) => (
+                                    <Link
+                                        key={index}
+                                        href={link.url}
+                                        className={`mx-1 px-3 py-1 border rounded ${
+                                            link.active
+                                                ? "bg-blue-500 text-white"
+                                                : "bg-white text-blue-500"
+                                        }`}
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
+                                    />
                                 ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div className="mt-4 flex justify-between">
-                    <div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300">
-                            Menampilkan {sewaKendaraans.from}-
-                            {sewaKendaraans.to} dari {sewaKendaraans.total}{" "}
-                            total data
-                        </p>
-                    </div>
-                    <div>
-                        {sewaKendaraans.links.map((link, index) => (
-                            <Link
-                                key={index}
-                                href={link.url}
-                                className={`mx-1 px-3 py-1 border rounded ${
-                                    link.active
-                                        ? "bg-blue-500 text-white"
-                                        : "bg-white text-blue-500"
-                                }`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                            />
-                        ))}
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
             <ToastContainer autoClose={7000} />
         </AuthenticatedLayout>
