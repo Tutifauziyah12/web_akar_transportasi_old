@@ -112,14 +112,27 @@ class SewaKendaraanController extends Controller
     {
         $validated = $request->validated();
 
-        $sewaKendaraan->update($validated);
+        // Simpan nilai tanggal sebelum update
+        $tanggalSebelumUpdate = $sewaKendaraan->mulai_tanggal;
+        // Debug: Cetak tanggal sebelum update
+        // dd('Tanggal Sebelum Update: ', $tanggalSebelumUpdate);
 
+        // Update sewa kendaraan
+        $updateResult = $sewaKendaraan->update($validated);
+        // Debug: Cetak hasil update
+        // dd('Sewa Kendaraan - ' . $sewaKendaraan->nama);
+
+        // Cari kas yang sesuai dengan nama dan tanggal sebelum update
         $kas = Kas::where('nama', 'Sewa Kendaraan - ' . $sewaKendaraan->nama)
-            ->where('tanggal', $sewaKendaraan->mulai_tanggal)
+            ->where('tanggal', $tanggalSebelumUpdate)
             ->first();
 
+        // Debug: Cetak query untuk menemukan kas
+        // dd('Kas yang ditemukan: ', $kas);
+
+        // Jika ada kas yang sesuai, update kas tersebut
         if ($kas) {
-            $kas->update([
+            $kasUpdateResult = $kas->update([
                 'nama' => 'Sewa Kendaraan - ' . $sewaKendaraan->nama,
                 'jenis' => 'Masuk',
                 'tanggal' => $sewaKendaraan->mulai_tanggal,
@@ -127,12 +140,16 @@ class SewaKendaraanController extends Controller
                 'pembayaran' => $sewaKendaraan->metode,
                 'keterangan' => $sewaKendaraan->keterangan,
             ]);
+            // Debug: Cetak hasil update kas
+            // dd('Hasil Update Kas: ', $kasUpdateResult);
         }
 
         $namaPenyewa = $sewaKendaraan->nama;
 
         return redirect()->route('sewa_kendaraan.index')->with('message', sprintf("Sewa Kendaraan atas nama %s berhasil diupdate!", $namaPenyewa));
     }
+
+
 
     /**
      * Remove the specified resource from storage.
