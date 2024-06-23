@@ -12,7 +12,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $today = Carbon::today();
+        $today = Carbon::today('Asia/Jakarta');
         $totalSewaHariIni = SewaKendaraan::whereDate('mulai_tanggal', $today)->count();
 
         $endOfMonth = Carbon::now()->endOfMonth();
@@ -25,6 +25,7 @@ class DashboardController extends Controller
                 ->orWhereDate('akhir_tanggal', '<=', $endOfMonth);
         })
             ->count();
+
         $totalUangMasukHariIni = Kas::whereDate('tanggal', $today)
             ->where('jenis', 'Masuk')
             ->sum('biaya');
