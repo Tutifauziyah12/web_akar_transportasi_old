@@ -25,7 +25,7 @@ return new class extends Migration
 
         Schema::create('sewa', function (Blueprint $table) {
             $table->id();
-            $table->string('kode'); // Kolom kode yang merujuk ke tabel kas
+            $table->string('kode')->unique(); // Kolom kode yang merujuk ke tabel kas
             $table->date('mulai_tanggal');
             $table->date('akhir_tanggal');
             $table->bigInteger('total');
