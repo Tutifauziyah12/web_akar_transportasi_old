@@ -48,7 +48,7 @@ export default function Edit({ auth, kendaraan }) {
                         <div>
                             <label
                                 htmlFor="nama"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                className="block mb-2 text-sm font-medium text-gray-900"
                             >
                                 Nama
                             </label>
@@ -58,7 +58,7 @@ export default function Edit({ auth, kendaraan }) {
                                     setData("nama", e.target.value)
                                 }
                                 value={data.nama}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
                                     errors.nama && "border-red-500"
                                 }`}
                                 placeholder={
@@ -79,7 +79,7 @@ export default function Edit({ auth, kendaraan }) {
                         <div>
                             <label
                                 htmlFor="no_registrasi"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                className="block mb-2 text-sm font-medium text-gray-900"
                             >
                                 No. Registrasi
                             </label>
@@ -91,7 +91,7 @@ export default function Edit({ auth, kendaraan }) {
                                 }
                                 value={data.no_registrasi}
                                 autoCapitalize="characters"
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
                                     errors.no_registrasi && "border-red-500"
                                 }`}
                                 placeholder={
@@ -109,7 +109,7 @@ export default function Edit({ auth, kendaraan }) {
                         <div>
                             <label
                                 htmlFor="jenis"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                className="block mb-2 text-sm font-medium text-gray-900"
                             >
                                 Jenis
                             </label>
@@ -120,7 +120,7 @@ export default function Edit({ auth, kendaraan }) {
                                     setData("jenis", e.target.value)
                                 }
                                 value={data.jenis}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
                                     errors.jenis && "border-red-500"
                                 }`}
                                 placeholder={
@@ -136,7 +136,7 @@ export default function Edit({ auth, kendaraan }) {
                         <div>
                             <label
                                 htmlFor="tahun_pembuatan"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                className="block mb-2 text-sm font-medium text-gray-900"
                             >
                                 Tahun Pembuatan
                             </label>
@@ -147,7 +147,7 @@ export default function Edit({ auth, kendaraan }) {
                                     setData("tahun_pembuatan", e.target.value)
                                 }
                                 value={data.tahun_pembuatan}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
                                     errors.tahun_pembuatan && "border-red-500"
                                 }`}
                                 placeholder={
@@ -165,7 +165,7 @@ export default function Edit({ auth, kendaraan }) {
                         <div>
                             <label
                                 htmlFor="warna"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                className="block mb-2 text-sm font-medium text-gray-900"
                             >
                                 Warna
                             </label>
@@ -176,7 +176,7 @@ export default function Edit({ auth, kendaraan }) {
                                     setData("warna", e.target.value)
                                 }
                                 value={data.warna}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
                                     errors.warna && "border-red-500"
                                 }`}
                                 placeholder={
@@ -192,7 +192,7 @@ export default function Edit({ auth, kendaraan }) {
                         <div className="items-center">
                             <label
                                 htmlFor="status"
-                                className="block mb-2 font-semibold text-gray-900 dark:text-white"
+                                className="block mb-2 font-semibold text-gray-900"
                             >
                                 Status
                             </label>
@@ -249,7 +249,7 @@ export default function Edit({ auth, kendaraan }) {
                     </div>
                     <button
                         type="submit"
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
                     >
                         Submit
                     </button>
