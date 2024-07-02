@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kas;
 use App\Models\Kendaraan;
-use App\Models\SewaKendaraan;
+use App\Models\Pengeluaran;
+use App\Models\Sewa;
 use Inertia\Inertia;
 use Carbon\Carbon;
 
@@ -13,51 +13,66 @@ class DashboardController extends Controller
     public function index()
     {
         $today = Carbon::today('Asia/Jakarta');
-        $totalSewaHariIni = SewaKendaraan::whereDate('mulai_tanggal', $today)->count();
+        $totalSewaHariIni = Sewa::whereDate('mulai_tanggal', $today)->count();
 
         $endOfMonth = Carbon::now()->endOfMonth();
-        $sewaAktifSampaiAkhirBulan = SewaKendaraan::whereDate('akhir_tanggal', '>=', $today)
+        $sewaAktifSampaiAkhirBulan = Sewa::whereDate('akhir_tanggal', '>=', $today)
             ->whereDate('akhir_tanggal', '<=', $endOfMonth)
             ->count();
         $startOfMonth = Carbon::now()->startOfMonth();
-        $totalSewaBulanIni = SewaKendaraan::where(function ($query) use ($startOfMonth, $endOfMonth) {
+        $totalSewaBulanIni = Sewa::where(function ($query) use ($startOfMonth, $endOfMonth) {
             $query->whereDate('mulai_tanggal', '>=', $startOfMonth)
                 ->orWhereDate('akhir_tanggal', '<=', $endOfMonth);
         })
             ->count();
 
-        $totalUangMasukHariIni = Kas::whereDate('tanggal', $today)
-            ->where('jenis', 'Masuk')
-            ->sum('biaya');
-        $totalUangKeluarHariIni = Kas::whereDate('tanggal', $today)
-            ->where('jenis', 'Keluar')
-            ->sum('biaya');
+        $totalUangSewaKendaraan = Sewa::whereDate('mulai_tanggal', $today)
+            ->sum('total');
+        $totalUangLainnya = Sewa::whereDate('mulai_tanggal', $today)
+            ->with('pendapatanLainnya')
+            ->get()
+            ->flatMap(function ($sewa) {
+                return $sewa->pendapatanLainnya;
+            })
+            ->sum('total');
+        $totalUangMasukHariIni = $totalUangSewaKendaraan + $totalUangLainnya;
 
-        $totalUangMasukBulanIni = Kas::whereBetween('tanggal', [$startOfMonth, $endOfMonth])
-            ->where('jenis', 'Masuk')
-            ->sum('biaya');
+        $totalUangKeluarHariIni = Pengeluaran::whereDate('tanggal', $today)
+            ->sum('total');
 
-        $totalUangKeluarBulanIni = Kas::whereBetween('tanggal', [$startOfMonth, $endOfMonth])
-            ->where('jenis', 'Keluar')
-            ->sum('biaya');
+        $totalUangMasukBulanIni = Sewa::where(function ($query) use ($startOfMonth, $endOfMonth) {
+            $query->whereBetween('mulai_tanggal', [$startOfMonth, $endOfMonth])
+                ->orWhereBetween('akhir_tanggal', [$startOfMonth, $endOfMonth]);
+        })
+            ->with('pendapatanLainnya')
+            ->get()
+            ->flatMap(function ($sewa) {
+                return array_merge(
+                    [$sewa->total],
+                    $sewa->pendapatanLainnya->pluck('total')->toArray()
+                );
+            })
+            ->sum();
+
+        $totalUangKeluarBulanIni = Pengeluaran::whereBetween('tanggal', [$startOfMonth, $endOfMonth])
+            ->sum('total');
 
 
-        $aktifCount = Kendaraan::where('status', 'Aktif')->count();
+        $kendaraanAktif = Kendaraan::where('status', 'Aktif')->count();
 
-        // Mendapatkan jumlah kendaraan dalam perbaikan
-        $perbaikanCount = Kendaraan::where('status', 'Perbaikan')->count();
+        $kendaraanPerbaikan = Kendaraan::where('status', 'Perbaikan')->count();
 
-        // Mendapatkan jumlah kendaraan non-aktif
-        $nonAktifCount = Kendaraan::where('status', '!=', 'Aktif')
+        $kendaraanTidakAktif = Kendaraan::where('status', '!=', 'Aktif')
             ->where('status', '!=', 'Perbaikan')
             ->count();
+
         return Inertia::render('Dashboard', [
             'totalSewaHariIni' => $totalSewaHariIni,
-            'aktifCount' => $aktifCount,
-            'perbaikanCount' => $perbaikanCount,
-            'nonAktifCount' => $nonAktifCount,
             'sewaAktifSampaiAkhirBulan' => $sewaAktifSampaiAkhirBulan,
             'totalSewaBulanIni' => $totalSewaBulanIni,
+            'kendaraanAktif' => $kendaraanAktif,
+            'kendaraanPerbaikan' => $kendaraanPerbaikan,
+            'kendaraanTidakAktif' => $kendaraanTidakAktif,
             'totalUangMasukHariIni' => $totalUangMasukHariIni,
             'totalUangKeluarHariIni' => $totalUangKeluarHariIni,
             'totalUangMasukBulanIni' => $totalUangMasukBulanIni,

@@ -4,7 +4,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { Head, Link, usePage } from "@inertiajs/react";
 import { IoAddOutline, IoPencil, IoTrash } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Index({
     auth,
@@ -19,8 +19,6 @@ export default function Index({
         }
     };
 
-    console.log(kendaraans);
-
     const handleSearch = (e) => {
         e.preventDefault();
         Inertia.get(
@@ -31,6 +29,10 @@ export default function Index({
                 preserveScroll: true,
             }
         );
+    };
+
+    const handleReset = () => {
+        setSearchTerm("");
     };
 
     const { flash } = usePage().props;
@@ -60,29 +62,61 @@ export default function Index({
 
             <div className="py-8">
                 <div className="flex justify-between mb-4">
-                    <form onSubmit={handleSearch} className="relative">
-                        <input
-                            type="text"
-                            className="w-full border-gray-300 dark:bg-gray-800 dark:text-gray-100 rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
-                            placeholder="Search..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </form>
+                    <div className="w-fit p-4 mb-4 text-sm bg-white rounded-xl shadow-md">
+                        <form onSubmit={handleSearch} className="">
+                            <div className="flex items-end space-x-4">
+                                <div className="w-52">
+                                    <label
+                                        htmlFor="cari"
+                                        className="block mb-2 font-semibold text-gray-700"
+                                    >
+                                        Cari
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="cari"
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        placeholder="Cari"
+                                        value={searchTerm}
+                                        onChange={(e) =>
+                                            setSearchTerm(e.target.value)
+                                        }
+                                    />
+                                </div>
 
-                    <a
-                        href={route("kendaraan.create")}
-                        className="flex items-center text-xl px-2 py-1 text-slate-900 hover:text-blue-600"
-                    >
-                        <IoAddOutline />
-                    </a>
+                                <div className="flex items-center space-x-2">
+                                    <button
+                                        type="button"
+                                        onClick={handleReset}
+                                        className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-md border"
+                                    >
+                                        Reset
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md border"
+                                    >
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="flex items-end">
+                        <a
+                            href={route("kendaraan.create")}
+                            className="flex items-center text-xl px-2 py-1 text-slate-900 hover:text-blue-600"
+                        >
+                            <IoAddOutline />
+                        </a>
+                    </div>
                 </div>
                 <div className="overflow-x-auto">
                     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead className="sm:text-xs md:text-sm text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                        <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead className="sm:text-xs md:text-sm text-gray-700 uppercase bg-gray-200">
                                 <tr>
-                                    <th scope="col" className="px-4 py-3">
+                                    <th scope="col" className="px-8 py-3">
                                         No
                                     </th>
                                     <th scope="col" className="px-6 py-3">
@@ -105,7 +139,7 @@ export default function Index({
                                     </th>
                                     <th
                                         scope="col"
-                                        className="py-3 px-1 text-center"
+                                        className="py- px-8 text-center"
                                     >
                                         Action
                                     </th>
@@ -116,7 +150,7 @@ export default function Index({
                                     <tr>
                                         <td
                                             colSpan="8"
-                                            className="px-6 py-4 text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                            className="px-6 py-4 text-center bg-white border-b hover:bg-gray-50"
                                         >
                                             Kendaraan tidak ditemukan
                                         </td>
@@ -125,9 +159,9 @@ export default function Index({
                                     kendaraans.data.map((kendaraan, index) => (
                                         <tr
                                             key={kendaraan.id}
-                                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                            className="bg-white border-b hover:bg-gray-50"
                                         >
-                                            <td className="px-4 py-4">
+                                            <td className="px-8 py-4">
                                                 {kendaraans.from + index}
                                             </td>
                                             <td className="px-6 py-4">
@@ -148,7 +182,7 @@ export default function Index({
                                             <td className="px-6 py-4">
                                                 {kendaraan.status}
                                             </td>
-                                            <td className="px-1 py-4 flex justify-center space-x-2">
+                                            <td className="px-8 py-4 flex justify-center space-x-2">
                                                 <a
                                                     href={route(
                                                         "kendaraan.edit",
@@ -178,7 +212,7 @@ export default function Index({
                 </div>
                 <div className="mt-4 flex justify-between">
                     <div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300">
+                        <p className="text-sm text-gray-700">
                             Menampilkan {kendaraans.from}-{kendaraans.to} dari{" "}
                             {kendaraans.total} total data
                         </p>

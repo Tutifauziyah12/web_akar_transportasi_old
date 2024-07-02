@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RupiahFormat = ({ value }) => {
+const RupiahFormat = ({ value = 0 }) => {
     const formatToRupiah = (angka) => {
         if (!angka) return 'Rp 0';
         
@@ -9,10 +9,10 @@ const RupiahFormat = ({ value }) => {
         angka = Math.abs(angka); // Convert to positive for formatting
 
         angka = typeof angka === 'number' ? angka.toString() : angka;
-        var rupiah = '';
-        var angkarev = angka.split('').reverse().join('');
-        for (var i = 0; i < angkarev.length; i++) {
-            if (i % 3 == 0) rupiah += angkarev.substr(i, 3) + '.';
+        let rupiah = '';
+        let angkarev = angka.split('').reverse().join('');
+        for (let i = 0; i < angkarev.length; i++) {
+            if (i % 3 === 0) rupiah += angkarev.substr(i, 3) + '.';
         }
 
         // Reformat to Rp format

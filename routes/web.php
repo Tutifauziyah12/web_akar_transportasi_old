@@ -3,8 +3,9 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SewaKendaraanController;
+use App\Http\Controllers\SewaController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,18 +37,18 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return Inertia::render('Auth/Login', [
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        // 'laravelVersion' => Application::VERSION,
+        // 'phpVersion' => PHP_VERSION,
     ]);
 });
 
-Route::get('/register', function () {
-    return Inertia::render('Auth/Register', [
-        'canLogin' => Route::has('login'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/register', function () {
+//     return Inertia::render('Auth/Register', [
+//         'canLogin' => Route::has('login'),
+//         // 'laravelVersion' => Application::VERSION,
+//         // 'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -57,6 +58,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/register', function () {
+        return Inertia::render('Auth/Register', [
+            'canLogin' => Route::has('login'),
+            // 'laravelVersion' => Application::VERSION,
+            // 'phpVersion' => PHP_VERSION,
+        ]);
+    });
+
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -68,18 +78,30 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/kendaraan/{kendaraan}', [KendaraanController::class, 'destroy'])->name('kendaraan.destroy');
 
     Route::get('/kas', [KasController::class, 'index'])->name('kas.index');
-    Route::get('/kas/create', [KasController::class, 'create'])->name('kas.create');
+    Route::get('/kas/pendapatan', [KasController::class, 'indexPendapatan'])->name('kasPendapatan.index');
+    Route::get('/kas/pengeluaran', [KasController::class, 'indexPengeluaran'])->name('kasPengeluaran.index');
+    Route::get('/kas/buku_besar', [KasController::class, 'indexBukuBesar'])->name('kasBukuBesar.index');
+    Route::get('/kas/create/sewa', [KasController::class, 'createSewa'])->name('kas.createSewa');
+    Route::get('/kas/create/lainnya', [KasController::class, 'createLainnya'])->name('kas.createLainnya');
     Route::post('/kas', [KasController::class, 'store'])->name('kas.store');
     Route::get('/kas/{kas}/edit', [KasController::class, 'edit'])->name('kas.edit');
     Route::put('/kas/{kas}', [KasController::class, 'update'])->name('kas.update');
     Route::delete('/kas/{kas}', [KasController::class, 'destroy'])->name('kas.destroy');
 
-    Route::get('/sewa_kendaraan', [SewaKendaraanController::class, 'index'])->name('sewa_kendaraan.index');
-    Route::get('/sewa_kendaraan/create', [SewaKendaraanController::class, 'create'])->name('sewa_kendaraan.create');
-    Route::post('/sewa_kendaraan', [SewaKendaraanController::class, 'store'])->name('sewa_kendaraan.store');
-    Route::get('/sewa_kendaraan/{sewa_kendaraan}/edit', [SewaKendaraanController::class, 'edit'])->name('sewa_kendaraan.edit');
-    Route::put('/sewa_kendaraan/{sewa_kendaraan}', [SewaKendaraanController::class, 'update'])->name('sewa_kendaraan.update');
-    Route::delete('/sewa_kendaraan/{sewa_kendaraan}', [SewaKendaraanController::class, 'destroy'])->name('sewa_kendaraan.destroy');
+    Route::get('/pendapatan/sewa_kendaraan', [SewaController::class, 'index'])->name('sewa.index');
+    Route::get('/pendapatan/sewa_lainnya', [SewaController::class, 'indexLainnya'])->name('sewaLainnya.index');
+    Route::get('/pendapatan/sewa_kendaraan/create', [SewaController::class, 'create'])->name('sewa.create');
+    Route::post('/pendapatan/sewa_kendaraan', [SewaController::class, 'store'])->name('sewa_kendaraan.store');
+    Route::get('/pendapatan/sewa_kendaraan/{sewa}/edit', [SewaController::class, 'edit'])->name('sewa.edit');
+    Route::put('/pendapatan/sewa_kendaraan/{sewa}', [SewaController::class, 'update'])->name('sewa.update');
+    Route::delete('/pendapatan/sewa_kendaraan/{sewa}', [SewaController::class, 'destroy'])->name('sewa.destroy');
+
+    Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
+    Route::get('/pengeluaran/create', [PengeluaranController::class, 'create'])->name('pengeluaran.create');
+    Route::post('/pengeluaran', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+    Route::get('/pengeluaran/{pengeluaran}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
+    Route::put('/pengeluaran/{pengeluaran}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
+    Route::delete('/pengeluaran/{pengeluaran}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
 
 });
 require __DIR__.'/auth.php';

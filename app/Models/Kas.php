@@ -8,6 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Kas extends Model
 {
     use HasFactory;
+    protected $table = 'kas';
 
-    protected $fillable = ['nama','jenis','tanggal','biaya','pembayaran','keterangan'];
+    protected $fillable = ['kode'];
+
+    public function sewa()
+    {
+        return $this->hasOne(Sewa::class, 'kode', 'kode');
+    }
+    public function pengeluaran()
+    {
+        return $this->hasOne(Pengeluaran::class, 'kode', 'kode');
+    }
 }

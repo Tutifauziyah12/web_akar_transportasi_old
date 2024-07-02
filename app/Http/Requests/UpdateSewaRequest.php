@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateSewaKendaraanRequest extends FormRequest
+class UpdateSewaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,6 @@ class UpdateSewaKendaraanRequest extends FormRequest
             'kode' => 'required|string|max:100|not_regex:/^\s*$/',
             'mulai_tanggal' => 'required|date',
             'akhir_tanggal' => 'required|date|after_or_equal:mulai_tanggal',
-            'kendaraan_id' => 'required|exists:kendaraans,id',
             'total' => 'required|numeric|min:0',
             'metode' => 'required|string|in:Cash,Debit,Kredit',
         ];
@@ -49,9 +48,6 @@ class UpdateSewaKendaraanRequest extends FormRequest
             'akhir_tanggal.required' => 'Tanggal akhir harus diisi.',
             'akhir_tanggal.date' => 'Format tanggal akhir tidak valid.',
             'akhir_tanggal.after_or_equal' => 'Tanggal akhir harus setelah atau sama dengan tanggal mulai.',
-
-            'kendaraan_id.required' => 'Kendaraan harus dipilih.',
-            'kendaraan_id.exists' => 'Kendaraan yang dipilih tidak valid.',
 
             'total.required' => 'Total harus diisi.',
             'total.numeric' => 'Total harus berupa angka.',

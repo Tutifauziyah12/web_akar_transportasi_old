@@ -5,7 +5,7 @@ export default function NavLink({ active = false, className = '', icon: Icon, ch
         <Link
             {...props}
             className={
-                'inline-flex items-center my-2 px-4 py-2 border-b-2 rounded-md w-full font-medium    transition duration-150 ease-in-out focus:outline-none ' +
+                'inline-flex items-center my-1 px-2 py-2 border-b-2 rounded-md w-full font-medium transition duration-150 ease-in-out focus:outline-none ' +
                 (active
                     ? 'border-indigo-200 focus:border-indigo-700 bg-white bg-opacity-10'
                     : 'border-transparent hover:bg-white hover:bg-opacity-10') +

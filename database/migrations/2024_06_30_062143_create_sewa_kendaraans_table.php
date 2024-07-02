@@ -13,17 +13,12 @@ return new class extends Migration
     {
         Schema::create('sewa_kendaraans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama', 100);
-            $table->date('mulai_tanggal');
-            $table->date('akhir_tanggal');
-            $table->unsignedBigInteger('kendaraan_id'); // Foreign key ke tabel kendaraans
-            $table->string('harga', 30);
-            $table->string('metode', 20);
-            $table->string('keterangan', 100)->nullable();
+            $table->string('kode');
+            $table->unsignedBigInteger('kendaraan_id');
             $table->timestamps();
 
-            // Menambahkan foreign key constraint
             $table->foreign('kendaraan_id')->references('id')->on('kendaraans')->onDelete('cascade');
+            $table->foreign('kode')->references('kode')->on('sewa')->onDelete('cascade');
         });
     }
 
