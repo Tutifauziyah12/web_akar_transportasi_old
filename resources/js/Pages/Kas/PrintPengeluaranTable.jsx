@@ -40,7 +40,7 @@ const PrintPengeluaranTable = React.forwardRef(
                         {pengeluaran && pengeluaran.length > 0 ? (
                             pengeluaran.map((item, index) => (
                                 <React.Fragment key={item.id}>
-                                    <tr className="bg-white border-b hover:bg-gray-50">
+                                    <tr className="bg-white border-b hover:bg-gray-50 align-top">
                                         <td className="px-8 py-2">
                                             {index + 1}
                                         </td>

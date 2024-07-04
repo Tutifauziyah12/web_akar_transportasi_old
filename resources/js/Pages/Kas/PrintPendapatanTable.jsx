@@ -65,7 +65,7 @@ const PrintPendapatanTable = React.forwardRef(
                                 <React.Fragment key={item.id}>
                                     {category === "semua" ||
                                     category === "pendapatan_sewa" ? (
-                                        <tr className="bg-white border-b hover:bg-gray-50">
+                                        <tr className="bg-white border-b hover:bg-gray-50 align-top">
                                             <td className="px-8 py-2">
                                                 {index + 1}
                                             </td>
@@ -115,7 +115,7 @@ const PrintPendapatanTable = React.forwardRef(
                                             (pendapatan, idx) => (
                                                 <tr
                                                     key={`${item.id}-${idx}`}
-                                                    className="bg-white border-b hover:bg-gray-50"
+                                                    className="bg-white border-b hover:bg-gray-50 align-top"
                                                 >
                                                     <td className="px-3 py-2">
                                                         {category ===

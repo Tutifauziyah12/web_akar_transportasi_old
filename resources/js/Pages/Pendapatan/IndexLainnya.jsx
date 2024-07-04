@@ -297,7 +297,7 @@ export default function IndexLainnya({
                                     sewa.data.map((kendaraan, index) => (
                                         <tr
                                             key={kendaraan.id}
-                                            className="bg-white border-b hover:bg-gray-50"
+                                            className="bg-white border-b hover:bg-gray-50 align-top"
                                         >
                                             <td className="px-8 py-2">
                                                 {sewa.from + index}
@@ -326,7 +326,7 @@ export default function IndexLainnya({
                                                 />{" "}
                                                 <br /> ({kendaraan.metode} )
                                             </td>
-                                            <td className="px-1 py-4 flex justify-center space-x-2">
+                                            <td className="px-1 py-2 flex justify-center space-x-2">
                                                 <button
                                                     onClick={() => {
                                                         if (!disabled) {
@@ -336,7 +336,7 @@ export default function IndexLainnya({
                                                             );
                                                         }
                                                     }}
-                                                    className={`px-2 py-1 text-center hover:text-yellow-600 ${
+                                                    className={`px-2 text-center hover:text-yellow-600 ${
                                                         disabled
                                                             ? "opacity-50 cursor-not-allowed"
                                                             : ""
@@ -351,7 +351,7 @@ export default function IndexLainnya({
                                                             kendaraan.id
                                                         )
                                                     }
-                                                    className={`px-2 py-1 text-center hover:text-red-600 ${
+                                                    className={`px-2 text-center hover:text-red-600 ${
                                                         disabled
                                                             ? "opacity-50 cursor-not-allowed"
                                                             : ""

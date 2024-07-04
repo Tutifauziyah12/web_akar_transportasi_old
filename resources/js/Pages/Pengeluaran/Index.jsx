@@ -278,7 +278,7 @@ export default function Index({
                                     pengeluaran.data.map((kendaraan, index) => (
                                         <tr
                                             key={kendaraan.id}
-                                            className="bg-white border-b hover:bg-gray-50"
+                                            className="bg-white border-b hover:bg-gray-50 align-top"
                                         >
                                             <td className="px-8 py-2">
                                                 {pengeluaran.from + index}
@@ -308,13 +308,13 @@ export default function Index({
                                             <td className="px-3 py-2">
                                                 {kendaraan.keterangan}
                                             </td>
-                                            <td className="px-1 py-4 flex justify-center space-x-2">
+                                            <td className="px-1 py-2 flex justify-center space-x-2">
                                                 <a
                                                     href={route(
                                                         "pengeluaran.edit",
                                                         kendaraan.id
                                                     )}
-                                                    className="px-2 py-1 text-center hover:text-yellow-600"
+                                                    className="px-2 text-center hover:text-yellow-600"
                                                 >
                                                     <IoPencil />
                                                 </a>
@@ -324,7 +324,7 @@ export default function Index({
                                                             kendaraan.id
                                                         )
                                                     }
-                                                    className="px-2 py-1 text-center hover:text-red-600"
+                                                    className="px-2 text-center hover:text-red-600"
                                                 >
                                                     <IoTrash />
                                                 </button>

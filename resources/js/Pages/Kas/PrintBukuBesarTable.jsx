@@ -48,7 +48,7 @@ const PrintBukuBesarTable = React.forwardRef(
                                     {item.kode.startsWith("PS") ? (
                                         <>
                                             <tr
-                                                className="bg-white border-b hover:bg-gray-50"
+                                                className="bg-white border-b hover:bg-gray-50 align-top"
                                                 key={`row-ps-${item.id}`}
                                             >
                                                 <td className="px-8 py-2 w-28">
@@ -108,7 +108,7 @@ const PrintBukuBesarTable = React.forwardRef(
                                                 item.sewa.pendapatan_lainnya.map(
                                                     (pendapatan, idx) => (
                                                         <tr
-                                                            className="bg-white border-b hover:bg-gray-50"
+                                                            className="bg-white border-b hover:bg-gray-50 align-top"
                                                             key={`row-ps-pendapatan-${item.id}-${idx}`}
                                                         >
                                                             <td className="px-3 py-2"></td>
@@ -153,7 +153,7 @@ const PrintBukuBesarTable = React.forwardRef(
                                         </>
                                     ) : (
                                         <tr
-                                            className="bg-white border-b hover:bg-gray-50"
+                                            className="bg-white border-b hover:bg-gray-50 align-top"
                                             key={`row-p-${item.id}`}
                                         >
                                             <td className="px-8 py-2">

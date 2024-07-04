@@ -257,7 +257,7 @@ export default function Index({
                                     </th>
                                     <th
                                         scope="col"
-                                        className="py-3 px-8 text-center w-[1%]"
+                                        className="py-3 px-8 w-[1%]"
                                     >
                                         Action
                                     </th>
@@ -277,7 +277,7 @@ export default function Index({
                                     sewa.data.map((swa, index) => (
                                         <tr
                                             key={swa.id}
-                                            className="bg-white border-b hover:bg-gray-50"
+                                            className="bg-white border-b hover:bg-gray-50 align-top"
                                         >
                                             <td className="px-8 py-2">
                                                 {sewa.from + index}
@@ -323,13 +323,13 @@ export default function Index({
                                                 />{" "}
                                                 <br /> ({swa.metode} )
                                             </td>
-                                            <td className="px-1 py-4 flex justify-center space-x-2">
+                                            <td className="px-1 py-2 flex justify-center space-x-2">
                                                 <a
                                                     href={route(
                                                         "sewa.edit",
                                                         swa.id
                                                     )}
-                                                    className="px-2 py-1 text-center hover:text-yellow-600"
+                                                    className="px-2 text-center hover:text-yellow-600"
                                                 >
                                                     <IoPencil />
                                                 </a>
@@ -339,7 +339,7 @@ export default function Index({
                                                             swa.id
                                                         )
                                                     }
-                                                    className="px-2 py-1 text-center hover:text-red-600"
+                                                    className="px-2 text-center hover:text-red-600"
                                                 >
                                                     <IoTrash />
                                                 </button>
