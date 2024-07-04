@@ -150,7 +150,7 @@ const PrintPendapatanTable = React.forwardRef(
                                                             Lainnya
                                                         </span>{" "}
                                                         <br />
-                                                        {pendapatan.nama}
+                                                        {pendapatan.nama} total {pendapatan.jumlah}
                                                     </td>
                                                     <td className="px-3 py-2">
                                                         <RupiahFormat

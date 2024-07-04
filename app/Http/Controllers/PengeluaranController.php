@@ -23,7 +23,14 @@ class PengeluaranController extends Controller
         $query = Pengeluaran::query();
 
         if ($request->has('search')) {
-            $query->where('kode', 'like', '%' . $request->input('search') . '%');
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('kode', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('nama', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('keterangan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('total', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('metode', 'like', '%' . $searchTerm . '%');
+            });
         }
 
         $query->orderByDesc('kode');

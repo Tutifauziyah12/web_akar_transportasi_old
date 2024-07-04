@@ -271,7 +271,7 @@ export default function Index({
                                             colSpan="7"
                                             className="px-6 py-4 text-center bg-white border-b hover:bg-gray-50"
                                         >
-                                            Sewa Kendaraan tidak ditemukan
+                                            Biaya tidak ditemukan
                                         </td>
                                     </tr>
                                 ) : (

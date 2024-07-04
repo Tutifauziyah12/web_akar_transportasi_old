@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\KendaraanController;
@@ -37,37 +38,24 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return Inertia::render('Auth/Login', [
         'canRegister' => Route::has('register'),
-        // 'laravelVersion' => Application::VERSION,
-        // 'phpVersion' => PHP_VERSION,
     ]);
 });
 
-// Route::get('/register', function () {
-//     return Inertia::render('Auth/Register', [
-//         'canLogin' => Route::has('login'),
-//         // 'laravelVersion' => Application::VERSION,
-//         // 'phpVersion' => PHP_VERSION,
-//     ]);
-// });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/register', function () {
-        return Inertia::render('Auth/Register', [
-            'canLogin' => Route::has('login'),
-            // 'laravelVersion' => Application::VERSION,
-            // 'phpVersion' => PHP_VERSION,
-        ]);
-    });
-
+Route::middleware(['auth', 'Admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+    Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
+    Route::get('/admin/{user}', [AdminController::class, 'edit'])->name('admin.storedite');
+    Route::put('/admin/{user}', [AdminController::class, 'update'])->name('admin.update');
+    Route::delete('/admin/{user}', [AdminController::class, 'destroy'])->name('admin.destroy');
 });
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/kendaraan', [KendaraanController::class, 'index'])->name('kendaraan.index');
@@ -102,6 +90,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengeluaran/{pengeluaran}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
     Route::put('/pengeluaran/{pengeluaran}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::delete('/pengeluaran/{pengeluaran}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
-
 });
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

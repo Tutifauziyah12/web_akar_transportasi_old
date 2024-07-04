@@ -24,7 +24,7 @@ const PrintBukuBesarTable = React.forwardRef(
                             <th scope="col" className="px-8 py-2 w-[1%]">
                                 No
                             </th>
-                            <th scope="col" className="px-3 py-2 w-[10%]" >
+                            <th scope="col" className="px-3 py-2 w-[10%]">
                                 Tanggal
                             </th>
                             <th scope="col" className="px-3 py-2">
@@ -125,6 +125,13 @@ const PrintBukuBesarTable = React.forwardRef(
                                                                 {
                                                                     pendapatan.nama
                                                                 }
+                                                                <br />
+                                                                <span className="text-[10px] 2xl:text-xs">
+                                                                    Jumlah :{" "}
+                                                                    {
+                                                                        pendapatan.jumlah
+                                                                    }
+                                                                </span>
                                                             </td>
                                                             <td className="px-3 py-2">
                                                                 <RupiahFormat
@@ -176,6 +183,14 @@ const PrintBukuBesarTable = React.forwardRef(
                                                 </span>
                                                 <br />
                                                 {item.pengeluaran.nama}
+                                                <br />
+                                                <span className="text-[10px] 2xl:text-xs">
+                                                    Detail :{" "}
+                                                    {
+                                                        item.pengeluaran
+                                                            .keterangan
+                                                    }
+                                                </span>
                                             </td>
                                             <td className="px-3 py-2"> - </td>
                                             <td className="px-3 py-2">

@@ -40,7 +40,6 @@ export default function Edit({
 
     const [validationErrors, setValidationErrors] = useState({});
     const { flash } = usePage().props;
-    console.log("flash", flash);
 
     // DateRange
     const [showDateRangePicker, setShowDateRangePicker] = useState(false);
@@ -169,7 +168,6 @@ export default function Edit({
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Submitting data:", data);
         try {
             await validationSchema.validate(data, { abortEarly: false });
             put(`/pendapatan/sewa_kendaraan/${sewa.id}`, {
@@ -226,7 +224,7 @@ export default function Edit({
                                 placeholder="Kode"
                             />
                             {validationErrors.kode && (
-                                <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.kode}
                                 </div>
                             )}
@@ -251,7 +249,7 @@ export default function Edit({
                             />
 
                             {validationErrors.nama && (
-                                <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.nama}
                                 </div>
                             )}
@@ -312,7 +310,7 @@ export default function Edit({
                             )}
                             {(validationErrors.mulai_tanggal ||
                                 validationErrors.akhir_tanggal) && (
-                                <p className="text-red-700 text-xs italic mt-1 ml-1">
+                                <p className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.mulai_tanggal ||
                                         validationErrors.akhir_tanggal}
                                 </p>
@@ -396,7 +394,7 @@ export default function Edit({
                                 error={validationErrors.total}
                             />
                             {validationErrors.total && (
-                                <p className="text-red-700 text-xs italic mt-1 ml-1">
+                                <p className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.total}
                                 </p>
                             )}
@@ -451,7 +449,7 @@ export default function Edit({
                                 </label>
                             </div>
                             {validationErrors.metode && (
-                                <p className="text-red-700 text-xs italic mt-1 ml-1">
+                                <p className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.metode}
                                 </p>
                             )}
@@ -493,7 +491,7 @@ export default function Edit({
                                         {validationErrors[
                                             `pendapatanLainnya[${index}].nama`
                                         ] && (
-                                            <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                            <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                                 {
                                                     validationErrors[
                                                         `pendapatanLainnya[${index}].nama`
@@ -530,7 +528,7 @@ export default function Edit({
                                             {validationErrors[
                                                 `pendapatanLainnya[${index}].jumlah`
                                             ] && (
-                                                <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                                <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                                     {
                                                         validationErrors[
                                                             `pendapatanLainnya[${index}].jumlah`
@@ -571,7 +569,7 @@ export default function Edit({
                                     {validationErrors[
                                         `pendapatanLainnya[${index}].total`
                                     ] && (
-                                        <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                        <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                             {
                                                 validationErrors[
                                                     `pendapatanLainnya[${index}].total`
@@ -646,7 +644,7 @@ export default function Edit({
                                     {validationErrors[
                                         `pendapatanLainnya[${index}].metode`
                                     ] && (
-                                        <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                        <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                             {
                                                 validationErrors[
                                                     `pendapatanLainnya[${index}].metode`

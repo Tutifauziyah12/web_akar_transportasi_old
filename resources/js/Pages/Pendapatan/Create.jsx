@@ -155,8 +155,6 @@ export default function Create({
         setData(name, value);
     }
 
-    // console.log("data", data);
-
     const handleCheckboxChange = (e) => {
         const { value, checked } = e.target;
         if (checked) {
@@ -179,11 +177,8 @@ export default function Create({
         }
     }, [flash]);
 
-    // console.log(flash);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // console.log("Submitting data:", data);
         try {
             await validationSchema.validate(data, { abortEarly: false });
             post("/pendapatan/sewa_kendaraan", {
@@ -240,7 +235,7 @@ export default function Create({
                                 placeholder="Kode"
                             />
                             {validationErrors.kode && (
-                                <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.kode}
                                 </div>
                             )}
@@ -265,7 +260,7 @@ export default function Create({
                             />
 
                             {validationErrors.nama && (
-                                <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.nama}
                                 </div>
                             )}
@@ -326,7 +321,7 @@ export default function Create({
                             )}
                             {(validationErrors.mulai_tanggal ||
                                 validationErrors.akhir_tanggal) && (
-                                <p className="text-red-700 text-xs italic mt-1 ml-1">
+                                <p className="text-red-700 text- 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.mulai_tanggal ||
                                         validationErrors.akhir_tanggal}
                                 </p>
@@ -390,7 +385,7 @@ export default function Create({
                                 </div>
                             )}
                             {validationErrors.kendaraan_ids && (
-                                <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.kendaraan_ids}
                                 </div>
                             )}
@@ -410,7 +405,7 @@ export default function Create({
                                 error={validationErrors.total}
                             />
                             {validationErrors.total && (
-                                <p className="text-red-700 text-xs italic mt-1 ml-1">
+                                <p className="text-red-700 text- 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.total}
                                 </p>
                             )}
@@ -465,7 +460,7 @@ export default function Create({
                                 </label>
                             </div>
                             {validationErrors.metode && (
-                                <p className="text-red-700 text-xs italic mt-1 ml-1">
+                                <p className="text-red-700 text- 2xl:text-xs italic mt-1 ml-1">
                                     {validationErrors.metode}
                                 </p>
                             )}
@@ -507,7 +502,7 @@ export default function Create({
                                         {validationErrors[
                                             `pendapatanLainnya[${index}].nama`
                                         ] && (
-                                            <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                            <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                                 {
                                                     validationErrors[
                                                         `pendapatanLainnya[${index}].nama`
@@ -544,7 +539,7 @@ export default function Create({
                                             {validationErrors[
                                                 `pendapatanLainnya[${index}].jumlah`
                                             ] && (
-                                                <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                                <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                                     {
                                                         validationErrors[
                                                             `pendapatanLainnya[${index}].jumlah`
@@ -585,7 +580,7 @@ export default function Create({
                                     {validationErrors[
                                         `pendapatanLainnya[${index}].total`
                                     ] && (
-                                        <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                        <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                             {
                                                 validationErrors[
                                                     `pendapatanLainnya[${index}].total`
@@ -660,7 +655,7 @@ export default function Create({
                                     {validationErrors[
                                         `pendapatanLainnya[${index}].metode`
                                     ] && (
-                                        <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                        <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
                                             {
                                                 validationErrors[
                                                     `pendapatanLainnya[${index}].metode`

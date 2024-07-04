@@ -273,6 +273,9 @@ export default function IndexLainnya({
                                         Keterangan Sewa Lainnya
                                     </th>
                                     <th scope="col" className="px-3 py-2">
+                                        Jumlah
+                                    </th>
+                                    <th scope="col" className="px-3 py-2">
                                         Total
                                     </th>
                                     <th
@@ -287,10 +290,10 @@ export default function IndexLainnya({
                                 {sewa.data.length === 0 ? (
                                     <tr>
                                         <td
-                                            colSpan="6"
+                                            colSpan="7"
                                             className="px-6 py-4 text-center bg-white border-b hover:bg-gray-50"
                                         >
-                                            Sewa Kendaraan tidak ditemukan
+                                            Sewa Lainnya tidak ditemukan
                                         </td>
                                     </tr>
                                 ) : (
@@ -319,6 +322,9 @@ export default function IndexLainnya({
                                             </td>
                                             <td className="px-3 py-2">
                                                 {kendaraan.nama}
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {kendaraan.jumlah}
                                             </td>
                                             <td className="px-3 py-2">
                                                 <RupiahFormat

@@ -143,7 +143,14 @@ class KasController extends Controller
 
         // Filter by search term
         if ($request->filled('search')) {
-            $query->where('kode', 'like', '%' . $request->input('search') . '%');
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('kode', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('nama', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('keterangan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('total', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('metode', 'like', '%' . $searchTerm . '%');
+            });
         }
 
         // Filter by date range

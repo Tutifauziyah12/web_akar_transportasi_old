@@ -6,23 +6,19 @@ import { IoAddOutline, IoPencil, IoTrash } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Index({
-    auth,
-    kendaraans,
-    searchTerm: initialSearchTerm,
-}) {
+export default function Index({ auth, users, searchTerm: initialSearchTerm }) {
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm || "");
 
     const handleDelete = (id) => {
         if (confirm("Apakah Anda yakin ingin menghapus kendaraan ini?")) {
-            Inertia.delete(route("kendaraan.destroy", id));
+            Inertia.delete(route("admin.destroy", id));
         }
     };
 
     const handleSearch = (e) => {
         e.preventDefault();
         Inertia.get(
-            route("kendaraan.index"),
+            route("admin.index"),
             { search: searchTerm },
             {
                 preserveState: true,
@@ -48,11 +44,11 @@ export default function Index({
             user={auth.user}
             header={
                 <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight w-full">
-                    Tabel Kendaraan
+                    Tabel Management Akun
                 </h2>
             }
         >
-            <Head title="Kendaraan" />
+            <Head title="Tabel Management Akun" />
 
             <div className="py-4 2xl:py-8 text-xs 2xl:text-base">
                 <div className="flex justify-between mb-2 2xl:mb-4">
@@ -98,7 +94,7 @@ export default function Index({
                     </div>
                     <div className="flex items-end">
                         <a
-                            href={route("kendaraan.create")}
+                            href={route("admin.create")}
                             className="flex items-center text-xl px-2 py-1 text-blue-500 hover:text-blue-700"
                         >
                             <IoAddOutline />
@@ -120,22 +116,10 @@ export default function Index({
                                         Nama
                                     </th>
                                     <th scope="col" className="px-6 py-3">
-                                        Nomor Registrasi
+                                        Email
                                     </th>
                                     <th scope="col" className="px-6 py-3">
-                                        Tahun Pembuatan
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Jenis
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Warna
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 w-[10%]"
-                                    >
-                                        Status
+                                        Level
                                     </th>
                                     <th
                                         scope="col"
@@ -146,7 +130,7 @@ export default function Index({
                                 </tr>
                             </thead>
                             <tbody>
-                                {kendaraans.data.length === 0 ? (
+                                {users.length === 0 ? (
                                     <tr>
                                         <td
                                             colSpan="8"
@@ -156,37 +140,32 @@ export default function Index({
                                         </td>
                                     </tr>
                                 ) : (
-                                    kendaraans.data.map((kendaraan, index) => (
+                                    users.map((user, index) => (
                                         <tr
-                                            key={kendaraan.id}
+                                            key={user.id}
                                             className="bg-white border-b hover:bg-gray-50"
                                         >
                                             <td className="px-8 py-4">
-                                                {kendaraans.from + index}
+                                                {users.from
+                                                    ? users.from + index
+                                                    : index + 1}
+                                            </td>
+
+                                            <td className="px-6 py-4">
+                                                {user.name}
                                             </td>
                                             <td className="px-6 py-4">
-                                                {kendaraan.nama}
+                                                {user.email}
                                             </td>
                                             <td className="px-6 py-4">
-                                                {kendaraan.no_registrasi}
+                                                {user.level}
                                             </td>
-                                            <td className="px-6 py-4">
-                                                {kendaraan.tahun_pembuatan}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {kendaraan.jenis}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {kendaraan.warna}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {kendaraan.status}
-                                            </td>
+
                                             <td className="px-8 py-4 flex justify-center space-x-2">
                                                 <a
                                                     href={route(
-                                                        "kendaraan.edit",
-                                                        kendaraan.id
+                                                        "admin.update",
+                                                        user.id
                                                     )}
                                                     className="px-2 py-1 text-center hover:text-yellow-600"
                                                 >
@@ -195,7 +174,7 @@ export default function Index({
                                                 <button
                                                     onClick={() =>
                                                         handleDelete(
-                                                            kendaraan.id
+                                                            user.id
                                                         )
                                                     }
                                                     className="px-2 py-1 text-center hover:text-red-600"
@@ -208,33 +187,6 @@ export default function Index({
                                 )}
                             </tbody>
                         </table>
-                    </div>
-                </div>
-                <div className="mt-6 flex justify-between">
-                    <div>
-                        <p className="text-gray-700">
-                            Menampilkan {kendaraans.from}-{kendaraans.to} dari{" "}
-                            {kendaraans.total} total data kendaraan
-                        </p>
-                    </div>
-                    <div className="font-bold">
-                        {kendaraans.links.map((link, index) => (
-                            <Link
-                                key={index}
-                                href={link.url}
-                                className={`mx-1 px-3 py-2 hover:bg-slate-200 border rounded ${
-                                    link.active
-                                        ? "bg-blue-500 text-white"
-                                        : "bg-white text-blue-500"
-                                }`}
-                            >
-                                {link.label === "&laquo; Previous"
-                                    ? "Sebelumnya"
-                                    : link.label === "Next &raquo;"
-                                    ? "Selanjutnya"
-                                    : link.label}
-                            </Link>
-                        ))}
                     </div>
                 </div>
             </div>

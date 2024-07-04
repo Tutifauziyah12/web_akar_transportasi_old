@@ -47,3 +47,20 @@ export const validationSchemaPengeluaran = yup.object().shape({
         .required("Tanggal harus diisi")
         .typeError("Tanggal harus berupa tanggal yang valid"),
 });
+
+export const validationSchemaUserCreation = yup.object().shape({
+    name: yup.string().required("Nama harus diisi"),
+    level: yup.string().required("Level harus diisi"),
+    email: yup
+        .string()
+        .email("Email harus berupa email yang valid")
+        .required("Email harus diisi"),
+    password: yup
+        .string()
+        .required("Password harus diisi")
+        .min(8, "Password harus memiliki panjang minimal 8 karakter"),
+    password_confirmation: yup
+        .string()
+        .required("Konfirmasi password harus diisi")
+        .oneOf([yup.ref('password'), null], "Konfirmasi password harus cocok dengan password"),
+});

@@ -57,7 +57,7 @@ const PrintPengeluaranTable = React.forwardRef(
                                                 {item.nama}
                                             </span>
                                             <br />
-                                            {item.keterangan}
+                                            detail : {item.keterangan}
                                         </td>
 
                                         <td className="px-3 py-2">

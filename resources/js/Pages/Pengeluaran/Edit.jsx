@@ -72,7 +72,6 @@ export default function Edit({ auth, pengeluaran }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log(data);
             await validationSchemaPengeluaran.validate(data, {
                 abortEarly: false,
             });
@@ -80,7 +79,6 @@ export default function Edit({ auth, pengeluaran }) {
                 onSuccess: () => reset(),
             });
         } catch (err) {
-            console.log(err);
             if (err.inner) {
                 const newErrors = {};
                 err.inner.forEach((error) => {

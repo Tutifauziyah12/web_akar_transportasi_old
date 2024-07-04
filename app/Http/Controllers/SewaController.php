@@ -25,7 +25,19 @@ class SewaController extends Controller
         $query = Sewa::query();
 
         if ($request->has('search')) {
-            $query->where('kode', 'like', '%' . $request->input('search') . '%');
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('kode', 'like', '%' . $searchTerm . '%')
+                    ->orWhereHas('sewaKendaraan.kendaraan', function ($q) use ($searchTerm) {
+                        $q->where('nama', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhereHas('sewaKendaraan.kendaraan', function ($q) use ($searchTerm) {
+                        $q->where('no_registrasi', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhere('total', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('nama', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('metode', 'like', '%' . $searchTerm . '%');
+            });
         }
 
         $query->orderByDesc('kode');
@@ -56,7 +68,14 @@ class SewaController extends Controller
         $query = SewaLainnya::query();
 
         if ($request->has('search')) {
-            $query->where('kode_sewa', 'like', '%' . $request->input('search') . '%');
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('kode_sewa', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('nama', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('jumlah', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('total', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('metode', 'like', '%' . $searchTerm . '%');
+            });
         }
 
         $query->orderByDesc('kode_sewa');
