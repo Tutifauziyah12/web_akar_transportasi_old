@@ -23,7 +23,7 @@ export default function Dashboard({
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="pb-6 font-semibold text-4xl text-gray-800 leading-tight">
+                <h2 className="pb-6 font-semibold text-2xl text-gray-800 leading-tight">
                     Dashboard
                 </h2>
             }
@@ -81,7 +81,7 @@ export default function Dashboard({
                 </div>
 
                 {/* Uang */}
-                <div className="mt-10 w-full rounded-sm border border-stroke bg-white p-4 shadow-default md:p-6 xl:p-7.5">
+                <div className="mt-8 w-full rounded-sm border border-stroke bg-white p-4 shadow-default md:p-6 xl:p-7.5">
                     <div className="flex flex-row items-center border-gray-300 pb-2">
                         <IoLogoUsd className="mr-4 text-xl" />
                         <span className="text-xl font-semibold text-center flex items-center justify-center">

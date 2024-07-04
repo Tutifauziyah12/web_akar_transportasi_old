@@ -39,7 +39,7 @@ export default function Index({
 
     useEffect(() => {
         if (flash.message) {
-            toast(flash.message);
+            toast.success(flash.message);
         }
     }, [flash]);
 
@@ -53,29 +53,29 @@ export default function Index({
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-4xl text-gray-800 leading-tight w-full">
+                <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight w-full">
                     Tabel Kendaraan
                 </h2>
             }
         >
             <Head title="Kendaraan" />
 
-            <div className="py-8">
-                <div className="flex justify-between mb-4">
-                    <div className="w-fit p-4 mb-4 text-sm bg-white rounded-xl shadow-md">
-                        <form onSubmit={handleSearch} className="">
-                            <div className="flex items-end space-x-4">
-                                <div className="w-52">
+            <div className="py-4 2xl:py-8 text-xs 2xl:text-base">
+                <div className="flex justify-between mb-2 2xl:mb-4">
+                    <div className="w-fit p-3 2xl:p-4 mb-4 bg-white rounded-md 2xl:rounded-xl shadow-md 2xl:shadow-lg">
+                        <form onSubmit={handleSearch}>
+                            <div className="flex items-end space-x-2">
+                                <div className="w-fit">
                                     <label
                                         htmlFor="cari"
                                         className="block mb-2 font-semibold text-gray-700"
                                     >
-                                        Cari
+                                        Filter
                                     </label>
                                     <input
                                         type="text"
                                         id="cari"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-base rounded-md 2xl:rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2"
                                         placeholder="Cari"
                                         value={searchTerm}
                                         onChange={(e) =>
@@ -88,13 +88,13 @@ export default function Index({
                                     <button
                                         type="button"
                                         onClick={handleReset}
-                                        className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-md border"
+                                        className="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-2 2xl:px-4 rounded-md"
                                     >
                                         Reset
                                     </button>
                                     <button
                                         type="submit"
-                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md border"
+                                        className="bg-green-400 hover:bg-green-500 text-white font-medium py-2 px-2 2xl:px-4 rounded-md"
                                     >
                                         Submit
                                     </button>
@@ -105,7 +105,7 @@ export default function Index({
                     <div className="flex items-end">
                         <a
                             href={route("kendaraan.create")}
-                            className="flex items-center text-xl px-2 py-1 text-slate-900 hover:text-blue-600"
+                            className="flex items-center text-xl px-2 py-1 text-blue-500 hover:text-blue-700"
                         >
                             <IoAddOutline />
                         </a>
@@ -113,10 +113,13 @@ export default function Index({
                 </div>
                 <div className="overflow-x-auto">
                     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <thead className="sm:text-xs md:text-sm text-gray-700 uppercase bg-gray-200">
+                        <table className="w-full text-left rtl:text-right text-gray-500">
+                            <thead className=" text-gray-700 uppercase bg-gray-200">
                                 <tr>
-                                    <th scope="col" className="px-8 py-3">
+                                    <th
+                                        scope="col"
+                                        className="px-8 py-3 w-[1%]"
+                                    >
                                         No
                                     </th>
                                     <th scope="col" className="px-6 py-3">
@@ -134,12 +137,15 @@ export default function Index({
                                     <th scope="col" className="px-6 py-3">
                                         Warna
                                     </th>
-                                    <th scope="col" className="px-6 py-3">
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 w-[10%]"
+                                    >
                                         Status
                                     </th>
                                     <th
                                         scope="col"
-                                        className="py- px-8 text-center"
+                                        className="py-3 px-8 text-center w-[1%]"
                                     >
                                         Action
                                     </th>
@@ -210,32 +216,46 @@ export default function Index({
                         </table>
                     </div>
                 </div>
-                <div className="mt-4 flex justify-between">
+                <div className="mt-6 flex justify-between">
                     <div>
-                        <p className="text-sm text-gray-700">
+                        <p className="text-gray-700">
                             Menampilkan {kendaraans.from}-{kendaraans.to} dari{" "}
-                            {kendaraans.total} total data
+                            {kendaraans.total} total data kendaraan
                         </p>
                     </div>
-                    <div>
+                    <div className="font-bold">
                         {kendaraans.links.map((link, index) => (
                             <Link
                                 key={index}
                                 href={link.url}
-                                className={`mx-1 px-3 py-1 border rounded ${
+                                className={`mx-1 px-3 py-2 hover:bg-slate-200 border rounded ${
                                     link.active
                                         ? "bg-blue-500 text-white"
                                         : "bg-white text-blue-500"
                                 }`}
-                                dangerouslySetInnerHTML={{
-                                    __html: link.label,
-                                }}
-                            />
+                            >
+                                {link.label === "&laquo; Previous"
+                                    ? "Sebelumnya"
+                                    : link.label === "Next &raquo;"
+                                    ? "Selanjutnya"
+                                    : link.label}
+                            </Link>
                         ))}
                     </div>
                 </div>
             </div>
-            <ToastContainer autoClose={7000} />
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </AuthenticatedLayout>
     );
 }

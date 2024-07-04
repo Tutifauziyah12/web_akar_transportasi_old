@@ -14,8 +14,6 @@ export default function Create({ auth }) {
         status: "",
     });
 
-    console.log(data)
-
     const storeKendaraan = (e) => {
         e.preventDefault();
         router.post("/kendaraan", data);
@@ -25,21 +23,21 @@ export default function Create({ auth }) {
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-4xl text-gray-800 leading-tight w-full">
+                <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight w-full">
                     <a
                         href={route("kendaraan.index")}
                         className="flex items-center pr-4"
                     >
-                        <IoArrowBack className="text-2xl mr-4" />
+                        <IoArrowBack className="text-2xl 2xl:text-4xl mr-4" />
                         Tambah Kendaraan
                     </a>
                 </h2>
             }
         >
             <Head title="Tambah Kendaraan" />
-            <div className="py-6 my-6 px-10 bg-slate-200 bg-opacity-70 rounded-lg">
+            <div className="py-4 2xl:py-6 my-8 2xl:my-10 px-6 2xl:px-10 bg-slate-200 bg-opacity-70 rounded-lg">
                 <form onSubmit={storeKendaraan}>
-                    <div className="grid gap-6 mb-6 md:grid-cols-2">
+                    <div className="grid gap-10 mb-6 md:grid-cols-3">
                         <div>
                             <label
                                 htmlFor="nama"
@@ -53,19 +51,13 @@ export default function Create({ auth }) {
                                     setData("nama", e.target.value)
                                 }
                                 value={data.nama}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                     errors.nama && "border-red-500"
                                 }`}
-                                placeholder={
-                                    errors.nama
-                                        ? errors.nama
-                                        : data.nama
-                                        ? ""
-                                        : "Nama"
-                                }
+                                placeholder="Nama"
                             />
                             {errors.nama && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs italic mt-1 ml-1">
                                     {errors.nama}
                                 </p>
                             )}
@@ -86,17 +78,13 @@ export default function Create({ auth }) {
                                 }
                                 value={data.no_registrasi}
                                 autoCapitalize="characters"
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                     errors.no_registrasi && "border-red-500"
                                 }`}
-                                placeholder={
-                                    errors.no_registrasi
-                                        ? errors.no_registrasi
-                                        : "No. Registrasi"
-                                }
+                                placeholder="No. Registrasi"
                             />
                             {errors.no_registrasi && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs italic mt-1 ml-1">
                                     {errors.no_registrasi}
                                 </p>
                             )}
@@ -115,15 +103,13 @@ export default function Create({ auth }) {
                                     setData("jenis", e.target.value)
                                 }
                                 value={data.jenis}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                     errors.jenis && "border-red-500"
                                 }`}
-                                placeholder={
-                                    errors.jenis ? errors.jenis : "Jenis"
-                                }
+                                placeholder="Jenis"
                             />
                             {errors.jenis && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs italic mt-1 ml-1">
                                     {errors.jenis}
                                 </p>
                             )}
@@ -142,17 +128,13 @@ export default function Create({ auth }) {
                                     setData("tahun_pembuatan", e.target.value)
                                 }
                                 value={data.tahun_pembuatan}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                     errors.tahun_pembuatan && "border-red-500"
                                 }`}
-                                placeholder={
-                                    errors.tahun_pembuatan
-                                        ? errors.tahun_pembuatan
-                                        : "Tahun Pembuatan"
-                                }
+                                placeholder="Tahun Pembuatan"
                             />
                             {errors.tahun_pembuatan && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs italic mt-1 ml-1">
                                     {errors.tahun_pembuatan}
                                 </p>
                             )}
@@ -171,15 +153,13 @@ export default function Create({ auth }) {
                                     setData("warna", e.target.value)
                                 }
                                 value={data.warna}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                     errors.warna && "border-red-500"
                                 }`}
-                                placeholder={
-                                    errors.warna ? errors.warna : "Warna"
-                                }
+                                placeholder="Warna"
                             />
                             {errors.warna && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs italic mt-1 ml-1">
                                     {errors.warna}
                                 </p>
                             )}
@@ -204,7 +184,7 @@ export default function Create({ auth }) {
                                         }
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">Aktif</span>
+                                    <span className="text-xs 2xl:text-sm">Aktif</span>
                                 </label>
                                 <label className="flex items-center">
                                     <input
@@ -218,7 +198,7 @@ export default function Create({ auth }) {
                                         }
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">Perbaikan</span>
+                                    <span className="text-xs 2xl:text-sm">Perbaikan</span>
                                 </label>
                                 <label className="flex items-center">
                                     <input
@@ -232,11 +212,11 @@ export default function Create({ auth }) {
                                         }
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">Tidak Aktif</span>
+                                    <span className="text-xs 2xl:text-sm">Tidak Aktif</span>
                                 </label>
                             </div>
                             {errors.status && (
-                            <p className="text-red-700 text-xs mt-1 ml-1">
+                            <p className="text-red-700 text-xs italic mt-1 ml-1">
                                 {errors.status}
                             </p>
                         )}
@@ -244,7 +224,7 @@ export default function Create({ auth }) {
                     </div>
                     <button
                         type="submit"
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-2 py-2 2xl:px-2.5 2xl:py-2.5 text-center"
                     >
                         Submit
                     </button>

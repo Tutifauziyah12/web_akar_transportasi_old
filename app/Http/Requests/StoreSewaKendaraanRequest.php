@@ -13,6 +13,7 @@ class StoreSewaKendaraanRequest extends FormRequest
     {
         return [
             'kode' => 'required|string|max:100|not_regex:/^\s*$/',
+            'nama' => 'required|string|max:100|not_regex:/^\s*$/',
             'mulai_tanggal' => 'required|date',
             'akhir_tanggal' => 'required|date|after_or_equal:mulai_tanggal',
             'total' => 'required|numeric|min:0',
@@ -28,6 +29,11 @@ class StoreSewaKendaraanRequest extends FormRequest
     public function messages()
     {
         return [
+            'nama.required' => 'Nama harus diisi',
+            'nama.string' => 'Nama harus berupa teks.',
+            'nama.max' => 'Nama tidak boleh lebih dari :max karakter',
+            'nama.not_regex' => 'Format nama tidak valid',
+            
             'kode.required' => 'Kode harus diisi.',
             'kode.string' => 'Kode harus berupa teks.',
             'kode.max' => 'Kode tidak boleh lebih dari :max karakter.',

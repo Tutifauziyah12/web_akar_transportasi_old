@@ -11,28 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('sewa', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('kode')->unique();
-        //     $table->date('mulai_tanggal');
-        //     $table->date('akhir_tanggal');
-        //     $table->bigInteger('total');
-        //     $table->string('metode');
-        //     $table->timestamps();
-
-        //     $table->foreign('kode')->references('kode')->on('kas')->onDelete('cascade');
-        // });
-
         Schema::create('sewa', function (Blueprint $table) {
             $table->id();
-            $table->string('kode')->unique(); // Kolom kode yang merujuk ke tabel kas
+            $table->string('kode')->unique();
+            $table->string('nama');
             $table->date('mulai_tanggal');
             $table->date('akhir_tanggal');
             $table->bigInteger('total');
             $table->string('metode');
             $table->timestamps();
         
-            // Tambahkan foreign key ke kolom 'kode' di tabel 'kas'
             $table->foreign('kode')->references('kode')->on('kas')->onDelete('cascade');
         });
         

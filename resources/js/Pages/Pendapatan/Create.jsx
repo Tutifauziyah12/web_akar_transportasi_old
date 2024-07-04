@@ -39,6 +39,7 @@ export default function Create({
 
     const { data, setData, post, processing, reset } = useForm({
         kode: modifiedString,
+        nama: "",
         mulai_tanggal: "",
         akhir_tanggal: "",
         kendaraan_ids: [],
@@ -90,7 +91,12 @@ export default function Create({
     const handlePendapatanLainnyaChange = (index, e) => {
         const { name, value } = e.target;
 
-        if (name.startsWith("metode")) {
+        if (name.startsWith("nama")){
+            const metodeIndex = name.split("-")[1];
+            const updatedPendapatanLainnya = [...data.pendapatanLainnya];
+            updatedPendapatanLainnya[index].nama = value;
+            setData({ ...data, pendapatanLainnya: updatedPendapatanLainnya });
+        } else if (name.startsWith("metode")) {
             const metodeIndex = name.split("-")[1];
             const updatedPendapatanLainnya = [...data.pendapatanLainnya];
             updatedPendapatanLainnya[index].metode = value;
@@ -141,14 +147,15 @@ export default function Create({
         );
     };
 
-    const handleChange = (field, value) => {
-        if (field === "mulai_tanggal" || field === "akhir_tanggal") {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name === "mulai_tanggal" || name === "akhir_tanggal") {
             value = value.value;
         }
-        setData(field, value);
-    };
+        setData(name, value);
+    }
 
-    console.log(data);
+    // console.log("data", data);
 
     const handleCheckboxChange = (e) => {
         const { value, checked } = e.target;
@@ -172,11 +179,11 @@ export default function Create({
         }
     }, [flash]);
 
-    console.log(flash);
+    // console.log(flash);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Submitting data:", data);
+        // console.log("Submitting data:", data);
         try {
             await validationSchema.validate(data, { abortEarly: false });
             post("/pendapatan/sewa_kendaraan", {
@@ -199,21 +206,21 @@ export default function Create({
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-4xl text-gray-800 leading-tight w-full">
+                <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight">
                     <a
                         href={route("sewa.index")}
                         className="flex items-center pr-4"
                     >
-                        <IoArrowBack className="text-2xl mr-4" />
-                        Tambah Sewa
+                        <IoArrowBack className="text-2xl 2xl:text-4xl mr-4" />
+                        Tambah Sewa Kendaraan
                     </a>
                 </h2>
             }
         >
-            <Head title="Tambah Sewa" />
-            <div className="py-6 my-6 px-10 bg-slate-200 bg-opacity-70 rounded-lg">
+            <Head title="Tambah Sewa Kendaraan" />
+            <div className="py-4 2xl:py-6 my-8 2xl:my-10 px-6 2xl:px-10 bg-slate-200 bg-opacity-70 rounded-lg">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid gap-6 mb-14 md:grid-cols-2">
+                    <div className="grid gap-10 mb-6 md:grid-cols-3">
                         <div>
                             <label
                                 htmlFor="kode"
@@ -227,17 +234,43 @@ export default function Create({
                                 value={data.kode}
                                 onChange={handleChange}
                                 readOnly
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                     validationErrors.kode && "border-red-500"
                                 }`}
                                 placeholder="Kode"
                             />
                             {validationErrors.kode && (
-                                <div className="text-red-700 text-xs mt-1 ml-1">
+                                <div className="text-red-700 text-xs italic mt-1 ml-1">
                                     {validationErrors.kode}
                                 </div>
                             )}
                         </div>
+
+                        <div>
+                            <label
+                                htmlFor="nama"
+                                className="block mb-2 font-semibold text-gray-700"
+                            >
+                                Nama Penyewa
+                            </label>
+                            <input
+                                type="text"
+                                name="nama"
+                                value={data.nama}
+                                onChange={handleChange}
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
+                                    validationErrors.nama && "border-red-500"
+                                }`}
+                                placeholder="Nama"
+                            />
+
+                            {validationErrors.nama && (
+                                <div className="text-red-700 text-xs italic mt-1 ml-1">
+                                    {validationErrors.nama}
+                                </div>
+                            )}
+                        </div>
+                        <div></div>
 
                         <div>
                             <label
@@ -256,7 +289,7 @@ export default function Create({
                                     }
                                     value={formattedDateRange}
                                     readOnly
-                                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  ${
+                                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5  ${
                                         (validationErrors.mulai_tanggal ||
                                             validationErrors.akhir_tanggal) &&
                                         "border-red-500"
@@ -285,7 +318,7 @@ export default function Create({
                                         <div>
                                             <IoCloseCircleOutline
                                                 onClick={handleXDateRange}
-                                                className="text-4xl mt-4 ml-3 text-red-500"
+                                                className="text-4xl mt-4 ml-3 text-red-500 bg-white rounded-full"
                                             />
                                         </div>
                                     </div>
@@ -293,7 +326,7 @@ export default function Create({
                             )}
                             {(validationErrors.mulai_tanggal ||
                                 validationErrors.akhir_tanggal) && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs italic mt-1 ml-1">
                                     {validationErrors.mulai_tanggal ||
                                         validationErrors.akhir_tanggal}
                                 </p>
@@ -357,7 +390,7 @@ export default function Create({
                                 </div>
                             )}
                             {validationErrors.kendaraan_ids && (
-                                <div className="text-red-700 text-xs mt-1 ml-1">
+                                <div className="text-red-700 text-xs italic mt-1 ml-1">
                                     {validationErrors.kendaraan_ids}
                                 </div>
                             )}
@@ -377,7 +410,7 @@ export default function Create({
                                 error={validationErrors.total}
                             />
                             {validationErrors.total && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs italic mt-1 ml-1">
                                     {validationErrors.total}
                                 </p>
                             )}
@@ -394,7 +427,9 @@ export default function Create({
                                         checked={data.metode === "Cash"}
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">Cash</span>
+                                    <span className="text-xs 2xl:text-sm">
+                                        Cash
+                                    </span>
                                 </label>
                                 <label className="flex items-center">
                                     <input
@@ -408,7 +443,9 @@ export default function Create({
                                         checked={data.metode === "Debit"}
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">Debit</span>
+                                    <span className="text-xs 2xl:text-sm">
+                                        Debit
+                                    </span>
                                 </label>
                                 <label className="flex items-center">
                                     <input
@@ -422,11 +459,13 @@ export default function Create({
                                         checked={data.metode === "Credit"}
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">Credit</span>
+                                    <span className="text-xs 2xl:text-sm">
+                                        Credit
+                                    </span>
                                 </label>
                             </div>
                             {validationErrors.metode && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs italic mt-1 ml-1">
                                     {validationErrors.metode}
                                 </p>
                             )}
@@ -436,7 +475,7 @@ export default function Create({
                     {data.pendapatanLainnya.map((pendapatan, index) => (
                         <div key={index}>
                             <IoCloseSharp
-                                className="text-2xl my-2 hover:text-red-600"
+                                className="text-xl 2xl:text-2xl my-2 text-red-400 hover:text-red-600"
                                 onClick={() => deletePendapatanLainnya(index)}
                             />
                             <div className="grid gap-6 p-2 md:grid-cols-2 border-2 border-dashed border-slate-300 relative">
@@ -450,10 +489,10 @@ export default function Create({
                                         </label>
                                         <input
                                             type="text"
-                                            name="nama"
+                                            name={`nama-${index}`}
                                             placeholder="Pendapatan Lainnya"
                                             value={pendapatan.nama}
-                                            className={`block w-full px-3 py-2 border rounded-md ${
+                                            className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                                 validationErrors[
                                                     `pendapatanLainnya[${index}].nama`
                                                 ] && "border-red-500"
@@ -468,7 +507,7 @@ export default function Create({
                                         {validationErrors[
                                             `pendapatanLainnya[${index}].nama`
                                         ] && (
-                                            <div className="text-red-700 text-xs mb-4">
+                                            <div className="text-red-700 text-xs italic mt-1 ml-1">
                                                 {
                                                     validationErrors[
                                                         `pendapatanLainnya[${index}].nama`
@@ -490,7 +529,7 @@ export default function Create({
                                                 type="number"
                                                 name="jumlah"
                                                 value={pendapatan.jumlah}
-                                                className={`block w-full px-3 py-2 border rounded-md ${
+                                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                                     validationErrors[
                                                         `pendapatanLainnya[${index}].jumlah`
                                                     ] && "border-red-500"
@@ -505,7 +544,7 @@ export default function Create({
                                             {validationErrors[
                                                 `pendapatanLainnya[${index}].jumlah`
                                             ] && (
-                                                <div className="text-red-700 text-xs mb-4">
+                                                <div className="text-red-700 text-xs italic mt-1 ml-1">
                                                     {
                                                         validationErrors[
                                                             `pendapatanLainnya[${index}].jumlah`
@@ -546,7 +585,7 @@ export default function Create({
                                     {validationErrors[
                                         `pendapatanLainnya[${index}].total`
                                     ] && (
-                                        <div className="text-red-700 text-xs mb-4">
+                                        <div className="text-red-700 text-xs italic mt-1 ml-1">
                                             {
                                                 validationErrors[
                                                     `pendapatanLainnya[${index}].total`
@@ -571,7 +610,7 @@ export default function Create({
                                                 }
                                                 className="mr-2"
                                             />
-                                            <span className="text-sm">
+                                            <span className="text-xs 2xl:text-sm">
                                                 Cash
                                             </span>
                                         </label>
@@ -592,7 +631,7 @@ export default function Create({
                                                 }
                                                 className="mr-2"
                                             />
-                                            <span className="text-sm">
+                                            <span className="text-xs 2xl:text-sm">
                                                 Debit
                                             </span>
                                         </label>
@@ -613,7 +652,7 @@ export default function Create({
                                                 }
                                                 className="mr-2"
                                             />
-                                            <span className="text-sm">
+                                            <span className="text-xs 2xl:text-sm">
                                                 Credit
                                             </span>
                                         </label>
@@ -621,7 +660,7 @@ export default function Create({
                                     {validationErrors[
                                         `pendapatanLainnya[${index}].metode`
                                     ] && (
-                                        <div className="text-red-700 text-xs mb-4">
+                                        <div className="text-red-700 text-xs italic mt-1 ml-1">
                                             {
                                                 validationErrors[
                                                     `pendapatanLainnya[${index}].metode`
@@ -633,19 +672,16 @@ export default function Create({
                             </div>
                         </div>
                     ))}
-
-                    <button
-                        className="w-full flex justify-center items-center hover:font-semibold"
-                        type="button"
-                        onClick={addPendapatanLainnya}
-                    >
-                        - Tambah Pendapatan Lainnya -
-                    </button>
+                    <div className="w-full flex justify-center items-center hover:font-semibold">
+                        <button type="button" onClick={addPendapatanLainnya}>
+                            - Tambah Pendapatan Lainnya -
+                        </button>
+                    </div>
 
                     <button
                         type="submit"
                         disabled={processing}
-                        className="inline-flex items-end px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-2 py-2 2xl:px-2.5 2xl:py-2.5 text-center"
                     >
                         Submit
                     </button>

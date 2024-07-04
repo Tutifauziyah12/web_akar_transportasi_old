@@ -2,6 +2,7 @@ import * as yup from "yup";
 
 export const validationSchema = yup.object().shape({
     kode: yup.string().required("Kode harus diisi"),
+    nama: yup.string().required("Nama harus diisi"),
     mulai_tanggal: yup
         .date()
         .required("Mulai tanggal harus diisi")
@@ -33,7 +34,7 @@ export const validationSchema = yup.object().shape({
             total: yup.number().required("Total harus diisi"),
             metode: yup.string().required("Metode harus diisi"),
         })
-    )
+    ),
 });
 
 export const validationSchemaPengeluaran = yup.object().shape({
@@ -46,4 +47,3 @@ export const validationSchemaPengeluaran = yup.object().shape({
         .required("Tanggal harus diisi")
         .typeError("Tanggal harus berupa tanggal yang valid"),
 });
-

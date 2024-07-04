@@ -203,6 +203,8 @@ class SewaController extends Controller
 
             $validated = $request->validated();
 
+            // dd($request);
+
             $sewa->update($validated);
 
             SewaKendaraan::where('kode', $sewa->kode)->delete();

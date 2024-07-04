@@ -10,8 +10,8 @@ const PrintPengeluaranTable = React.forwardRef(
         });
 
         return (
-            <div ref={ref} className="print:m-16">
-                <div className="text-center font-semibold m-6 text-xl">
+            <div ref={ref} className="print:m-1">
+                <div className="text-center font-semibold mb-6 text-xl 2xl:text-2xl">
                     <span className="block">Laporan Pengeluran Kas</span>
 
                     <span className="block">
@@ -19,19 +19,19 @@ const PrintPengeluaranTable = React.forwardRef(
                     </span>
                 </div>
 
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                <table className="w-full text-left rtl:text-right text-gray-500">
                     <thead className="text-md text-gray-700 uppercase bg-gray-200 h-14 rounded-lg">
                         <tr>
-                            <th scope="col" className="px-8 py-2">
+                            <th scope="col" className="px-8 py-2 w-[1%]">
                                 No
                             </th>
-                            <th scope="col" className="px-3 py-2">
+                            <th scope="col" className="px-3 py-2 w-[15%]">
                                 Tanggal
                             </th>
                             <th scope="col" className="px-3 py-2">
                                 Keterangan
                             </th>
-                            <th scope="col" className="px-3 py-2">
+                            <th scope="col" className="px-3 py-2 w-[15%]">
                                 Jumlah
                             </th>
                         </tr>
@@ -52,9 +52,12 @@ const PrintPengeluaranTable = React.forwardRef(
                                         </td>
                                         <td className="px-3 py-2">
                                             <span className="font-semibold">
-                                                {item.kode}{" - "}{item.nama}
+                                                {item.kode}
+                                                {" - "}
+                                                {item.nama}
                                             </span>
-                                            <br />{item.keterangan}
+                                            <br />
+                                            {item.keterangan}
                                         </td>
 
                                         <td className="px-3 py-2">

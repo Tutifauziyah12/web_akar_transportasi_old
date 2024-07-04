@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import {
-    IoCloseSharp,
-    IoArrowBack,
-    IoCloseCircleOutline,
-} from "react-icons/io5";
+import { IoArrowBack } from "react-icons/io5";
 import { Head, router, useForm, usePage } from "@inertiajs/react";
 import RupiahInput from "@/Utils/RupiahInput";
-import FormatDateRange from "@/Utils/FormatDateRange";
-import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -19,10 +13,7 @@ import { format } from "date-fns";
 
 import { validationSchemaPengeluaran } from "@/Utils/validationSchema";
 
-export default function Edit({
-    auth,
-    pengeluaran,
-}) {
+export default function Edit({ auth, pengeluaran }) {
     const { data, setData, put, processing, reset } = useForm({
         kode: pengeluaran.kode,
         nama: pengeluaran.nama,
@@ -42,7 +33,9 @@ export default function Edit({
     useEffect(() => {
         if (data.tanggal) {
             const formattedDate = format(new Date(data.tanggal), "yyyy/MM/dd");
-            setDisplayedDate(format(new Date(data.tanggal), "d MMMM yyyy", { locale: id }));
+            setDisplayedDate(
+                format(new Date(data.tanggal), "d MMMM yyyy", { locale: id })
+            );
             setData("tanggal", formattedDate);
         }
     }, [data.tanggal]);
@@ -50,7 +43,7 @@ export default function Edit({
     const handleChange = (field, value) => {
         if (field === "tanggal") {
             const date = new Date(value);
-            value = format(date, 'yyyy/MM/dd');
+            value = format(date, "yyyy/MM/dd");
         }
         setData((prevData) => ({
             ...prevData,
@@ -79,13 +72,15 @@ export default function Edit({
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log(data)
-            await validationSchemaPengeluaran.validate(data, { abortEarly: false });
+            console.log(data);
+            await validationSchemaPengeluaran.validate(data, {
+                abortEarly: false,
+            });
             put(`/pengeluaran/${pengeluaran.id}`, data, {
                 onSuccess: () => reset(),
             });
         } catch (err) {
-            console.log(err)
+            console.log(err);
             if (err.inner) {
                 const newErrors = {};
                 err.inner.forEach((error) => {
@@ -102,21 +97,21 @@ export default function Edit({
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-4xl text-gray-800 leading-tight w-full">
+                <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight">
                     <a
                         href={route("pengeluaran.index")}
                         className="flex items-center pr-4"
                     >
                         <IoArrowBack className="text-2xl mr-4" />
-                        Edit Pengeluaran
+                        Edit Biaya
                     </a>
                 </h2>
             }
         >
-            <Head title="Edit Pengeluaran" />
-            <div className="py-6 my-6 px-10 bg-slate-200 bg-opacity-70 rounded-lg">
+            <Head title="Edit Biaya" />
+            <div className="py-4 2xl:py-6 my-8 2xl:my-10 px-6 2xl:px-10 bg-slate-200 bg-opacity-70 rounded-lg">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid gap-6 mb-14 md:grid-cols-2">
+                    <div className="grid gap-10 mb-6 md:grid-cols-3">
                         <div>
                             <label
                                 htmlFor="kode"
@@ -130,7 +125,7 @@ export default function Edit({
                                 value={data.kode}
                                 onChange={handleChange}
                                 readOnly
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                     validationErrors.kode && "border-red-500"
                                 }`}
                                 placeholder="Kode"
@@ -155,7 +150,7 @@ export default function Edit({
                                     setData("nama", e.target.value)
                                 }
                                 value={data.nama}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                     validationErrors.nama && "border-red-500"
                                 }`}
                                 placeholder={
@@ -188,8 +183,9 @@ export default function Edit({
                                     }
                                     value={displayedDate}
                                     readOnly
-                                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
-                                        validationErrors.tanggal && "border-red-500"
+                                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
+                                        validationErrors.tanggal &&
+                                        "border-red-500"
                                     }`}
                                     placeholder={
                                         validationErrors.tanggal
@@ -248,7 +244,7 @@ export default function Edit({
                                         checked={data.metode === "Cash"}
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">Cash</span>
+                                    <span className="text-xs 2xl:text-sm">Cash</span>
                                 </label>
                                 <label className="flex items-center">
                                     <input
@@ -262,7 +258,7 @@ export default function Edit({
                                         checked={data.metode === "Debit"}
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">Debit</span>
+                                    <span className="text-xs 2xl:text-sm">Debit</span>
                                 </label>
                                 <label className="flex items-center">
                                     <input
@@ -276,7 +272,7 @@ export default function Edit({
                                         checked={data.metode === "Credit"}
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">Credit</span>
+                                    <span className="text-xs 2xl:text-sm">Credit</span>
                                 </label>
                             </div>
                             {validationErrors.metode && (
@@ -299,8 +295,9 @@ export default function Edit({
                                 }
                                 value={data.keterangan}
                                 style={{ minHeight: "120px" }}
-                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
-                                    validationErrors.keterangan && "border-red-500"
+                                className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
+                                    validationErrors.keterangan &&
+                                    "border-red-500"
                                 }`}
                                 placeholder={
                                     validationErrors.keterangan
@@ -310,7 +307,7 @@ export default function Edit({
                             />
                             {validationErrors.keterangan && (
                                 <p className="text-red-700 text-xs mt-1 ml-1">
-                                    {validationErrors   .keterangan}
+                                    {validationErrors.keterangan}
                                 </p>
                             )}
                         </div>
@@ -319,7 +316,7 @@ export default function Edit({
                     <button
                         type="submit"
                         disabled={processing}
-                        className="inline-flex items-end px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-2 py-2 2xl:px-2.5 2xl:py-2.5 text-center"
                     >
                         Submit
                     </button>

@@ -24,10 +24,13 @@ class KendaraanController extends Controller
                 ->orWhere('no_registrasi', 'LIKE', "%{$searchTerm}%")
                 ->orWhere('jenis', 'LIKE', "%{$searchTerm}%")
                 ->orWhere('warna', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('status', 'LIKE', "%{$searchTerm}%")
                 ->orWhere('tahun_pembuatan', 'LIKE', "%{$searchTerm}%");
         }
 
-        $kendaraans = $query->paginate(10);
+        $query->orderBy('nama', 'asc');
+
+        $kendaraans = $query->paginate(5);
 
         return Inertia::render('Kendaraan/Index', [
             'kendaraans' => $kendaraans,

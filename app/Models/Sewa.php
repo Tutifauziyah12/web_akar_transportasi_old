@@ -13,6 +13,7 @@ class Sewa extends Model
 
     protected $fillable = [
         'kode',
+        'nama',
         'mulai_tanggal',
         'akhir_tanggal',
         'total',
