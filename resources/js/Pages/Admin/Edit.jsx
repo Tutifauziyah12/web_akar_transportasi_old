@@ -140,7 +140,7 @@ export default function Edit({ auth, user }) {
                             >
                                 <option value="">Pilih Level</option>
                                 <option value="Pegawai">Pegawai</option>
-                                <option value="Admin">Admin</option>
+                                <option value="Owner">Owner</option>
                             </select>
 
                             {validationErrors.level && (

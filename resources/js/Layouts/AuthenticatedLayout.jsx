@@ -4,7 +4,12 @@ import NavLink from "@/Components/NavLink";
 import { Inertia } from "@inertiajs/inertia";
 import logo from "../asset/Logo1.png";
 
-import { IoCubeOutline, IoAnalytics, IoCarSharp, IoExitOutline } from "react-icons/io5";
+import {
+    IoCubeOutline,
+    IoAnalytics,
+    IoCarSharp,
+    IoExitOutline,
+} from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { GiReceiveMoney, GiPayMoney } from "react-icons/gi";
@@ -100,173 +105,203 @@ export default function Authenticated({ user, header, children }) {
                                         >
                                             Dashboard
                                         </NavLink>
-                                        <NavLink
-                                            href={route("kendaraan.index")}
-                                            active={
-                                                (route()
-                                                    .current()
-                                                    .includes("kendaraan") &&
-                                                    !route()
-                                                        .current()
-                                                        .includes(
-                                                            "sewa_kendaraan"
-                                                        )) ||
-                                                (route()
-                                                    .current()
-                                                    .indexOf(
-                                                        "kendaraan.create"
-                                                    ) !== -1 &&
-                                                    !route()
-                                                        .current()
-                                                        .includes(
-                                                            "sewa_kendaraan"
-                                                        )) ||
-                                                (route()
-                                                    .current()
-                                                    .includes("kendaraan") &&
-                                                    route()
-                                                        .current()
-                                                        .includes("edit") &&
-                                                    !route()
-                                                        .current()
-                                                        .includes(
-                                                            "sewa_kendaraan"
-                                                        ))
-                                            }
-                                            icon={IoCarSharp}
-                                        >
-                                            Kendaraan
-                                        </NavLink>
-                                        <div>
-                                            <div
-                                                onClick={togglePendapatan}
-                                                className={`inline-flex items-center px-2 py-2 my-0.5 rounded-md w-full transition duration-150 ease-in-out focus:outline-none border-transparent hover:bg-white hover:bg-opacity-10 ${
-                                                    !isPendapatanOpen &&
-                                                    isAnyPendapatanActive
-                                                        ? "bg-opacity-10 bg-white"
-                                                        : ""
-                                                }`}
-                                            >
-                                                <GiReceiveMoney className="mr-2" />
-                                                <span>Pendapatan</span>
-                                                {isPendapatanOpen ? (
-                                                    <RiArrowDropUpLine className="text-lg 2xl:text-2xl ml-auto" />
-                                                ) : (
-                                                    <RiArrowDropDownLine className="text-lg 2xl:text-2xl ml-auto" />
-                                                )}
-                                            </div>
-                                            {isPendapatanOpen && (
-                                                <div className="">
-                                                    <DropDownLink
-                                                        href={route(
-                                                            "sewa.index"
-                                                        )}
-                                                        active={route().current(
-                                                            "sewa.index"
-                                                        )}
+
+                                        {user.level === "Pegawai" ? (
+                                            <>
+                                                <NavLink
+                                                    href={route(
+                                                        "kendaraan.index"
+                                                    )}
+                                                    active={
+                                                        (route()
+                                                            .current()
+                                                            .includes(
+                                                                "kendaraan"
+                                                            ) &&
+                                                            !route()
+                                                                .current()
+                                                                .includes(
+                                                                    "sewa_kendaraan"
+                                                                )) ||
+                                                        (route()
+                                                            .current()
+                                                            .indexOf(
+                                                                "kendaraan.create"
+                                                            ) !== -1 &&
+                                                            !route()
+                                                                .current()
+                                                                .includes(
+                                                                    "sewa_kendaraan"
+                                                                )) ||
+                                                        (route()
+                                                            .current()
+                                                            .includes(
+                                                                "kendaraan"
+                                                            ) &&
+                                                            route()
+                                                                .current()
+                                                                .includes(
+                                                                    "edit"
+                                                                ) &&
+                                                            !route()
+                                                                .current()
+                                                                .includes(
+                                                                    "sewa_kendaraan"
+                                                                ))
+                                                    }
+                                                    icon={IoCarSharp}
+                                                >
+                                                    Kendaraan
+                                                </NavLink>
+
+                                                <div>
+                                                    <div
+                                                        onClick={
+                                                            togglePendapatan
+                                                        }
+                                                        className={`inline-flex items-center px-2 py-2 my-0.5 rounded-md w-full transition duration-150 ease-in-out focus:outline-none border-transparent hover:bg-white hover:bg-opacity-10 ${
+                                                            !isPendapatanOpen &&
+                                                            isAnyPendapatanActive
+                                                                ? "bg-opacity-10 bg-white"
+                                                                : ""
+                                                        }`}
                                                     >
-                                                        <span className="px-5 2xl:px-6 text-slate-300">
-                                                            Sewa Kendaraan
-                                                        </span>
-                                                    </DropDownLink>
-                                                    <DropDownLink
-                                                        href={route(
-                                                            "sewaLainnya.index"
+                                                        <GiReceiveMoney className="mr-2" />
+                                                        <span>Pendapatan</span>
+                                                        {isPendapatanOpen ? (
+                                                            <RiArrowDropUpLine className="text-lg 2xl:text-2xl ml-auto" />
+                                                        ) : (
+                                                            <RiArrowDropDownLine className="text-lg 2xl:text-2xl ml-auto" />
                                                         )}
-                                                        active={route().current(
-                                                            "sewaLainnya.index"
-                                                        )}
-                                                    >
-                                                        <span className="px-5 2xl:px-6 text-slate-300">
-                                                            Lainnya
-                                                        </span>
-                                                    </DropDownLink>
+                                                    </div>
+                                                    {isPendapatanOpen && (
+                                                        <div className="">
+                                                            <DropDownLink
+                                                                href={route(
+                                                                    "sewa.index"
+                                                                )}
+                                                                active={route().current(
+                                                                    "sewa.index"
+                                                                )}
+                                                            >
+                                                                <span className="px-5 2xl:px-6 text-slate-300">
+                                                                    Sewa
+                                                                    Kendaraan
+                                                                </span>
+                                                            </DropDownLink>
+                                                            <DropDownLink
+                                                                href={route(
+                                                                    "sewaLainnya.index"
+                                                                )}
+                                                                active={route().current(
+                                                                    "sewaLainnya.index"
+                                                                )}
+                                                            >
+                                                                <span className="px-5 2xl:px-6 text-slate-300">
+                                                                    Lainnya
+                                                                </span>
+                                                            </DropDownLink>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
-                                        <NavLink
-                                            href={route("pengeluaran.index")}
-                                            active={
-                                                route().current(
-                                                    "pengeluaran.index"
-                                                ) ||
-                                                route().current(
-                                                    "pengeluaran.create"
-                                                ) ||
-                                                route().current(
-                                                    "pengeluaran.edit"
-                                                )
-                                            }
-                                            icon={GiPayMoney}
-                                        >
-                                            Biaya
-                                        </NavLink>
-                                        <div>
-                                            <div
-                                                onClick={toggleLaporan}
-                                                className={`inline-flex items-center px-2 py-2 my-0.5 rounded-md w-full transition duration-150 ease-in-out focus:outline-none border-transparent hover:bg-white hover:bg-opacity-10 ${
-                                                    !isLaporanOpen &&
-                                                    isAnyLaporanActive
-                                                        ? "border-indigo-200 focus:border-indigo-700 bg-white bg-opacity-10"
-                                                        : ""
-                                                }`}
-                                            >
-                                                <TbReportAnalytics className="mr-2" />
-                                                <span>Laporan</span>
-                                                {isLaporanOpen ? (
-                                                    <RiArrowDropUpLine className="text-lg 2xl:text-2xl ml-auto" />
-                                                ) : (
-                                                    <RiArrowDropDownLine className="text-lg 2xl:text-2xl ml-auto" />
-                                                )}
-                                            </div>
-                                            {isLaporanOpen && (
-                                                <div className="">
-                                                    <DropDownLink
-                                                        href={route(
-                                                            "kasPendapatan.index"
-                                                        )}
-                                                        active={route().current(
-                                                            "kasPendapatan.index"
-                                                        )}
+
+                                                <NavLink
+                                                    href={route(
+                                                        "pengeluaran.index"
+                                                    )}
+                                                    active={
+                                                        route().current(
+                                                            "pengeluaran.index"
+                                                        ) ||
+                                                        route().current(
+                                                            "pengeluaran.create"
+                                                        ) ||
+                                                        route().current(
+                                                            "pengeluaran.edit"
+                                                        )
+                                                    }
+                                                    icon={GiPayMoney}
+                                                >
+                                                    Biaya
+                                                </NavLink>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        {user.level === "Owner" ? (
+                                            <>
+                                                <div>
+                                                    <div
+                                                        onClick={toggleLaporan}
+                                                        className={`inline-flex items-center px-2 py-2 my-0.5 rounded-md w-full transition duration-150 ease-in-out focus:outline-none border-transparent hover:bg-white hover:bg-opacity-10 ${
+                                                            !isLaporanOpen &&
+                                                            isAnyLaporanActive
+                                                                ? "border-indigo-200 focus:border-indigo-700 bg-white bg-opacity-10"
+                                                                : ""
+                                                        }`}
                                                     >
-                                                        <span className="px-5 2xl:px-6 text-slate-300">
-                                                            Pendapatan Kas
-                                                        </span>
-                                                    </DropDownLink>
-                                                    <DropDownLink
-                                                        href={route(
-                                                            "kasPengeluaran.index"
+                                                        <TbReportAnalytics className="mr-2" />
+                                                        <span>Laporan</span>
+                                                        {isLaporanOpen ? (
+                                                            <RiArrowDropUpLine className="text-lg 2xl:text-2xl ml-auto" />
+                                                        ) : (
+                                                            <RiArrowDropDownLine className="text-lg 2xl:text-2xl ml-auto" />
                                                         )}
-                                                        active={route().current(
-                                                            "kasPengeluaran.index"
-                                                        )}
-                                                    >
-                                                        <span className="px-5 2xl:px-6 text-slate-300">
-                                                            Pengeluaran Kas
-                                                        </span>
-                                                    </DropDownLink>
-                                                    <DropDownLink
-                                                        href={route(
-                                                            "kasBukuBesar.index"
-                                                        )}
-                                                        active={route().current(
-                                                            "kasBukuBesar.index"
-                                                        )}
-                                                    >
-                                                        <span className="px-5 2xl:px-6 text-slate-300">
-                                                            Buku Besar
-                                                        </span>
-                                                    </DropDownLink>
+                                                    </div>
+                                                    {isLaporanOpen && (
+                                                        <div className="">
+                                                            <DropDownLink
+                                                                href={route(
+                                                                    "kasPendapatan.index"
+                                                                )}
+                                                                active={route().current(
+                                                                    "kasPendapatan.index"
+                                                                )}
+                                                            >
+                                                                <span className="px-5 2xl:px-6 text-slate-300">
+                                                                    Pendapatan
+                                                                    Kas
+                                                                </span>
+                                                            </DropDownLink>
+                                                            <DropDownLink
+                                                                href={route(
+                                                                    "kasPengeluaran.index"
+                                                                )}
+                                                                active={route().current(
+                                                                    "kasPengeluaran.index"
+                                                                )}
+                                                            >
+                                                                <span className="px-5 2xl:px-6 text-slate-300">
+                                                                    Pengeluaran
+                                                                    Kas
+                                                                </span>
+                                                            </DropDownLink>
+                                                            <DropDownLink
+                                                                href={route(
+                                                                    "kasBukuBesar.index"
+                                                                )}
+                                                                active={route().current(
+                                                                    "kasBukuBesar.index"
+                                                                )}
+                                                            >
+                                                                <span className="px-5 2xl:px-6 text-slate-300">
+                                                                    Buku Besar
+                                                                </span>
+                                                            </DropDownLink>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
                                     </nav>
                                 </div>
                             </div>
                             <div className="text-slate-100">
                                 <NavLink
-                                    // href={route("profile.edit")}
-                                    // active={route().current("profile.edit")}
+                                // href={route("profile.edit")}
+                                // active={route().current("profile.edit")}
                                 >
                                     <MdAccountCircle className="text-sm 2xl:text-xl mr-2" />
                                     {user.name}

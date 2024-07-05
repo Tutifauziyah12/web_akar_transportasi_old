@@ -139,7 +139,7 @@ export default function Create({ auth }) {
                             >
                                 <option value="">Pilih Level</option>
                                 <option value="Pegawai">Pegawai</option>
-                                <option value="Admin">Admin</option>
+                                <option value="Owner">Owner</option>
                             </select>
 
                             {validationErrors.level && (
