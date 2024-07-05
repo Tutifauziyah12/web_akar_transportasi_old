@@ -165,7 +165,7 @@ export default function Authenticated({ user, header, children }) {
                                                             "sewa.index"
                                                         )}
                                                     >
-                                                        <span className="px-6 text-slate-300">
+                                                        <span className="px-5 2xl:px-6 text-slate-300">
                                                             Sewa Kendaraan
                                                         </span>
                                                     </DropDownLink>
@@ -177,7 +177,7 @@ export default function Authenticated({ user, header, children }) {
                                                             "sewaLainnya.index"
                                                         )}
                                                     >
-                                                        <span className="px-6 text-slate-300">
+                                                        <span className="px-5 2xl:px-6 text-slate-300">
                                                             Lainnya
                                                         </span>
                                                     </DropDownLink>
@@ -229,7 +229,7 @@ export default function Authenticated({ user, header, children }) {
                                                             "kasPendapatan.index"
                                                         )}
                                                     >
-                                                        <span className="px-6 text-slate-300">
+                                                        <span className="px-5 2xl:px-6 text-slate-300">
                                                             Pendapatan Kas
                                                         </span>
                                                     </DropDownLink>
@@ -241,7 +241,7 @@ export default function Authenticated({ user, header, children }) {
                                                             "kasPengeluaran.index"
                                                         )}
                                                     >
-                                                        <span className="px-6 text-slate-300">
+                                                        <span className="px-5 2xl:px-6 text-slate-300">
                                                             Pengeluaran Kas
                                                         </span>
                                                     </DropDownLink>
@@ -253,7 +253,7 @@ export default function Authenticated({ user, header, children }) {
                                                             "kasBukuBesar.index"
                                                         )}
                                                     >
-                                                        <span className="px-6 text-slate-300">
+                                                        <span className="px-5 2xl:px-6 text-slate-300">
                                                             Buku Besar
                                                         </span>
                                                     </DropDownLink>
