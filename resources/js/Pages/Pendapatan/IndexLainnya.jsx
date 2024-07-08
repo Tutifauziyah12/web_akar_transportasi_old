@@ -275,7 +275,7 @@ export default function IndexLainnya({
                                     <th scope="col" className="px-3 py-2">
                                         Jumlah
                                     </th>
-                                    <th scope="col" className="px-3 py-2">
+                                    <th scope="col" className="px-3 py-2 w-[12%]">
                                         Total
                                     </th>
                                     {/* <th
