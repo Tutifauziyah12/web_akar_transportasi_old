@@ -431,7 +431,7 @@ export default function Edit({
                                         Debit
                                     </span>
                                 </label>
-                                <label className="flex items-center">
+                                {/* <label className="flex items-center">
                                     <input
                                         type="radio"
                                         id="Credit"
@@ -446,7 +446,7 @@ export default function Edit({
                                     <span className="text-xs 2xl:text-sm">
                                         Credit
                                     </span>
-                                </label>
+                                </label> */}
                             </div>
                             {validationErrors.metode && (
                                 <p className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
@@ -619,7 +619,7 @@ export default function Edit({
                                                 Debit
                                             </span>
                                         </label>
-                                        <label className="flex items-center">
+                                        {/* <label className="flex items-center">
                                             <input
                                                 type="radio"
                                                 name={`metode-${index}`}
@@ -639,7 +639,7 @@ export default function Edit({
                                             <span className="text-xs 2xl:text-sm">
                                                 Credit
                                             </span>
-                                        </label>
+                                        </label> */}
                                     </div>
                                     {validationErrors[
                                         `pendapatanLainnya[${index}].metode`

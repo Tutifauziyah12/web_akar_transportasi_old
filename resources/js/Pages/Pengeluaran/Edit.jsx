@@ -258,7 +258,7 @@ export default function Edit({ auth, pengeluaran }) {
                                     />
                                     <span className="text-xs 2xl:text-sm">Debit</span>
                                 </label>
-                                <label className="flex items-center">
+                                {/* <label className="flex items-center">
                                     <input
                                         type="radio"
                                         id="Credit"
@@ -271,7 +271,7 @@ export default function Edit({ auth, pengeluaran }) {
                                         className="mr-2"
                                     />
                                     <span className="text-xs 2xl:text-sm">Credit</span>
-                                </label>
+                                </label> */}
                             </div>
                             {validationErrors.metode && (
                                 <p className="text-red-700 text-xs mt-1 ml-1">

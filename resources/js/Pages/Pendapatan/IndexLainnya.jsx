@@ -16,7 +16,7 @@ import { id } from "date-fns/locale";
 import { format } from "date-fns";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css"; // theme css file
+import "react-date-range/dist/theme/default.css";
 
 export default function IndexLainnya({
     auth,
@@ -230,7 +230,7 @@ export default function IndexLainnya({
                             </div>
                         </form>
                     </div>
-                    {!showDateRangePicker && (
+                    {/* {!showDateRangePicker && (
                         <div className="flex items-end">
                             <button
                                 onClick={() => {
@@ -249,7 +249,7 @@ export default function IndexLainnya({
                                 <IoAddOutline />
                             </button>
                         </div>
-                    )}
+                    )} */}
                 </div>
 
                 <div className="overflow-x-auto">
@@ -278,12 +278,12 @@ export default function IndexLainnya({
                                     <th scope="col" className="px-3 py-2">
                                         Total
                                     </th>
-                                    <th
+                                    {/* <th
                                         scope="col"
                                         className="py-3 px-8 text-center w-[1%]"
                                     >
                                         Action
-                                    </th>
+                                    </th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -332,7 +332,7 @@ export default function IndexLainnya({
                                                 />{" "}
                                                 <br /> ({kendaraan.metode} )
                                             </td>
-                                            <td className="px-1 py-2 flex justify-center space-x-2">
+                                            {/* <td className="px-1 py-2 flex justify-center space-x-2">
                                                 <button
                                                     onClick={() => {
                                                         if (!disabled) {
@@ -366,7 +366,7 @@ export default function IndexLainnya({
                                                 >
                                                     <IoTrash />
                                                 </button>
-                                            </td>
+                                            </td> */}
                                         </tr>
                                     ))
                                 )}

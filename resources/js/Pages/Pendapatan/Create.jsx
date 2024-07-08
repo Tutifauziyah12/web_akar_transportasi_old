@@ -442,7 +442,7 @@ export default function Create({
                                         Debit
                                     </span>
                                 </label>
-                                <label className="flex items-center">
+                                {/* <label className="flex items-center">
                                     <input
                                         type="radio"
                                         id="Credit"
@@ -457,7 +457,7 @@ export default function Create({
                                     <span className="text-xs 2xl:text-sm">
                                         Credit
                                     </span>
-                                </label>
+                                </label> */}
                             </div>
                             {validationErrors.metode && (
                                 <p className="text-red-700 text- 2xl:text-xs italic mt-1 ml-1">
@@ -630,7 +630,7 @@ export default function Create({
                                                 Debit
                                             </span>
                                         </label>
-                                        <label className="flex items-center">
+                                        {/* <label className="flex items-center">
                                             <input
                                                 type="radio"
                                                 name={`metode-${index}`}
@@ -650,7 +650,7 @@ export default function Create({
                                             <span className="text-xs 2xl:text-sm">
                                                 Credit
                                             </span>
-                                        </label>
+                                        </label> */}
                                     </div>
                                     {validationErrors[
                                         `pendapatanLainnya[${index}].metode`
