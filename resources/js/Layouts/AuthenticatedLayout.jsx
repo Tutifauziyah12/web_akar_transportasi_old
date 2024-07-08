@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "@inertiajs/react";
 import NavLink from "@/Components/NavLink";
 import { Inertia } from "@inertiajs/inertia";
-import logo from "../asset/Logo1.png";
+import logo from "../asset/Akar Transportasi Full White.png";
 
 import {
     IoCubeOutline,

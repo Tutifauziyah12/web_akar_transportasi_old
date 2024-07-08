@@ -6,7 +6,7 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Head, Link, useForm } from "@inertiajs/react";
-import logo from "../../asset/logo2.png";
+import logo from "../../asset/Akar Transportasi Full Black.png";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -38,7 +38,7 @@ export default function Login({ status, canResetPassword }) {
             )}
 
             <div className="pb-10">
-                <img src={logo} alt="Logo" className="mx-auto w-64 m-4 mb-8" />
+                <img src={logo} alt="Logo" className="mx-auto m-4 mb-8" />
                 <hr />
             </div>
 

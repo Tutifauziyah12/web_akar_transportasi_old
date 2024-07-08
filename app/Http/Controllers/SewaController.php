@@ -131,7 +131,7 @@ class SewaController extends Controller
             $validated = $request->validated();
 
             $kas = Kas::create([
-                'kode' => $request['kode'], // Metode untuk menghasilkan kode kas unik
+                'kode' => $request['kode'],
             ]);
 
             $sewa = Sewa::create($validated);

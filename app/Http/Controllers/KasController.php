@@ -9,7 +9,6 @@ use App\Models\Pengeluaran;
 use App\Models\Sewa;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class KasController extends Controller
 {
@@ -63,7 +62,6 @@ class KasController extends Controller
     {
         $query = Sewa::query();
 
-        // Filter by date range
         if ($request->filled('startDate') && $request->filled('endDate')) {
             $startDate = $request->input('startDate');
             $endDate = $request->input('endDate');
@@ -73,7 +71,6 @@ class KasController extends Controller
             });
         }
 
-        // Filter by search term if provided
         $searchTerm = $request->input('search', '');
         if ($searchTerm !== '') {
             $query->where(function ($q) use ($searchTerm) {
@@ -90,11 +87,9 @@ class KasController extends Controller
             });
         }
 
-        // Filter by pendapatan type
         if ($request->filled('category') && $request->input('category') !== 'semua') {
             $category = $request->input('category');
             if ($category === 'pendapatan_sewa') {
-                // $query->whereHas('sewaKendaraans');
                 $query->whereHas('sewaKendaraan', function ($q) use ($searchTerm) {
                     if ($searchTerm !== '') {
                         $q->where(function ($q) use ($searchTerm) {
@@ -104,7 +99,6 @@ class KasController extends Controller
                     }
                 });
             } elseif ($category === 'pendapatan_lainnya') {
-                // Filter only pendapatan_lainnya, optionally filtered by $searchTerm
                 $query->whereHas('pendapatanLainnya', function ($q) use ($searchTerm) {
                     if ($searchTerm !== '') {
                         $q->where(function ($q) use ($searchTerm) {
@@ -141,7 +135,6 @@ class KasController extends Controller
     {
         $query = Pengeluaran::query();
 
-        // Filter by search term
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
@@ -153,7 +146,6 @@ class KasController extends Controller
             });
         }
 
-        // Filter by date range
         if ($request->filled('startDate') && $request->filled('endDate')) {
             $startDate = date('Y-m-d', strtotime($request->input('startDate')));
             $endDate = date('Y-m-d', strtotime($request->input('endDate')));
@@ -161,10 +153,8 @@ class KasController extends Controller
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
-        // Order by kode descending
         $query->orderByDesc('kode');
 
-        // Retrieve pengeluaran data
         $pengeluaran = $query->get();
 
         return Inertia::render('Kas/IndexPengeluaran', [
@@ -181,7 +171,6 @@ class KasController extends Controller
     {
         $query = Kas::with('sewa', 'pengeluaran', 'sewa.sewaKendaraan', 'sewa.sewaKendaraan.kendaraan', 'sewa.pendapatanLainnya');
 
-        // Filter by date range
         if ($request->filled('startDate') && $request->filled('endDate')) {
             $startDate = $request->input('startDate');
             $endDate = $request->input('endDate');
@@ -196,7 +185,6 @@ class KasController extends Controller
             });
         }
 
-        // Execute query to get the filtered data
         $kasList = $query->get();
 
         return Inertia::render('Kas/IndexBukuBesar', [
