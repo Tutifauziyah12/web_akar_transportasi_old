@@ -108,52 +108,6 @@ export default function Authenticated({ user, header, children }) {
 
                                         {user.level === "Pegawai" ? (
                                             <>
-                                                <NavLink
-                                                    href={route(
-                                                        "kendaraan.index"
-                                                    )}
-                                                    active={
-                                                        (route()
-                                                            .current()
-                                                            .includes(
-                                                                "kendaraan"
-                                                            ) &&
-                                                            !route()
-                                                                .current()
-                                                                .includes(
-                                                                    "sewa_kendaraan"
-                                                                )) ||
-                                                        (route()
-                                                            .current()
-                                                            .indexOf(
-                                                                "kendaraan.create"
-                                                            ) !== -1 &&
-                                                            !route()
-                                                                .current()
-                                                                .includes(
-                                                                    "sewa_kendaraan"
-                                                                )) ||
-                                                        (route()
-                                                            .current()
-                                                            .includes(
-                                                                "kendaraan"
-                                                            ) &&
-                                                            route()
-                                                                .current()
-                                                                .includes(
-                                                                    "edit"
-                                                                ) &&
-                                                            !route()
-                                                                .current()
-                                                                .includes(
-                                                                    "sewa_kendaraan"
-                                                                ))
-                                                    }
-                                                    icon={IoCarSharp}
-                                                >
-                                                    Kendaraan
-                                                </NavLink>
-
                                                 <div>
                                                     <div
                                                         onClick={
@@ -230,6 +184,52 @@ export default function Authenticated({ user, header, children }) {
                                         )}
                                         {user.level === "Owner" ? (
                                             <>
+                                                <NavLink
+                                                    href={route(
+                                                        "kendaraan.index"
+                                                    )}
+                                                    active={
+                                                        (route()
+                                                            .current()
+                                                            .includes(
+                                                                "kendaraan"
+                                                            ) &&
+                                                            !route()
+                                                                .current()
+                                                                .includes(
+                                                                    "sewa_kendaraan"
+                                                                )) ||
+                                                        (route()
+                                                            .current()
+                                                            .indexOf(
+                                                                "kendaraan.create"
+                                                            ) !== -1 &&
+                                                            !route()
+                                                                .current()
+                                                                .includes(
+                                                                    "sewa_kendaraan"
+                                                                )) ||
+                                                        (route()
+                                                            .current()
+                                                            .includes(
+                                                                "kendaraan"
+                                                            ) &&
+                                                            route()
+                                                                .current()
+                                                                .includes(
+                                                                    "edit"
+                                                                ) &&
+                                                            !route()
+                                                                .current()
+                                                                .includes(
+                                                                    "sewa_kendaraan"
+                                                                ))
+                                                    }
+                                                    icon={IoCarSharp}
+                                                >
+                                                    Kendaraan
+                                                </NavLink>
+
                                                 <div>
                                                     <div
                                                         onClick={toggleLaporan}
@@ -299,10 +299,7 @@ export default function Authenticated({ user, header, children }) {
                                 </div>
                             </div>
                             <div className="text-slate-100">
-                                <NavLink
-                                // href={route("profile.edit")}
-                                // active={route().current("profile.edit")}
-                                >
+                                <NavLink                                >
                                     <MdAccountCircle className="text-sm 2xl:text-xl mr-2" />
                                     {user.name}
                                 </NavLink>

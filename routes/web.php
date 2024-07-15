@@ -54,10 +54,7 @@ Route::middleware(['auth', 'Owner'])->group(function () {
     Route::get('/admin/{user}', [AdminController::class, 'edit'])->name('admin.storedite');
     Route::put('/admin/{user}', [AdminController::class, 'update'])->name('admin.update');
     Route::delete('/admin/{user}', [AdminController::class, 'destroy'])->name('admin.destroy');
-});
 
-
-Route::middleware(['auth'])->group(function () {
     Route::get('/kendaraan', [KendaraanController::class, 'index'])->name('kendaraan.index');
     Route::get('/kendaraan/create', [KendaraanController::class, 'create'])->name('kendaraan.create');
     Route::post('/kendaraan', [KendaraanController::class, 'store'])->name('kendaraan.store');
@@ -65,17 +62,13 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/kendaraan/{kendaraan}', [KendaraanController::class, 'update'])->name('kendaraan.update');
     Route::delete('/kendaraan/{kendaraan}', [KendaraanController::class, 'destroy'])->name('kendaraan.destroy');
 
-    Route::get('/kas', [KasController::class, 'index'])->name('kas.index');
     Route::get('/kas/pendapatan', [KasController::class, 'indexPendapatan'])->name('kasPendapatan.index');
     Route::get('/kas/pengeluaran', [KasController::class, 'indexPengeluaran'])->name('kasPengeluaran.index');
     Route::get('/kas/buku_besar', [KasController::class, 'indexBukuBesar'])->name('kasBukuBesar.index');
-    Route::get('/kas/create/sewa', [KasController::class, 'createSewa'])->name('kas.createSewa');
-    Route::get('/kas/create/lainnya', [KasController::class, 'createLainnya'])->name('kas.createLainnya');
-    Route::post('/kas', [KasController::class, 'store'])->name('kas.store');
-    Route::get('/kas/{kas}/edit', [KasController::class, 'edit'])->name('kas.edit');
-    Route::put('/kas/{kas}', [KasController::class, 'update'])->name('kas.update');
-    Route::delete('/kas/{kas}', [KasController::class, 'destroy'])->name('kas.destroy');
+});
 
+
+Route::middleware(['auth'])->group(function () {
     Route::get('/pendapatan/sewa_kendaraan', [SewaController::class, 'index'])->name('sewa.index');
     Route::get('/pendapatan/sewa_lainnya', [SewaController::class, 'indexLainnya'])->name('sewaLainnya.index');
     Route::get('/pendapatan/sewa_kendaraan/create', [SewaController::class, 'create'])->name('sewa.create');

@@ -54,12 +54,19 @@ class SewaController extends Controller
 
         $sewa = $query->with('sewaKendaraan.kendaraan')->paginate(10);
 
+
+        $kendaraans = Kendaraan::all();
+        $lastSewa = Sewa::where('kode', 'like', 'PS24%')->orderBy('kode', 'desc')->first();
+        $lastKode = $lastSewa ? $lastSewa->kode : "PS24000";
+
         return Inertia::render('Pendapatan/Index', [
             'sewa' => $sewa,
             'status' => session('status'),
             'searchTerm' => $request->input('search'),
             'startDate' => $request->input('startDate'),
             'endDate' => $request->input('endDate'),
+            'kendaraans' => $kendaraans,
+            'lastKode' => $lastKode,
         ]);
     }
 

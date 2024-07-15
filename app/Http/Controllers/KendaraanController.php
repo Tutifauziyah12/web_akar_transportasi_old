@@ -13,6 +13,11 @@ use Illuminate\Database\QueryException;
 
 class KendaraanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('Owner');
+    }
+    
     public function index(Request $request): Response
     {
         $searchTerm = $request->input('search');

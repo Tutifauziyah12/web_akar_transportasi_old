@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import {
     IoCloseSharp,
     IoArrowBack,
@@ -19,13 +18,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { validationSchema } from "@/Utils/validationSchema";
 
 export default function Create({
-    auth,
     initialStartDate,
     initialEndDate,
     kendaraans,
     lastKode,
+    handleClose,
+    setSuccessMessage
 }) {
-    // Default Code
     const modifyString = (str) => {
         let lastThreeDigits = str.slice(-3);
         let incrementedDigits = (parseInt(lastThreeDigits) + 1)
@@ -91,7 +90,7 @@ export default function Create({
     const handlePendapatanLainnyaChange = (index, e) => {
         const { name, value } = e.target;
 
-        if (name.startsWith("nama")){
+        if (name.startsWith("nama")) {
             const metodeIndex = name.split("-")[1];
             const updatedPendapatanLainnya = [...data.pendapatanLainnya];
             updatedPendapatanLainnya[index].nama = value;
@@ -153,7 +152,7 @@ export default function Create({
             value = value.value;
         }
         setData(name, value);
-    }
+    };
 
     const handleCheckboxChange = (e) => {
         const { value, checked } = e.target;
@@ -177,12 +176,27 @@ export default function Create({
         }
     }, [flash]);
 
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const toggleDropdown = () => {
+        setDropdownOpen(!dropdownOpen);
+    };
+
+    const filteredKendaraans = kendaraans.filter((kendaraan) =>
+        kendaraan.nama.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await validationSchema.validate(data, { abortEarly: false });
             post("/pendapatan/sewa_kendaraan", {
-                onSuccess: () => reset(),
+                onSuccess: () => {
+                    reset();
+                    handleClose();
+                    setSuccessMessage('Data submitted successfully from modal!');
+                },
             });
         } catch (err) {
             if (err.inner) {
@@ -198,24 +212,11 @@ export default function Create({
     };
 
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={
-                <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight">
-                    <a
-                        href={route("sewa.index")}
-                        className="flex items-center pr-4"
-                    >
-                        <IoArrowBack className="text-2xl 2xl:text-4xl mr-4" />
-                        Tambah Sewa Kendaraan
-                    </a>
-                </h2>
-            }
-        >
+        <>
             <Head title="Tambah Sewa Kendaraan" />
-            <div className="py-4 2xl:py-6 my-8 2xl:my-10 px-6 2xl:px-10 bg-slate-200 bg-opacity-70 rounded-lg">
+            <div className="py-4 2xl:py-6 px-6 2xl:px-10">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid gap-10 mb-6 md:grid-cols-3">
+                    <div className="grid gap-5 mb-6 md:grid-cols-1">
                         <div>
                             <label
                                 htmlFor="kode"
@@ -265,7 +266,6 @@ export default function Create({
                                 </div>
                             )}
                         </div>
-                        <div></div>
 
                         <div>
                             <label
@@ -293,7 +293,7 @@ export default function Create({
                                 />
                             </div>
                             {showDateRangePicker && (
-                                <div className="absolute z-10 mt-2 drop-shadow-lg shadow-slate-500">
+                                <div className="mt-2 drop-shadow-lg shadow-slate-500">
                                     <div className="flex">
                                         <DateRange
                                             showDateDisplay={false}
@@ -328,40 +328,103 @@ export default function Create({
                             )}
                         </div>
 
-                        <div>
-                            <label
-                                htmlFor="kendaraan_id"
-                                className="block mb-2 font-semibold text-gray-900"
+                        <div className="relative">
+                            <button
+                                id="dropdownSearchButton"
+                                className="inline-flex items-center px-3 py-2 2xl:px-3.5 2xl:py-2.5 text-white bg-slate-500 rounded-lg hover:bg-slate-600 focus:ring-4 focus:outline-none focus:ring-blue-300 text-xs 2xl:text-sm"
+                                onClick={toggleDropdown}
+                                type="button"
                             >
                                 Pilih Kendaraan
-                            </label>
+                                <svg
+                                    className={`w-4 h-4 ml-2 transition-transform ${
+                                        dropdownOpen ? "rotate-180" : "rotate-0"
+                                    }`}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M10 12l-4-4h8l-4 4z"
+                                        clipRule="evenodd"
+                                    />
+                                </svg>
+                            </button>
+
                             <div
-                                className="border-2 border-gray-400 rounded-md p-2"
-                                style={{
-                                    maxHeight: "150px",
-                                    overflowY: "auto",
-                                }}
+                                id="dropdownSearch"
+                                className={`absolute mt-2 w-60 bg-white rounded-lg shadow-lg ${
+                                    dropdownOpen ? "block" : "hidden"
+                                }`}
                             >
-                                {kendaraans.map((kendaraan) => (
-                                    <div key={kendaraan.id} className="p-1">
-                                        <label className="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                name="kendaraan_ids"
-                                                value={kendaraan.id}
-                                                onChange={handleCheckboxChange}
-                                                checked={data.kendaraan_ids.includes(
-                                                    String(kendaraan.id)
-                                                )}
-                                                className="mr-2"
-                                            />
-                                            <span>
-                                                {kendaraan.nama} (
-                                                {kendaraan.no_registrasi})
-                                            </span>
-                                        </label>
-                                    </div>
-                                ))}
+                                <div className="p-2">
+                                    <label
+                                        htmlFor="searchInput"
+                                        className="sr-only"
+                                    >
+                                        Search
+                                    </label>
+                                    <input
+                                        id="searchInput"
+                                        type="text"
+                                        value={searchTerm}
+                                        onChange={(e) =>
+                                            setSearchTerm(e.target.value)
+                                        }
+                                        placeholder="Cari kendaraan..."
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5"
+                                    />
+                                </div>
+                                <div className="max-h-48 overflow-y-auto">
+                                    <ul className="divide-y divide-gray-200">
+                                        {filteredKendaraans.length > 0 ? (
+                                            filteredKendaraans.map(
+                                                (kendaraan) => (
+                                                    <li
+                                                        key={kendaraan.id}
+                                                        className="px-4 py-2"
+                                                    >
+                                                        <div className="flex items-center">
+                                                            <input
+                                                                id={`checkbox-item-${kendaraan.id}`}
+                                                                type="checkbox"
+                                                                onChange={
+                                                                    handleCheckboxChange
+                                                                }
+                                                                value={
+                                                                    kendaraan.id
+                                                                }
+                                                                checked={data.kendaraan_ids.includes(
+                                                                    String(
+                                                                        kendaraan.id
+                                                                    )
+                                                                )}
+                                                                className="w-4 h-4 text-xs 2xl:text-sm text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                                            />
+                                                            <label
+                                                                htmlFor={`checkbox-item-${kendaraan.id}`}
+                                                                className="ml-2 text-xs 2xl:text-sm text-gray-900"
+                                                            >
+                                                                {kendaraan.nama}{" "}
+                                                                (
+                                                                {
+                                                                    kendaraan.no_registrasi
+                                                                }
+                                                                )
+                                                            </label>
+                                                        </div>
+                                                    </li>
+                                                )
+                                            )
+                                        ) : (
+                                            <li className="px-4 py-2 text-sm text-gray-500">
+                                                Tidak ada hasil ditemukan
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
                             </div>
 
                             {data.kendaraan_ids.length > 0 && (
@@ -384,8 +447,9 @@ export default function Create({
                                     </ul>
                                 </div>
                             )}
+
                             {validationErrors.kendaraan_ids && (
-                                <div className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1">
+                                <div className="text-red-700 text-xs italic mt-1 ml-1">
                                     {validationErrors.kendaraan_ids}
                                 </div>
                             )}
@@ -630,27 +694,6 @@ export default function Create({
                                                 Debit
                                             </span>
                                         </label>
-                                        {/* <label className="flex items-center">
-                                            <input
-                                                type="radio"
-                                                name={`metode-${index}`}
-                                                value="Credit"
-                                                checked={
-                                                    pendapatan.metode ===
-                                                    "Credit"
-                                                }
-                                                onChange={(e) =>
-                                                    handlePendapatanLainnyaChange(
-                                                        index,
-                                                        e
-                                                    )
-                                                }
-                                                className="mr-2"
-                                            />
-                                            <span className="text-xs 2xl:text-sm">
-                                                Credit
-                                            </span>
-                                        </label> */}
                                     </div>
                                     {validationErrors[
                                         `pendapatanLainnya[${index}].metode`
@@ -673,13 +716,15 @@ export default function Create({
                         </button>
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-2 py-2 2xl:px-2.5 2xl:py-2.5 text-center"
-                    >
-                        Submit
-                    </button>
+                    <div className="flex justify-end space-x-2 border-t pt-4">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-3 py-2 2xl:px-3.5 2xl:py-2.5 text-center"
+                        >
+                            Submit
+                        </button>
+                    </div>
                 </form>
             </div>
             <ToastContainer
@@ -694,6 +739,6 @@ export default function Create({
                 pauseOnHover
                 theme="light"
             />
-        </AuthenticatedLayout>
+        </>
     );
 }

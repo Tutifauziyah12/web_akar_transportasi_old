@@ -12,9 +12,11 @@ use Inertia\Inertia;
 
 class KasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('Owner');
+    }
+
     public function index(Request $request)
     {
         $query = Kas::query();
@@ -139,10 +141,10 @@ class KasController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('kode', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('nama', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('keterangan', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('total', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('metode', 'like', '%' . $searchTerm . '%');
+                    ->orWhere('nama', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('keterangan', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('total', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('metode', 'like', '%' . $searchTerm . '%');
             });
         }
 
@@ -239,9 +241,6 @@ class KasController extends Controller
      */
     public function edit(Kas $kas)
     {
-        return Inertia::render('Kas/Edit', [
-            'kas' => $kas
-        ]);
     }
 
     /**
@@ -249,13 +248,6 @@ class KasController extends Controller
      */
     public function update(UpdateKasRequest $request, Kas $kas)
     {
-        $validated = $request->validated();
-
-        $kas->update($validated);
-
-        $namaKas = $kas->nama;
-
-        return redirect()->route('kas.index')->with('message', sprintf("Kas atas nama %s berhasil diupdate!", $namaKas));
     }
 
     /**
@@ -263,9 +255,5 @@ class KasController extends Controller
      */
     public function destroy(Kas $kas)
     {
-        $kas->delete();
-        $namaKas = $kas->nama;
-
-        return redirect()->back()->with('message', sprintf("Kas atas nama %s berhasil dihapus!", $namaKas));
     }
 }
