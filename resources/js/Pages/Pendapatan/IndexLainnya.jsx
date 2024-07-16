@@ -46,20 +46,21 @@ export default function IndexLainnya({
             : null;
         const endDate = state[0].endDate
             ? format(state[0].endDate, "yyyy-MM-dd")
-            : (state[0].startDate ? format(state[0].startDate, "yyyy-MM-dd") : null);
-    
+            : state[0].startDate
+            ? format(state[0].startDate, "yyyy-MM-dd")
+            : null;
+
         const query = { search: searchTerm };
         if (startDate) {
             query.startDate = startDate;
             query.endDate = endDate;
         }
-    
+
         Inertia.get(route("sewaLainnya.index"), query, {
             preserveState: true,
             preserveScroll: true,
         });
     };
-    
 
     const handleReset = () => {
         setSearchTerm("");
@@ -221,7 +222,7 @@ export default function IndexLainnya({
                                     </th> */}
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="leading-relaxed">
                                 {sewa.data.length === 0 ? (
                                     <tr>
                                         <td
@@ -262,46 +263,14 @@ export default function IndexLainnya({
                                                 {kendaraan.jumlah}
                                             </td>
                                             <td className="px-3 py-2">
+                                                <span className="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                    {kendaraan.metode}
+                                                </span>
+                                                <br />
                                                 <RupiahFormat
                                                     value={kendaraan.total}
                                                 />{" "}
-                                                <br /> ({kendaraan.metode} )
                                             </td>
-                                            {/* <td className="px-1 py-2 flex justify-center space-x-2">
-                                                <button
-                                                    onClick={() => {
-                                                        if (!disabled) {
-                                                            route(
-                                                                "sewa.edit",
-                                                                kendaraan.id
-                                                            );
-                                                        }
-                                                    }}
-                                                    className={`px-2 text-center hover:text-yellow-600 ${
-                                                        disabled
-                                                            ? "opacity-50 cursor-not-allowed"
-                                                            : ""
-                                                    }`}
-                                                    disabled={disabled}
-                                                >
-                                                    <IoPencil />
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        handleDelete(
-                                                            kendaraan.id
-                                                        )
-                                                    }
-                                                    className={`px-2 text-center hover:text-red-600 ${
-                                                        disabled
-                                                            ? "opacity-50 cursor-not-allowed"
-                                                            : ""
-                                                    }`}
-                                                    disabled={disabled}
-                                                >
-                                                    <IoTrash />
-                                                </button>
-                                            </td> */}
                                         </tr>
                                     ))
                                 )}

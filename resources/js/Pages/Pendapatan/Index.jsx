@@ -2,7 +2,7 @@ import React, { useState, useEffect, forwardRef } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link, usePage } from "@inertiajs/react";
-import { IoPencil, IoTrash, IoAddOutline } from "react-icons/io5";
+import { IoPencil, IoTrash, IoAddOutline, IoPrintSharp } from "react-icons/io5";
 import RupiahFormat from "@/Utils/RupiahFormat";
 import FormatDateRange from "@/Utils/FormatDateRange";
 import { ToastContainer, toast } from "react-toastify";
@@ -266,13 +266,13 @@ export default function Index({
                                     </th>
                                     <th
                                         scope="col"
-                                        className="py-3 px-8 w-[1%]"
+                                        className="py-3 px-2 w-[1%]"
                                     >
                                         Action
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="leading-relaxed">
                                 {sewa.data.length === 0 ? (
                                     <tr>
                                         <td
@@ -343,7 +343,7 @@ export default function Index({
                                                     }
                                                 ).format(
                                                     swa.total +
-                                                    swa.pendapatan_lainnya.reduce(
+                                                        swa.pendapatan_lainnya.reduce(
                                                             (acc, item) =>
                                                                 acc +
                                                                 item.total,
@@ -352,12 +352,31 @@ export default function Index({
                                                 )}
                                             </td>
                                             <td className="px-3 py-2">
-                                                {swa.pembayaran ===
-                                                swa.total ? (
-                                                    "Lunas"
+                                                {swa.total +
+                                                    swa.pendapatan_lainnya.reduce(
+                                                        (acc, pendapatan) =>
+                                                            acc +
+                                                            pendapatan.total,
+                                                        0
+                                                    ) ===
+                                                swa.pembayaran ? (
+                                                    <>
+                                                        <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            Lunas
+                                                        </span>
+                                                        <span className="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            {swa.metode}
+                                                        </span>
+                                                    </>
                                                 ) : (
                                                     <>
-                                                        Termin{" - "}
+                                                        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            Termin
+                                                        </span>
+                                                        <span className="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            {swa.metode}
+                                                        </span>
+                                                        <br />
                                                         <RupiahFormat
                                                             value={
                                                                 swa.pembayaran
@@ -365,10 +384,8 @@ export default function Index({
                                                         />
                                                     </>
                                                 )}
-                                                <br />
-                                                <i>({swa.metode} )</i>
                                             </td>
-                                            <td className="px-1 py-2 flex justify-center space-x-2">
+                                            <td className="px-1 pr-5 py-2 flex justify-center space-x-2">
                                                 <a
                                                     // href={route(
                                                     //     "sewa.edit",
@@ -381,6 +398,11 @@ export default function Index({
                                                 >
                                                     <IoPencil />
                                                 </a>
+                                                <button className="px-2 text-center hover:text-green-600" onClick={() =>
+                                                        handleCetak(swa.kode)
+                                                    }>
+                                                    <IoPrintSharp className="text-sm 2xl:text-md mr-1" />
+                                                </button>
                                                 <button
                                                     // onClick={() =>
                                                     //     handleDelete(swa.id)

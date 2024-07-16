@@ -36,9 +36,9 @@ const PrintPengeluaranTable = React.forwardRef(
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="leading-relaxed">
                         {pengeluaran && pengeluaran.length > 0 ? (
-                            pengeluaran.map((item, index) => (
+                            pengeluaran.map((item, index) => (  
                                 <React.Fragment key={item.id}>
                                     <tr className="bg-white border-b hover:bg-gray-50 align-top">
                                         <td className="px-8 py-2">
@@ -51,7 +51,7 @@ const PrintPengeluaranTable = React.forwardRef(
                                             />
                                         </td>
                                         <td className="px-3 py-2">
-                                            <span className="font-semibold">
+                                            <span className="font-medium">
                                                 {item.kode}
                                                 {" - "}
                                                 {item.nama}
@@ -62,7 +62,10 @@ const PrintPengeluaranTable = React.forwardRef(
 
                                         <td className="px-3 py-2">
                                             <RupiahFormat value={item.total} />{" "}
-                                            <br /> ({item.metode} )
+                                            <br />{" "}
+                                            <span className="italic">
+                                                ({item.metode})
+                                            </span>
                                         </td>
                                     </tr>
                                 </React.Fragment>
@@ -71,7 +74,7 @@ const PrintPengeluaranTable = React.forwardRef(
                             <tr>
                                 <td
                                     colSpan="4"
-                                    className="px-3 py-2 text-center"
+                                    className="px-3 py-2 text-center bg-white h-14"
                                 >
                                     Tidak ada data pengeluaran untuk
                                     ditampilkan.

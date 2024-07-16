@@ -321,6 +321,8 @@ export default function Edit({
         );
     });
 
+    console.log("data : ", data)
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("dataSubmit : ", data)

@@ -76,6 +76,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pendapatan/sewa_kendaraan/create', [SewaController::class, 'create'])->name('sewa.create');
     Route::post('/pendapatan/sewa_kendaraan', [SewaController::class, 'store'])->name('sewa_kendaraan.store');
     Route::get('/pendapatan/sewa_kendaraan/{kode}', [SewaController::class, 'show'])->name('sewa.show');;
+    Route::get('/pendapatan/sewa_kendaraan/cetak/{kode}', [SewaController::class, 'cetak'])->name('sewa.cetak');;
     Route::get('/pendapatan/sewa_kendaraan/{sewa}/edit', [SewaController::class, 'edit'])->name('sewa.edit');
     Route::put('/pendapatan/sewa_kendaraan/{sewa}', [SewaController::class, 'update'])->name('sewa.update');
     Route::delete('/pendapatan/sewa_kendaraan/{kode}', [SewaController::class, 'destroy'])->name('sewa.destroy');

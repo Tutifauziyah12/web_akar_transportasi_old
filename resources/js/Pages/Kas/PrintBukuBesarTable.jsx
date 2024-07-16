@@ -4,6 +4,8 @@ import FormatDateRange from "@/Utils/FormatDateRange";
 
 const PrintBukuBesarTable = React.forwardRef(
     ({ kasList, formattedDateRange }, ref) => {
+        console.log(kasList);
+
         let number = 1;
 
         let totalPendapatan = 0;
@@ -41,7 +43,7 @@ const PrintBukuBesarTable = React.forwardRef(
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="leading-relaxed">
                         {kasList && kasList.length > 0 ? (
                             kasList.map((item, index) => (
                                 <React.Fragment key={item.id}>
@@ -67,6 +69,24 @@ const PrintBukuBesarTable = React.forwardRef(
                                                     />
                                                 </td>
                                                 <td className="px-3 py-2">
+                                                    {item.sewa.total +
+                                                        item.sewa.pendapatan_lainnya.reduce(
+                                                            (acc, item) =>
+                                                                acc +
+                                                                item.total,
+                                                            0
+                                                        ) ===
+                                                    item.sewa.pembayaran ? (
+                                                        <>
+                                                            <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                                Lunas
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            Termin
+                                                        </span>
+                                                    )}
                                                     <span className="font-medium">
                                                         {item.kode} - Sewa
                                                         Kendaraan
@@ -88,18 +108,87 @@ const PrintBukuBesarTable = React.forwardRef(
                                                 </td>
 
                                                 <td className="px-3 py-2">
-                                                    <RupiahFormat
-                                                        value={item.sewa.total}
-                                                    />
+                                                    {item.sewa.total +
+                                                        item.sewa.pendapatan_lainnya.reduce(
+                                                            (acc, item) =>
+                                                                acc +
+                                                                item.total,
+                                                            0
+                                                        ) ===
+                                                    item.sewa.pembayaran ? (
+                                                        <>
+                                                            <RupiahFormat
+                                                                value={
+                                                                    item.sewa
+                                                                        .total
+                                                                }
+                                                            />
+                                                        </>
+                                                    ) : item.sewa.total >
+                                                      item.sewa.pembayaran ? (
+                                                        <>
+                                                            <RupiahFormat
+                                                                value={
+                                                                    item.sewa
+                                                                        .pembayaran
+                                                                }
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <RupiahFormat
+                                                                value={
+                                                                    item.sewa
+                                                                        .total
+                                                                }
+                                                            />
+                                                        </>
+                                                    )}
                                                 </td>
                                                 <td className="px-3 py-2">-</td>
                                                 <td className="px-3 py-2">
-                                                    <RupiahFormat
-                                                        value={
-                                                            (totalPendapatan +=
-                                                                item.sewa.total)
-                                                        }
-                                                    />
+                                                    {item.sewa.total +
+                                                        item.sewa.pendapatan_lainnya.reduce(
+                                                            (acc, item) =>
+                                                                acc +
+                                                                item.total,
+                                                            0
+                                                        ) ===
+                                                    item.sewa.pembayaran ? (
+                                                        <>
+                                                            <RupiahFormat
+                                                                value={
+                                                                    (totalPendapatan +=
+                                                                        item
+                                                                            .sewa
+                                                                            .total)
+                                                                }
+                                                            />
+                                                        </>
+                                                    ) : item.sewa.total >
+                                                      item.sewa.pembayaran ? (
+                                                        <>
+                                                            <RupiahFormat
+                                                                value={
+                                                                    (totalPendapatan +=
+                                                                        item
+                                                                            .sewa
+                                                                            .pembayaran)
+                                                                }
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <RupiahFormat
+                                                                value={
+                                                                    (totalPendapatan +=
+                                                                        item
+                                                                            .sewa
+                                                                            .total)
+                                                                }
+                                                            />
+                                                        </>
+                                                    )}
                                                 </td>
                                             </tr>
                                             {item.sewa.pendapatan_lainnya &&
@@ -114,6 +203,29 @@ const PrintBukuBesarTable = React.forwardRef(
                                                             <td className="px-3 py-2"></td>
                                                             <td className="px-3 py-2"></td>
                                                             <td className="px-3 py-2">
+                                                                {item.sewa
+                                                                    .total +
+                                                                    item.sewa.pendapatan_lainnya.reduce(
+                                                                        (
+                                                                            acc,
+                                                                            item
+                                                                        ) =>
+                                                                            acc +
+                                                                            item.total,
+                                                                        0
+                                                                    ) ===
+                                                                item.sewa
+                                                                    .pembayaran ? (
+                                                                    <>
+                                                                        <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                                            Lunas
+                                                                        </span>
+                                                                    </>
+                                                                ) : (
+                                                                    <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                                        Termin
+                                                                    </span>
+                                                                )}
                                                                 <span className="font-semibold">
                                                                     {
                                                                         pendapatan.kode_sewa
@@ -125,31 +237,118 @@ const PrintBukuBesarTable = React.forwardRef(
                                                                 {
                                                                     pendapatan.nama
                                                                 }
-                                                                <br />
                                                                 <span className="text-[12px] 2xl:text-xs">
-                                                                    Jumlah :{" "}
+                                                                    {" "}
+                                                                    dengan
+                                                                    jumlah{" "}
                                                                     {
                                                                         pendapatan.jumlah
                                                                     }
                                                                 </span>
                                                             </td>
                                                             <td className="px-3 py-2">
-                                                                <RupiahFormat
+                                                                {item.sewa
+                                                                    .total +
+                                                                    item.sewa.pendapatan_lainnya.reduce(
+                                                                        (
+                                                                            acc,
+                                                                            item
+                                                                        ) =>
+                                                                            acc +
+                                                                            item.total,
+                                                                        0
+                                                                    ) ===
+                                                                item.sewa
+                                                                    .pembayaran ? (
+                                                                    <>
+                                                                        <RupiahFormat
+                                                                            value={
+                                                                                pendapatan.total
+                                                                            }
+                                                                        />
+                                                                    </>
+                                                                ) : item.sewa
+                                                                      .total >
+                                                                  item.sewa
+                                                                      .pembayaran ? (
+                                                                    <>-</>
+                                                                ) : (
+                                                                    <>
+                                                                        <RupiahFormat
+                                                                            value={
+                                                                                item
+                                                                                    .sewa
+                                                                                    .pembayaran -
+                                                                                item
+                                                                                    .sewa
+                                                                                    .total
+                                                                            }
+                                                                        />
+                                                                    </>
+                                                                )}
+                                                                {/* <RupiahFormat
                                                                     value={
                                                                         pendapatan.total
                                                                     }
-                                                                />
+                                                                /> */}
                                                             </td>
                                                             <td className="px-3 py-2">
                                                                 -
                                                             </td>
                                                             <td className="px-3 py-2">
-                                                                <RupiahFormat
+                                                                {item.sewa
+                                                                    .total +
+                                                                    item.sewa.pendapatan_lainnya.reduce(
+                                                                        (
+                                                                            acc,
+                                                                            item
+                                                                        ) =>
+                                                                            acc +
+                                                                            item.total,
+                                                                        0
+                                                                    ) ===
+                                                                item.sewa
+                                                                    .pembayaran ? (
+                                                                    <>
+                                                                        <RupiahFormat
+                                                                            value={
+                                                                                (totalPendapatan +=
+                                                                                    pendapatan.total)
+                                                                            }
+                                                                        />
+                                                                    </>
+                                                                ) : item.sewa
+                                                                      .total >
+                                                                  item.sewa
+                                                                      .pembayaran ? (
+                                                                    <>
+                                                                        <RupiahFormat
+                                                                            value={
+                                                                                totalPendapatan
+                                                                            }
+                                                                        />
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <RupiahFormat
+                                                                            value={
+                                                                                (totalPendapatan +=
+                                                                                    item
+                                                                                        .sewa
+                                                                                        .pembayaran -
+                                                                                    item
+                                                                                        .sewa
+                                                                                        .total)
+                                                                            }
+                                                                        />
+                                                                    </>
+                                                                )}
+                                                                {/* <RupiahFormat
                                                                     value={
                                                                         (totalPendapatan +=
                                                                             pendapatan.total)
                                                                     }
-                                                                />
+                                                                /> */}
                                                             </td>
                                                         </tr>
                                                     )

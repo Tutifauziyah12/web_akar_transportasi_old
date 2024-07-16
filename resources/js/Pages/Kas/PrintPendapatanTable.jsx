@@ -9,16 +9,38 @@ const PrintPendapatanTable = React.forwardRef(
         let totalPendapatan = 0;
         sewa.forEach((item) => {
             if (category === "semua") {
-                totalPendapatan += item.total;
-                item.pendapatan_lainnya.forEach((pendapatan) => {
-                    totalPendapatan += pendapatan.total;
-                });
+                const totalPendapatanLainnya = item.pendapatan_lainnya.reduce(
+                    (acc, pendapatan) => acc + pendapatan.total,
+                    0
+                );
+                const totalKeseluruhan = item.total + totalPendapatanLainnya;
+
+                if (totalKeseluruhan === item.pembayaran) {
+                    totalPendapatan += totalKeseluruhan;
+                } else {
+                    totalPendapatan += item.pembayaran;
+                }
             } else if (category === "pendapatan_sewa") {
-                totalPendapatan += item.total;
+                if (item.total === item.pembayaran) {
+                    totalPendapatan += item.total;
+                } else if (item.total < item.pembayaran) {
+                    totalPendapatan += item.total;
+                } else {
+                    totalPendapatan += item.pembayaran;
+                }
             } else if (category === "pendapatan_lainnya") {
-                item.pendapatan_lainnya.forEach((pendapatan) => {
-                    totalPendapatan += pendapatan.total;
-                });
+                const totalPendapatanLainnya = item.pendapatan_lainnya.reduce(
+                    (acc, pendapatan) => acc + pendapatan.total,
+                    0
+                );
+
+                if (totalPendapatanLainnya === item.pembayaran) {
+                    totalPendapatan += totalPendapatanLainnya;
+                } else if (item.total > item.pembayaran) {
+                    totalPendapatan += 0;
+                } else {
+                    totalPendapatan += item.pembayaran - item.total;
+                }
             } else {
                 totalPendapatan = 0;
             }
@@ -59,7 +81,7 @@ const PrintPendapatanTable = React.forwardRef(
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="leading-relaxed">
                         {sewa && sewa.length > 0 ? (
                             sewa.map((item, index) => (
                                 <React.Fragment key={item.id}>
@@ -80,9 +102,24 @@ const PrintPendapatanTable = React.forwardRef(
                                                 />
                                             </td>
                                             <td className="px-3 py-2">
+                                                {item.total +
+                                                    item.pendapatan_lainnya.reduce(
+                                                        (acc, item) =>
+                                                            acc + item.total,
+                                                        0
+                                                    ) ===
+                                                item.pembayaran ? (
+                                                    <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                        Lunas
+                                                    </span>
+                                                ) : (
+                                                    <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                        Termin
+                                                    </span>
+                                                )}
                                                 <span className="font-medium">
                                                     {item.kode} - Sewa
-                                                </span>{" "}
+                                                </span>
                                                 <br />
                                                 {item.sewa_kendaraan.length >
                                                     0 && (
@@ -95,13 +132,88 @@ const PrintPendapatanTable = React.forwardRef(
                                                             .join(", ")}
                                                     </span>
                                                 )}
+                                                <br />
+                                                {item.total +
+                                                    item.pendapatan_lainnya.reduce(
+                                                        (acc, pendapatan) =>
+                                                            acc +
+                                                            pendapatan.total,
+                                                        0
+                                                    ) ===
+                                                item.pembayaran ? (
+                                                    <></>
+                                                ) : item.pembayaran >
+                                                  item.total ? (
+                                                    <></>
+                                                ) : (
+                                                    <span className="italic">
+                                                        Details : Sisa
+                                                        Pembayaran{" "}
+                                                        {new Intl.NumberFormat(
+                                                            "id-ID",
+                                                            {
+                                                                style: "currency",
+                                                                currency: "IDR",
+                                                                minimumFractionDigits: 0,
+                                                            }
+                                                        ).format(
+                                                            item.total +
+                                                                item.pendapatan_lainnya.reduce(
+                                                                    (
+                                                                        acc,
+                                                                        item
+                                                                    ) =>
+                                                                        acc +
+                                                                        item.total,
+                                                                    0
+                                                                ) -
+                                                                item.pembayaran
+                                                        )}
+                                                    </span>
+                                                )}
                                             </td>
 
                                             <td className="px-3 py-2">
-                                                <RupiahFormat
-                                                    value={item.total}
-                                                />{" "}
-                                                <br /> ({item.metode} )
+                                                {item.total +
+                                                    item.pendapatan_lainnya.reduce(
+                                                        (acc, item) =>
+                                                            acc + item.total,
+                                                        0
+                                                    ) ===
+                                                item.pembayaran ? (
+                                                    <>
+                                                        <RupiahFormat
+                                                            value={item.total}
+                                                        />{" "}
+                                                        <br />{" "}
+                                                        <span className="italic">
+                                                            ({item.metode})
+                                                        </span>
+                                                    </>
+                                                ) : item.pembayaran >
+                                                  item.total ? (
+                                                    <>
+                                                        <RupiahFormat
+                                                            value={item.total}
+                                                        />{" "}
+                                                        <br />{" "}
+                                                        <span className="italic">
+                                                            ({item.metode})
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <RupiahFormat
+                                                            value={
+                                                                item.pembayaran
+                                                            }
+                                                        />{" "}
+                                                        <br />{" "}
+                                                        <span className="italic">
+                                                            ({item.metode})
+                                                        </span>
+                                                    </>
+                                                )}
                                             </td>
                                         </tr>
                                     ) : (
@@ -145,21 +257,122 @@ const PrintPendapatanTable = React.forwardRef(
                                                         )}
                                                     </td>
                                                     <td className="px-3 py-2">
-                                                        <span className="font-semibold">
+                                                        {item.total +
+                                                            item.pendapatan_lainnya.reduce(
+                                                                (acc, item) =>
+                                                                    acc +
+                                                                    item.total,
+                                                                0
+                                                            ) ===
+                                                        item.pembayaran ? (
+                                                            <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                                Lunas
+                                                            </span>
+                                                        ) : (
+                                                            <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                                Termin
+                                                            </span>
+                                                        )}
+                                                        <span className="font-medium">
                                                             {item.kode} -
                                                             Lainnya
                                                         </span>{" "}
                                                         <br />
-                                                        {pendapatan.nama} total {pendapatan.jumlah}
+                                                        {pendapatan.nama} dengan
+                                                        jumlah{" "}
+                                                        {pendapatan.jumlah}
+                                                        {item.total +
+                                                            item.pendapatan_lainnya.reduce(
+                                                                (
+                                                                    acc,
+                                                                    pendapatan
+                                                                ) =>
+                                                                    acc +
+                                                                    pendapatan.total,
+                                                                0
+                                                            ) ===
+                                                        item.pembayaran ? (
+                                                            <></>
+                                                        ) : item.pembayaran >
+                                                          item.total ? (
+                                                            <>
+                                                                <span className="italic">
+                                                                    <br/>
+                                                                    Details :
+                                                                    Sisa
+                                                                    Pembayaran{" "}
+                                                                    {new Intl.NumberFormat(
+                                                                        "id-ID",
+                                                                        {
+                                                                            style: "currency",
+                                                                            currency:
+                                                                                "IDR",
+                                                                            minimumFractionDigits: 0,
+                                                                        }
+                                                                    ).format(
+                                                                        item.total +
+                                                                            item.pendapatan_lainnya.reduce(
+                                                                                (
+                                                                                    acc,
+                                                                                    item
+                                                                                ) =>
+                                                                                    acc +
+                                                                                    item.total,
+                                                                                0
+                                                                            ) -
+                                                                            item.pembayaran
+                                                                    )}
+                                                                </span>
+                                                            </>
+                                                        ) : (
+                                                            <></>
+                                                        )}
                                                     </td>
                                                     <td className="px-3 py-2">
-                                                        <RupiahFormat
-                                                            value={
-                                                                pendapatan.total
-                                                            }
-                                                        />{" "}
-                                                        <br /> (
-                                                        {pendapatan.metode} )
+                                                        {item.total +
+                                                            item.pendapatan_lainnya.reduce(
+                                                                (acc, item) =>
+                                                                    acc +
+                                                                    item.total,
+                                                                0
+                                                            ) ===
+                                                        item.pembayaran ? (
+                                                            <>
+                                                                <RupiahFormat
+                                                                    value={
+                                                                        pendapatan.total
+                                                                    }
+                                                                />{" "}
+                                                                <br />{" "}
+                                                                <span className="italic">
+                                                                    (
+                                                                    {
+                                                                        pendapatan.metode
+                                                                    }
+                                                                    )
+                                                                </span>
+                                                            </>
+                                                        ) : item.pembayaran >
+                                                          item.total ? (
+                                                            <>
+                                                                <RupiahFormat
+                                                                    value={
+                                                                        item.pembayaran -
+                                                                        item.total
+                                                                    }
+                                                                />{" "}
+                                                                <br />{" "}
+                                                                <span className="italic">
+                                                                    (
+                                                                    {
+                                                                        pendapatan.metode
+                                                                    }
+                                                                    )
+                                                                </span>
+                                                            </>
+                                                        ) : (
+                                                            <></>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             )
@@ -173,7 +386,7 @@ const PrintPendapatanTable = React.forwardRef(
                             <tr>
                                 <td
                                     colSpan="4"
-                                    className="px-3 py-2 text-center"
+                                    className="px-3 py-2 text-center bg-white h-14"
                                 >
                                     Tidak ada data pendapatan untuk ditampilkan.
                                 </td>

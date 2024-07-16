@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $totalSewaHariIni = Sewa::whereDate('mulai_tanggal', $today)->count();
 
         $endOfMonth = Carbon::now()->endOfMonth();
-        $sewaAktifSampaiAkhirBulan = Sewa::whereDate('akhir_tanggal', '>=', $today)
+        $sewaAktifSampaiAkhirBulan = Sewa::whereDate('akhir_tanggal', '>', $today)
             ->whereDate('akhir_tanggal', '<=', $endOfMonth)
             ->count();
         $startOfMonth = Carbon::now()->startOfMonth();
@@ -27,14 +27,14 @@ class DashboardController extends Controller
             ->count();
 
         $totalUangSewaKendaraan = Sewa::whereDate('mulai_tanggal', $today)
-            ->sum('total');
+            ->sum('pembayaran');
         $totalUangLainnya = Sewa::whereDate('mulai_tanggal', $today)
             ->with('pendapatanLainnya')
             ->get()
             ->flatMap(function ($sewa) {
                 return $sewa->pendapatanLainnya;
             })
-            ->sum('total');
+            ->sum('pembayaran');
         $totalUangMasukHariIni = $totalUangSewaKendaraan + $totalUangLainnya;
 
         $totalUangKeluarHariIni = Pengeluaran::whereDate('tanggal', $today)
@@ -48,8 +48,8 @@ class DashboardController extends Controller
             ->get()
             ->flatMap(function ($sewa) {
                 return array_merge(
-                    [$sewa->total],
-                    $sewa->pendapatanLainnya->pluck('total')->toArray()
+                    [$sewa->pembayaran],
+                    $sewa->pendapatanLainnya->pluck('pembayaran')->toArray()
                 );
             })
             ->sum();

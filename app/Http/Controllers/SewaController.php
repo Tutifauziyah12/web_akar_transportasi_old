@@ -206,6 +206,16 @@ class SewaController extends Controller
         return response()->json($lastSewa);
     }
 
+    public function cetak(Sewa $sewa, $kode)
+    {
+        // dd($kode);
+        $lastSewa = Sewa::with('sewaKendaraan.kendaraan', 'pendapatanLainnya')
+            ->where('kode', 'like', $kode)
+            ->orderBy('kode', 'desc')
+            ->first();
+        return response()->json($lastSewa);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
