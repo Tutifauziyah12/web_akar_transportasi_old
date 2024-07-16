@@ -55,7 +55,8 @@ class SewaController extends Controller
         $sewa = $query->with('sewaKendaraan.kendaraan', 'pendapatanLainnya')->paginate(10);
 
 
-        $kendaraans = Kendaraan::all();
+        $kendaraans = Kendaraan::where('status', 'Aktif')->get();
+
         $lastSewa = Sewa::where('kode', 'like', 'PS24%')->orderBy('kode', 'desc')->first();
         $lastKode = $lastSewa ? $lastSewa->kode : "PS24000";
 
