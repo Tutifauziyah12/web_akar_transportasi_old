@@ -21,7 +21,11 @@ export const validationSchema = yup.object().shape({
                 .integer("ID Kendaraan harus berupa angka bulat")
         )
         .min(1, "Minimal satu kendaraan harus dipilih"),
-    total: yup.number().required("Total harus diisi"),
+    total: yup
+        .number()
+        .required("Total harus diisi")
+        .min(1, "Total harus lebih besar dari Rp 0"),
+    tipe_pembayaran: yup.string().required("Tipe Pembayaran harus diisi"),
     metode: yup.string().required("Metode harus diisi"),
     pendapatanLainnya: yup.array().of(
         yup.object().shape({
@@ -31,7 +35,10 @@ export const validationSchema = yup.object().shape({
                 .required("Jumlah harus diisi")
                 .positive("Jumlah harus berupa angka positif")
                 .integer("Jumlah harus berupa angka bulat"),
-            total: yup.number().required("Total harus diisi"),
+            total: yup
+                .number()
+                .required("Total harus diisi")
+                .min(1, "Total harus lebih besar dari Rp 0"),
             metode: yup.string().required("Metode harus diisi"),
         })
     ),
@@ -39,7 +46,10 @@ export const validationSchema = yup.object().shape({
 
 export const validationSchemaPengeluaran = yup.object().shape({
     kode: yup.string().required("Kode harus diisi"),
-    total: yup.number().required("Total harus diisi"),
+    total: yup
+        .number()
+        .required("Total harus diisi")
+        .min(1, "Total harus lebih besar dari Rp 0"),
     metode: yup.string().required("Metode harus diisi"),
     nama: yup.string().required("Nama harus diisi"),
     tanggal: yup
@@ -62,5 +72,8 @@ export const validationSchemaUserCreation = yup.object().shape({
     password_confirmation: yup
         .string()
         .required("Konfirmasi password harus diisi")
-        .oneOf([yup.ref('password'), null], "Konfirmasi password harus cocok dengan password"),
+        .oneOf(
+            [yup.ref("password"), null],
+            "Konfirmasi password harus cocok dengan password"
+        ),
 });

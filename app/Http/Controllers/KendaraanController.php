@@ -17,7 +17,7 @@ class KendaraanController extends Controller
     {
         $this->middleware('Owner');
     }
-    
+
     public function index(Request $request): Response
     {
         $searchTerm = $request->input('search');
@@ -68,10 +68,23 @@ class KendaraanController extends Controller
         }
     }
 
-    public function show(Kendaraan $kendaraan)
+    public function show(Kendaraan $kendaraan, $id)
     {
-        //
+        try {
+            $lastKendaraan = Kendaraan::where('id', $id)
+                ->orderByDesc('id')
+                ->first();
+
+            if (!$lastKendaraan) {
+                return response()->json(['message' => 'Kendaraan not found.'], 404);
+            }
+
+            return response()->json($lastKendaraan);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
+
 
     public function edit(Kendaraan $kendaraan)
     {
@@ -85,18 +98,18 @@ class KendaraanController extends Controller
         $namaKendaraan = $kendaraan->nama;
         try {
             $validated = $request->validated();
-            
+
             if ($validated['no_registrasi'] !== $kendaraan->no_registrasi) {
                 $existingKendaraan = Kendaraan::where('no_registrasi', $validated['no_registrasi'])
                     ->exists();
-    
+
                 if ($existingKendaraan) {
                     return redirect()->back()->withInput()->withErrors(['no_registrasi' => 'Nomor registrasi sudah ada']);
                 }
             }
-    
+
             $kendaraan->update($validated);
-    
+
             return redirect()->route('kendaraan.index')->with('message', sprintf("Kendaraan atas nama %s berhasil diupdate!", $namaKendaraan));
         } catch (QueryException $exception) {
             if ($exception->errorInfo[1] === 1062) {
@@ -104,11 +117,11 @@ class KendaraanController extends Controller
                     return redirect()->back()->withInput()->withErrors(['no_registrasi' => 'Nomor registrasi sudah ada']);
                 }
             }
-    
+
             return redirect()->back()->withInput()->withErrors(['general' => 'Terjadi kesalahan saat mengupdate kendaraan']);
         }
     }
-    
+
 
 
     public function destroy(Kendaraan $kendaraan)

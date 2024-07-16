@@ -61,77 +61,56 @@ class KasController extends Controller
     }
 
     public function indexPendapatan(Request $request)
-    {
-        $query = Sewa::query();
+{
+    $query = Sewa::query();
 
-        if ($request->filled('startDate') && $request->filled('endDate')) {
-            $startDate = $request->input('startDate');
-            $endDate = $request->input('endDate');
-            $query->where(function ($q) use ($startDate, $endDate) {
-                $q->whereBetween('mulai_tanggal', [$startDate, $endDate])
-                    ->orWhereBetween('akhir_tanggal', [$startDate, $endDate]);
-            });
-        }
+    // Filter by date range if both startDate and endDate are provided
+    if ($request->filled('startDate') && $request->filled('endDate')) {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $query->where(function ($q) use ($startDate, $endDate) {
+            $q->whereBetween('mulai_tanggal', [$startDate, $endDate])
+                ->orWhereBetween('akhir_tanggal', [$startDate, $endDate]);
+        });
+    }
 
-        $searchTerm = $request->input('search', '');
-        if ($searchTerm !== '') {
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('kode', 'like', '%' . $searchTerm . '%')
-                    ->orWhereHas('sewaKendaraan.kendaraan', function ($q) use ($searchTerm) {
-                        $q->where('nama', 'like', '%' . $searchTerm . '%')
-                            ->orWhere('no_registrasi', 'like', '%' . $searchTerm . '%');
-                    })
-                    ->orWhereHas('pendapatanLainnya', function ($q) use ($searchTerm) {
-                        $q->where('nama', 'like', '%' . $searchTerm . '%')
-                            ->orWhere('metode', 'like', '%' . $searchTerm . '%')
-                            ->orWhere('total', 'like', '%' . $searchTerm . '%');
-                    });
-            });
-        }
+    $searchTerm = $request->input('search', '');
+    $category = $request->input('category', 'semua');
 
-        if ($request->filled('category') && $request->input('category') !== 'semua') {
-            $category = $request->input('category');
-            if ($category === 'pendapatan_sewa') {
-                $query->whereHas('sewaKendaraan', function ($q) use ($searchTerm) {
-                    if ($searchTerm !== '') {
-                        $q->where(function ($q) use ($searchTerm) {
-                            $q->orWhere('metode', 'like', '%' . $searchTerm . '%')
-                                ->orWhere('total', 'like', '%' . $searchTerm . '%');
-                        });
-                    }
-                });
-            } elseif ($category === 'pendapatan_lainnya') {
-                $query->whereHas('pendapatanLainnya', function ($q) use ($searchTerm) {
-                    if ($searchTerm !== '') {
-                        $q->where(function ($q) use ($searchTerm) {
-                            $q->where('nama', 'like', '%' . $searchTerm . '%')
-                                ->orWhere('metode', 'like', '%' . $searchTerm . '%')
-                                ->orWhere('total', 'like', '%' . $searchTerm . '%');
-                        });
-                    }
-                });
-            }
-        }
-
-        $sewa = $query->with(['sewaKendaraan.kendaraan', 'pendapatanLainnya' => function ($q) use ($searchTerm) {
-            if ($searchTerm !== '') {
-                $q->where(function ($q) use ($searchTerm) {
+    if ($searchTerm !== '') {
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('kode', 'like', '%' . $searchTerm . '%')
+                ->orWhereHas('sewaKendaraan.kendaraan', function ($q) use ($searchTerm) {
+                    $q->where('nama', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('no_registrasi', 'like', '%' . $searchTerm . '%');
+                })
+                ->orWhereHas('pendapatanLainnya', function ($q) use ($searchTerm) {
                     $q->where('nama', 'like', '%' . $searchTerm . '%')
                         ->orWhere('metode', 'like', '%' . $searchTerm . '%')
                         ->orWhere('total', 'like', '%' . $searchTerm . '%');
                 });
-            }
-        }])->get();
-
-        return Inertia::render('Kas/IndexPendapatan', [
-            'status' => session('status'),
-            'searchTerm' => $searchTerm,
-            'startDate' => $request->input('startDate'),
-            'endDate' => $request->input('endDate'),
-            'category' => $request->input('category'),
-            'sewa' => $sewa
-        ]);
+        });
     }
+
+    if ($category !== 'semua') {
+        if ($category === 'pendapatan_sewa') {
+            $query->whereHas('sewaKendaraan');
+        } elseif ($category === 'pendapatan_lainnya') {
+            $query->whereHas('pendapatanLainnya');
+        }
+    }
+
+    $sewa = $query->with(['sewaKendaraan.kendaraan', 'pendapatanLainnya'])->get();
+
+    return Inertia::render('Kas/IndexPendapatan', [
+        'status' => session('status'),
+        'searchTerm' => $searchTerm,
+        'startDate' => $request->input('startDate'),
+        'endDate' => $request->input('endDate'),
+        'category' => $request->input('category'),
+        'sewa' => $sewa
+    ]);
+}
 
     public function indexPengeluaran(Request $request)
     {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link, usePage } from "@inertiajs/react";
@@ -14,9 +14,20 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { id } from "date-fns/locale";
 import { format } from "date-fns";
-import { DateRange } from "react-date-range";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css"; // theme css file
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+
+registerLocale("id", id);
+setDefaultLocale("id");
+
+import MyModal from "../Pendapatan/MyModal";
+import MyModalEdit from "../Pendapatan/MyModalEdit";
+import MyModalDelete from "../Pendapatan/MyModalDelete";
+import Create from "./Create";
+import Edit from "./Edit";
 
 export default function Index({
     auth,
@@ -24,9 +35,9 @@ export default function Index({
     searchTerm: initialSearchTerm,
     startDate: initialStartDate,
     endDate: initialEndDate,
+    lastKode,
 }) {
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm || "");
-    const [formattedDateRange, setFormattedDateRange] = useState("");
     const [state, setState] = useState([
         {
             startDate: initialStartDate ? new Date(initialStartDate) : null,
@@ -34,17 +45,6 @@ export default function Index({
             key: "selection",
         },
     ]);
-    const [showDateRangePicker, setShowDateRangePicker] = useState(false);
-
-    const handleDelete = (id) => {
-        if (
-            confirm(
-                "Apakah Anda yakin ingin menghapus data sewa kendaraan ini?"
-            )
-        ) {
-            Inertia.delete(route("pengeluaran.destroy", id));
-        }
-    };
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -53,13 +53,12 @@ export default function Index({
             : null;
         const endDate = state[0].endDate
             ? format(state[0].endDate, "yyyy-MM-dd")
+            : state[0].startDate
+            ? format(state[0].startDate, "yyyy-MM-dd")
             : null;
 
-        const query = {
-            search: searchTerm,
-        };
-
-        if (startDate && endDate) {
+        const query = { search: searchTerm };
+        if (startDate) {
             query.startDate = startDate;
             query.endDate = endDate;
         }
@@ -81,37 +80,73 @@ export default function Index({
         ]);
     };
 
-    const handleXDateRange = () => {
-        setShowDateRangePicker(false);
+    const onChange = (dates) => {
+        const [start, end] = dates;
+        setState([{ startDate: start, endDate: end, key: "selection" }]);
     };
 
-    const { flash } = usePage().props;
+    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
+        const renderedValues = () => {
+            const [start, end] = value.split(" - ");
+            if (!end || start === end) {
+                return start;
+            }
+            return `${start} - ${end}`;
+        };
+        return (
+            <input
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-64 2xl:w-72 p-2 2xl:p-2.5"
+                onClick={onClick}
+                ref={ref}
+                placeholder="Pilih tanggal..."
+                value={renderedValues()}
+                readOnly
+            />
+        );
+    });
 
+    const { flash } = usePage().props;
     useEffect(() => {
         if (flash && flash.message) {
             toast.success(flash.message);
         }
     }, [flash]);
 
-    //   toast.success('Pesan sukses!');
-    const startDate = state[0].startDate
-        ? format(state[0].startDate, "yyyy-MM-dd")
-        : "";
-    const endDate = state[0].endDate
-        ? format(state[0].endDate, "yyyy-MM-dd")
-        : "";
+    const [showModal, setShowModal] = useState(false);
+    const [showModalEdit, setShowModalEdit] = useState(false);
+    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [editId, setEditId] = useState(null);
 
-    useEffect(() => {
-        if (startDate && endDate) {
-            const formattedRange = FormatDateRange({
-                startDateString: startDate,
-                endDateString: endDate,
-            });
-            setFormattedDateRange(formattedRange);
-        } else {
-            setFormattedDateRange("");
-        }
-    }, [startDate, endDate]);
+    const handleShow = () => {
+        setShowModal(true);
+    };
+
+    const handleClose = () => {
+        setShowModal(false);
+    };
+
+    const handleShowEdit = (kode) => {
+        setEditId(kode);
+        setShowModalEdit(true);
+    };
+
+    const handleCloseEdit = () => {
+        setShowModalEdit(false);
+    };
+
+    const handleShowDelete = (kode) => {
+        setEditId(kode);
+        setShowModalDelete(true);
+    };
+
+    const handleCloseDelete = () => {
+        setShowModalDelete(false);
+    };
+
+    const handleDelete = (kode) => {
+        Inertia.delete(route("pengeluaran.destroy", kode));
+    };
 
     return (
         <AuthenticatedLayout
@@ -140,7 +175,7 @@ export default function Index({
                                         type="text"
                                         id="cari"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-base rounded-md 2xl:rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2"
-                                        placeholder="Cari"
+                                        placeholder="Cari kode atau nama"
                                         value={searchTerm}
                                         onChange={(e) =>
                                             setSearchTerm(e.target.value)
@@ -149,68 +184,38 @@ export default function Index({
                                 </div>
 
                                 <div className="w-fit">
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            onClick={() =>
-                                                setShowDateRangePicker(
-                                                    !showDateRangePicker
-                                                )
-                                            }
-                                            value={formattedDateRange}
-                                            readOnly
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-base rounded-md 2xl:rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2"
-                                            placeholder="Tanggal"
+                                    <label
+                                        htmlFor="tanggal"
+                                        className="block mb-2 font-semibold text-gray-700"
+                                    >
+                                        Tanggal
+                                    </label>
+
+                                    <div>
+                                        <DatePicker
+                                            selected={state[0].startDate}
+                                            onChange={onChange}
+                                            startDate={state[0].startDate}
+                                            endDate={state[0].endDate}
+                                            selectsRange
+                                            customInput={<ExampleCustomInput />}
+                                            dateFormat="dd MMMM yyyy"
+                                            locale="id"
                                         />
                                     </div>
-                                    {showDateRangePicker && (
-                                        <div className="absolute z-10 mt-2 drop-shadow-lg shadow-slate-500 ">
-                                            <div className="flex">
-                                                <DateRange
-                                                    showDateDisplay={false}
-                                                    editableDateInputs={false}
-                                                    onChange={(item) =>
-                                                        setState([
-                                                            item.selection,
-                                                        ])
-                                                    }
-                                                    moveRangeOnFirstSelection={
-                                                        false
-                                                    }
-                                                    ranges={state}
-                                                    locale={id}
-                                                    value={formattedDateRange}
-                                                    startDatePlaceholder={
-                                                        "Tanggal Mulai"
-                                                    }
-                                                    endDatePlaceholder={
-                                                        "Tanggal Akhir"
-                                                    }
-                                                />
-                                                <div>
-                                                    <IoCloseCircleOutline
-                                                        onClick={
-                                                            handleXDateRange
-                                                        }
-                                                        className="text-4xl mt-4 ml-3 text-red-500 bg-white rounded-full"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
 
                                 <div className="flex items-center space-x-2">
                                     <button
                                         type="button"
                                         onClick={handleReset}
-                                        className="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-2 2xl:px-4 rounded-md"
+                                        className="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
                                     >
                                         Reset
                                     </button>
                                     <button
                                         type="submit"
-                                        className="bg-green-400 hover:bg-green-500 text-white font-medium py-2 px-2 2xl:px-4 rounded-md"
+                                        className="bg-green-400 hover:bg-green-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
                                     >
                                         Submit
                                     </button>
@@ -218,16 +223,15 @@ export default function Index({
                             </div>
                         </form>
                     </div>
-                    {!showDateRangePicker && (
-                        <div className="flex items-end">
-                            <a
-                                href={route("pengeluaran.create")}
-                                className="flex items-center text-xl px-2 py-1 text-blue-500 hover:text-blue-700"
-                            >
-                                <IoAddOutline />
-                            </a>
-                        </div>
-                    )}
+                    <div className="flex items-end">
+                        <a
+                            // href={route("sewa.create")}
+                            onClick={() => handleShow()}
+                            className="flex items-center text-xl px-2 py-1 text-blue-500 hover:text-blue-700"
+                        >
+                            <IoAddOutline />
+                        </a>
+                    </div>
                 </div>
 
                 <div className="overflow-x-auto">
@@ -310,18 +314,28 @@ export default function Index({
                                             </td>
                                             <td className="px-1 py-2 flex justify-center space-x-2">
                                                 <a
-                                                    href={route(
-                                                        "pengeluaran.edit",
-                                                        kendaraan.id
-                                                    )}
+                                                    // href={route(
+                                                    //     "pengeluaran.edit",
+                                                    //     kendaraan.id
+                                                    // )}
+                                                    onClick={() =>
+                                                        handleShowEdit(
+                                                            kendaraan.kode
+                                                        )
+                                                    }
                                                     className="px-2 text-center hover:text-yellow-600"
                                                 >
                                                     <IoPencil />
                                                 </a>
                                                 <button
+                                                    // onClick={() =>
+                                                    //     handleDelete(
+                                                    //         kendaraan.id
+                                                    //     )
+                                                    // }
                                                     onClick={() =>
-                                                        handleDelete(
-                                                            kendaraan.id
+                                                        handleShowDelete(
+                                                            kendaraan.kode
                                                         )
                                                     }
                                                     className="px-2 text-center hover:text-red-600"
@@ -365,6 +379,22 @@ export default function Index({
                     </div>
                 </div>
             </div>
+
+            <MyModal show={showModal} handleClose={handleClose}>
+                <Create handleClose={handleClose} lastKode={lastKode} />
+            </MyModal>
+
+            <MyModalEdit show={showModalEdit} handleCloseEdit={handleCloseEdit}>
+                <Edit handleCloseEdit={handleCloseEdit} kode={editId} />
+            </MyModalEdit>
+
+            <MyModalDelete
+                show={showModalDelete}
+                handleCloseDelete={handleCloseDelete}
+                handleDelete={handleDelete}
+                kode={editId}
+            />
+
             <ToastContainer
                 position="top-right"
                 autoClose={5000}

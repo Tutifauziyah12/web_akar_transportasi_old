@@ -6,18 +6,18 @@ import { IoAddOutline, IoPencil, IoTrash } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import MyModal from "../Pendapatan/MyModal";
+import MyModalEdit from "../Pendapatan/MyModalEdit";
+import MyModalDelete from "./MyModalDelete";
+import Create from "./Create";
+import Edit from "./Edit";
+
 export default function Index({
     auth,
     kendaraans,
     searchTerm: initialSearchTerm,
 }) {
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm || "");
-
-    const handleDelete = (id) => {
-        if (confirm("Apakah Anda yakin ingin menghapus kendaraan ini?")) {
-            Inertia.delete(route("kendaraan.destroy", id));
-        }
-    };
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -43,6 +43,41 @@ export default function Index({
         }
     }, [flash]);
 
+    const [showModal, setShowModal] = useState(false);
+    const [showModalEdit, setShowModalEdit] = useState(false);
+    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [editId, setEditId] = useState(null);
+
+    const handleShow = () => {
+        setShowModal(true);
+    };
+
+    const handleClose = () => {
+        setShowModal(false);
+    };
+
+    const handleShowEdit = (kode) => {
+        setEditId(kode);
+        setShowModalEdit(true);
+    };
+
+    const handleCloseEdit = () => {
+        setShowModalEdit(false);
+    };
+
+    const handleShowDelete = (kode) => {
+        setEditId(kode);
+        setShowModalDelete(true);
+    };
+
+    const handleCloseDelete = () => {
+        setShowModalDelete(false);
+    };
+
+    const handleDelete = (id) => {
+        Inertia.delete(route("kendaraan.destroy", id));
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -59,7 +94,7 @@ export default function Index({
                     <div className="w-fit p-3 2xl:p-4 mb-4 bg-white rounded-md 2xl:rounded-xl shadow-md 2xl:shadow-lg">
                         <form onSubmit={handleSearch}>
                             <div className="flex items-end space-x-2">
-                                <div className="w-fit">
+                                <div className="w-48">
                                     <label
                                         htmlFor="cari"
                                         className="block mb-2 font-semibold text-gray-700"
@@ -82,13 +117,13 @@ export default function Index({
                                     <button
                                         type="button"
                                         onClick={handleReset}
-                                        className="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-2 2xl:px-4 rounded-md"
+                                        className="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
                                     >
                                         Reset
                                     </button>
                                     <button
                                         type="submit"
-                                        className="bg-green-400 hover:bg-green-500 text-white font-medium py-2 px-2 2xl:px-4 rounded-md"
+                                        className="bg-green-400 hover:bg-green-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
                                     >
                                         Submit
                                     </button>
@@ -98,13 +133,15 @@ export default function Index({
                     </div>
                     <div className="flex items-end">
                         <a
-                            href={route("kendaraan.create")}
+                            // href={route("kendaraan.create")}
+                            onClick={() => handleShow()}
                             className="flex items-center text-xl px-2 py-1 text-blue-500 hover:text-blue-700"
                         >
                             <IoAddOutline />
                         </a>
                     </div>
                 </div>
+
                 <div className="overflow-x-auto">
                     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table className="w-full text-left rtl:text-right text-gray-500">
@@ -184,17 +221,22 @@ export default function Index({
                                             </td>
                                             <td className="px-8 py-4 flex justify-center space-x-2">
                                                 <a
-                                                    href={route(
-                                                        "kendaraan.edit",
-                                                        kendaraan.id
-                                                    )}
+                                                    // href={route(
+                                                    //     "kendaraan.edit",
+                                                    //     kendaraan.id
+                                                    // )}
+                                                    onClick={() =>
+                                                        handleShowEdit(
+                                                            kendaraan.id
+                                                        )
+                                                    }
                                                     className="px-2 py-1 text-center hover:text-yellow-600"
                                                 >
                                                     <IoPencil />
                                                 </a>
                                                 <button
                                                     onClick={() =>
-                                                        handleDelete(
+                                                        handleShowDelete(
                                                             kendaraan.id
                                                         )
                                                     }
@@ -210,6 +252,7 @@ export default function Index({
                         </table>
                     </div>
                 </div>
+
                 <div className="mt-6 flex justify-between">
                     <div>
                         <p className="text-gray-700">
@@ -237,6 +280,24 @@ export default function Index({
                         ))}
                     </div>
                 </div>
+
+                <MyModal show={showModal} handleClose={handleClose}>
+                    <Create handleClose={handleClose} />
+                </MyModal>
+
+                <MyModalEdit
+                    show={showModalEdit}
+                    handleCloseEdit={handleCloseEdit}
+                >
+                    <Edit handleCloseEdit={handleCloseEdit} id={editId} />
+                </MyModalEdit>
+
+                <MyModalDelete
+                    show={showModalDelete}
+                    handleCloseDelete={handleCloseDelete}
+                    handleDelete={handleDelete}
+                    id={editId}
+                />
             </div>
             <ToastContainer
                 position="top-right"

@@ -52,7 +52,7 @@ class SewaController extends Controller
 
 
 
-        $sewa = $query->with('sewaKendaraan.kendaraan')->paginate(10);
+        $sewa = $query->with('sewaKendaraan.kendaraan', 'pendapatanLainnya')->paginate(10);
 
 
         $kendaraans = Kendaraan::all();
@@ -78,15 +78,14 @@ class SewaController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('kode_sewa', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('nama', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('jumlah', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('total', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('metode', 'like', '%' . $searchTerm . '%');
+                    ->orWhere('nama', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('jumlah', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('total', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('metode', 'like', '%' . $searchTerm . '%');
             });
         }
 
         $query->orderByDesc('kode_sewa');
-
 
         if ($request->has('startDate') && $request->has('endDate')) {
             $startDate = date('Y-m-d', strtotime($request->input('startDate')));
@@ -196,9 +195,14 @@ class SewaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Sewa $sewa)
+    public function show(Sewa $sewa, $kode)
     {
-        //
+        // dd($kode);
+        $lastSewa = Sewa::with('sewaKendaraan.kendaraan', 'pendapatanLainnya')
+            ->where('kode', 'like', $kode)
+            ->orderBy('kode', 'desc')
+            ->first();
+        return response()->json($lastSewa);
     }
 
     /**
@@ -289,16 +293,16 @@ class SewaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sewa $sewa)
+    public function destroy(Sewa $sewa, $kode)
     {
         try {
             DB::beginTransaction();
 
-            SewaKendaraan::where('kode', $sewa->kode)->delete();
+            SewaKendaraan::where('kode', $kode)->delete();
 
-            SewaLainnya::where('kode_sewa', $sewa->kode)->delete();
+            SewaLainnya::where('kode_sewa',$kode)->delete();
 
-            Kas::where('kode', $sewa->kode)->delete();
+            Kas::where('kode',$kode)->delete();
 
             $sewa->delete();
 
@@ -306,7 +310,7 @@ class SewaController extends Controller
 
             return redirect()->route('sewa.index')->with('message', sprintf(
                 "Sewa dengan code %s berhasil dihapus!",
-                $sewa->kode
+               $kode
             ));
         } catch (\Exception $e) {
             DB::rollback();

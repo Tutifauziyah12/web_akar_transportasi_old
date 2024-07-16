@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, useForm } from "@inertiajs/react";
@@ -13,24 +13,47 @@ import {
 } from "react-icons/io5";
 import { validationSchemaUserCreation } from "@/Utils/validationSchema";
 
-export default function Edit({ auth, user }) {
+export default function Edit({ id, handleCloseEdit }) {
     const { data, setData, put, processing, errors, reset } = useForm({
-        name: user.name,
-        email: user.email,
-        level: user.level,
+        name: "",
+        email: "",
+        level: "",
         password: "",
         password_confirmation: "",
     });
 
     const [validationErrors, setValidationErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
-    const [showPasswordConfirmation, setShowPasswordConfirmation] =
-        useState(false);
+    const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData(name, value);
     };
+
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        if (id) {
+            axios
+                .get(`/admin/${id}`)
+                .then((response) => {
+                    const userData = response.data;
+                    setUser(userData);
+
+                    setData({
+                        name: userData.name,
+                        email: userData.email,
+                        level: userData.level,
+                        password: "",
+                        password_confirmation: "",
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching user:", error);
+                });
+        }
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,8 +61,11 @@ export default function Edit({ auth, user }) {
             await validationSchemaUserCreation.validate(data, {
                 abortEarly: false,
             });
-            put(`/admin/${user.id}`, {
-                onSuccess: () => reset(),
+            put(`/admin/${id}`, {
+                onSuccess: () => {
+                    reset();
+                    handleCloseEdit();
+                },
             });
         } catch (err) {
             if (err.inner) {
@@ -55,25 +81,12 @@ export default function Edit({ auth, user }) {
     };
 
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={
-                <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight">
-                    <a
-                        href={route("admin.index")}
-                        className="flex items-center pr-4"
-                    >
-                        <IoArrowBack className="text-2xl 2xl:text-4xl mr-4" />
-                        Edit Akun
-                    </a>
-                </h2>
-            }
-        >
+        <>
             <Head title="Edit Akun" />
 
-            <div className="py-4 2xl:py-6 my-8 2xl:my-10 px-6 2xl:px-10 bg-slate-200 bg-opacity-70 rounded-lg">
+            <div className="py-4 2xl:py-6 px-6 2xl:px-10">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid gap-10 mb-6 md:grid-cols-3">
+                    <div className="grid gap-5 mb-6 md:grid-cols-1">
                         <div>
                             <label
                                 htmlFor="name"
@@ -110,6 +123,7 @@ export default function Edit({ auth, user }) {
                                 type="email"
                                 name="email"
                                 value={data.email}
+                                disabled
                                 onChange={handleChange}
                                 className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
                                     validationErrors.email && "border-red-500"
@@ -234,27 +248,17 @@ export default function Edit({ auth, user }) {
                             )}
                         </div>
                     </div>
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-2 py-2 2xl:px-2.5 2xl:py-2.5 text-center"
-                    >
-                        Submit
-                    </button>
+                    <div className="flex justify-end space-x-2 pt-4">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-3 py-2 2xl:px-3.5 2xl:py-2.5 text-center"
+                        >
+                            Submit
+                        </button>
+                    </div>
                 </form>
             </div>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
-        </AuthenticatedLayout>
+        </>
     );
 }

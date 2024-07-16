@@ -13,7 +13,7 @@ import {
 } from "react-icons/io5";
 import { validationSchemaUserCreation } from "@/Utils/validationSchema";
 
-export default function Create({ auth }) {
+export default function Create({ handleClose }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         email: "",
@@ -39,7 +39,10 @@ export default function Create({ auth }) {
                 abortEarly: false,
             });
             post("/admin", {
-                onSuccess: () => reset(),
+                onSuccess: () => {
+                    reset();
+                    handleClose();
+                },
             });
         } catch (err) {
             if (err.inner) {
@@ -55,25 +58,12 @@ export default function Create({ auth }) {
     };
 
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={
-                <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight">
-                    <a
-                        href={route("admin.index")}
-                        className="flex items-center pr-4"
-                    >
-                        <IoArrowBack className="text-2xl 2xl:text-4xl mr-4" />
-                        Tambah Akun
-                    </a>
-                </h2>
-            }
-        >
+        <>
             <Head title="Tambah Akun" />
 
-            <div className="py-4 2xl:py-6 my-8 2xl:my-10 px-6 2xl:px-10 bg-slate-200 bg-opacity-70 rounded-lg">
+            <div className="py-4 2xl:py-6 px-6 2xl:px-10">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid gap-10 mb-6 md:grid-cols-3">
+                    <div className="grid gap-5 mb-6 md:grid-cols-1">
                         <div>
                             <label
                                 htmlFor="name"
@@ -233,27 +223,17 @@ export default function Create({ auth }) {
                             )}
                         </div>
                     </div>
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-2 py-2 2xl:px-2.5 2xl:py-2.5 text-center"
-                    >
-                        Submit
-                    </button>
+                    <div className="flex justify-end space-x-2 pt-4">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-3 py-2 2xl:px-3.5 2xl:py-2.5 text-center"
+                        >
+                            Submit
+                        </button>
+                    </div>
                 </form>
             </div>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
-        </AuthenticatedLayout>
+        </>
     );
 }

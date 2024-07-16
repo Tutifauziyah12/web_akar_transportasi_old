@@ -9,7 +9,7 @@ const PrintBukuBesarTable = React.forwardRef(
         let totalPendapatan = 0;
 
         return (
-            <div ref={ref} className="print:m-1">
+            <div ref={ref} className="print:my-10 print:mx-20 print:text-[9px]">
                 <div className="text-center font-semibold mb-6 text-xl 2xl:text-2xl">
                     <span className="block">Laporan Buku Besar Kas</span>
 
@@ -126,7 +126,7 @@ const PrintBukuBesarTable = React.forwardRef(
                                                                     pendapatan.nama
                                                                 }
                                                                 <br />
-                                                                <span className="text-[10px] 2xl:text-xs">
+                                                                <span className="text-[12px] 2xl:text-xs">
                                                                     Jumlah :{" "}
                                                                     {
                                                                         pendapatan.jumlah
@@ -184,7 +184,7 @@ const PrintBukuBesarTable = React.forwardRef(
                                                 <br />
                                                 {item.pengeluaran.nama}
                                                 <br />
-                                                <span className="text-[10px] 2xl:text-xs">
+                                                <span className="text-[12px] 2xl:text-xs">
                                                     Detail :{" "}
                                                     {
                                                         item.pengeluaran

@@ -1,25 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link, usePage } from "@inertiajs/react";
-import {
-    IoAddOutline,
-    IoPencil,
-    IoTrash,
-    IoCloseCircleOutline,
-} from "react-icons/io5";
+import { IoPencil, IoTrash, IoAddOutline } from "react-icons/io5";
 import RupiahFormat from "@/Utils/RupiahFormat";
 import FormatDateRange from "@/Utils/FormatDateRange";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { id } from "date-fns/locale";
 import { format } from "date-fns";
-import { DateRange } from "react-date-range";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+
+registerLocale("id", id);
+setDefaultLocale("id");
 
 import MyModal from "./MyModal";
+import MyModalEdit from "./MyModalEdit";
+import MyModalDelete from "./MyModalDelete";
 import Create from "./Create";
+import Edit from "./Edit";
 
 export default function Index({
     auth,
@@ -31,7 +34,6 @@ export default function Index({
     lastKode,
 }) {
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm || "");
-    const [formattedDateRange, setFormattedDateRange] = useState("");
     const [state, setState] = useState([
         {
             startDate: initialStartDate ? new Date(initialStartDate) : null,
@@ -39,17 +41,8 @@ export default function Index({
             key: "selection",
         },
     ]);
-    const [showDateRangePicker, setShowDateRangePicker] = useState(false);
 
-    const handleDelete = (id) => {
-        if (
-            confirm(
-                "Apakah Anda yakin ingin menghapus data sewa kendaraan ini?"
-            )
-        ) {
-            Inertia.delete(route("sewa.destroy", id));
-        }
-    };
+    console.log(sewa.data);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -58,13 +51,12 @@ export default function Index({
             : null;
         const endDate = state[0].endDate
             ? format(state[0].endDate, "yyyy-MM-dd")
+            : state[0].startDate
+            ? format(state[0].startDate, "yyyy-MM-dd")
             : null;
 
-        const query = {
-            search: searchTerm,
-        };
-
-        if (startDate && endDate) {
+        const query = { search: searchTerm };
+        if (startDate) {
             query.startDate = startDate;
             query.endDate = endDate;
         }
@@ -86,32 +78,37 @@ export default function Index({
         ]);
     };
 
-    const handleXDateRange = () => {
-        setShowDateRangePicker(false);
+    const onChange = (dates) => {
+        const [start, end] = dates;
+        setState([{ startDate: start, endDate: end, key: "selection" }]);
     };
 
-    const startDate = state[0].startDate
-        ? format(state[0].startDate, "yyyy-MM-dd")
-        : "";
-    const endDate = state[0].endDate
-        ? format(state[0].endDate, "yyyy-MM-dd")
-        : "";
-
-    useEffect(() => {
-        if (startDate && endDate) {
-            const formattedRange = FormatDateRange({
-                startDateString: startDate,
-                endDateString: endDate,
-            });
-            setFormattedDateRange(formattedRange);
-        } else {
-            setFormattedDateRange("");
-        }
-    }, [startDate, endDate]);
+    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
+        const renderedValues = () => {
+            const [start, end] = value.split(" - ");
+            if (!end || start === end) {
+                return start;
+            }
+            return `${start} - ${end}`;
+        };
+        return (
+            <input
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-64 2xl:w-72 p-2 2xl:p-2.5"
+                onClick={onClick}
+                ref={ref}
+                placeholder="Pilih tanggal..."
+                value={renderedValues()}
+                readOnly
+            />
+        );
+    });
 
     const { flash } = usePage().props;
-    const [successMessage, setSuccessMessage] = useState("");
     const [showModal, setShowModal] = useState(false);
+    const [showModalEdit, setShowModalEdit] = useState(false);
+    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [editId, setEditId] = useState(null);
 
     useEffect(() => {
         console.log("Flash message:", flash.message);
@@ -120,30 +117,348 @@ export default function Index({
         }
     }, [flash]);
 
-    useEffect(() => {
-        if (successMessage) {
-            toast.success(successMessage);
-            setSuccessMessage(""); // Reset successMessage setelah ditampilkan
-        }
-    }, [successMessage]);
-
     const handleShow = () => {
         setShowModal(true);
     };
 
     const handleClose = () => {
-        console.log("Modal ditutup");
-        toast.success("hallo");
         setShowModal(false);
     };
-    useEffect(() => {
-        if (!showModal) {
-            toast.success("Modal ditutup!");
-        }
-    }, [showModal]);
+
+    const handleShowEdit = (kode) => {
+        setEditId(kode);
+        setShowModalEdit(true);
+    };
+
+    const handleCloseEdit = () => {
+        setShowModalEdit(false);
+    };
+
+    const handleShowDelete = (kode) => {
+        setEditId(kode);
+        setShowModalDelete(true);
+    };
+
+    const handleCloseDelete = () => {
+        setShowModalDelete(false);
+    };
+
+    const handleDelete = (kode) => {
+        Inertia.delete(route("sewa.destroy", kode));
+    };
+
+    const totalPendapatan = 0;
 
     return (
-        <>
+        <AuthenticatedLayout
+            user={auth.user}
+            header={
+                <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight w-full">
+                    Tabel Sewa Kendaraan
+                </h2>
+            }
+        >
+            <Head title="Sewa Kendaraan" />
+
+            <div className="py-4 2xl:py-8 text-xs 2xl:text-base">
+                <div className="flex justify-between mb-2 2xl:mb-4">
+                    <div className="w-fit p-3 2xl:p-4 mb-4 bg-white rounded-md 2xl:rounded-xl shadow-md 2xl:shadow-lg">
+                        <form onSubmit={handleSearch} className="">
+                            <div className="flex items-end space-x-4">
+                                <div className="w-fit">
+                                    <label
+                                        htmlFor="cari"
+                                        className="block mb-2 font-semibold text-gray-700"
+                                    >
+                                        Filter
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="cari"
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-base rounded-md 2xl:rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2"
+                                        placeholder="Cari kode atau nama"
+                                        value={searchTerm}
+                                        onChange={(e) =>
+                                            setSearchTerm(e.target.value)
+                                        }
+                                    />
+                                </div>
+
+                                <div className="w-fit">
+                                    <label
+                                        htmlFor="tanggal"
+                                        className="block mb-2 font-semibold text-gray-700"
+                                    >
+                                        Tanggal
+                                    </label>
+
+                                    <div>
+                                        <DatePicker
+                                            selected={state[0].startDate}
+                                            onChange={onChange}
+                                            startDate={state[0].startDate}
+                                            endDate={state[0].endDate}
+                                            selectsRange
+                                            customInput={<ExampleCustomInput />}
+                                            dateFormat="dd MMMM yyyy"
+                                            locale="id"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center space-x-2">
+                                    <button
+                                        type="button"
+                                        onClick={handleReset}
+                                        className="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
+                                    >
+                                        Reset
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-green-400 hover:bg-green-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
+                                    >
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="flex items-end">
+                        <a
+                            // href={route("sewa.create")}
+                            onClick={() => handleShow()}
+                            className="flex items-center text-xl px-2 py-1 text-blue-500 hover:text-blue-700"
+                        >
+                            <IoAddOutline />
+                        </a>
+                    </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table className="w-full text-left rtl:text-right text-gray-500">
+                            <thead className="text-gray-700 uppercase bg-gray-200">
+                                <tr>
+                                    <th
+                                        scope="col"
+                                        className="px-8 py-3 w-[1%]"
+                                    >
+                                        No
+                                    </th>
+                                    <th scope="col" className="px-3 py-2">
+                                        Kode
+                                    </th>
+                                    <th scope="col" className="px-3 py-2">
+                                        Tanggal
+                                    </th>
+                                    <th scope="col" className="px-3 py-2">
+                                        Nama Penyewa
+                                    </th>
+                                    <th scope="col" className="px-3 py-2">
+                                        Nama Kendaraan
+                                    </th>
+                                    <th scope="col" className="px-3 py-2">
+                                        Total Biaya
+                                    </th>
+                                    <th scope="col" className="px-3 py-2">
+                                        Pembayaran
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="py-3 px-8 w-[1%]"
+                                    >
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {sewa.data.length === 0 ? (
+                                    <tr>
+                                        <td
+                                            colSpan="8"
+                                            className="px-6 py-4 text-center bg-white border-b hover:bg-gray-50"
+                                        >
+                                            Sewa Kendaraan tidak ditemukan
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    sewa.data.map((swa, index) => (
+                                        <tr
+                                            key={swa.id}
+                                            className="bg-white border-b hover:bg-gray-50 align-top"
+                                        >
+                                            <td className="px-8 py-2">
+                                                {sewa.from + index}
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {swa.kode}
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                <FormatDateRange
+                                                    startDateString={
+                                                        swa.mulai_tanggal
+                                                    }
+                                                    endDateString={
+                                                        swa.akhir_tanggal
+                                                    }
+                                                />
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {swa.nama}
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                <ul>
+                                                    {swa.sewa_kendaraan.map(
+                                                        (sk) => (
+                                                            <li key={sk.id}>
+                                                                {"- "}
+                                                                {
+                                                                    sk.kendaraan
+                                                                        .nama
+                                                                }{" "}
+                                                                (
+                                                                {
+                                                                    sk.kendaraan
+                                                                        .no_registrasi
+                                                                }
+                                                                )
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </ul>
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {/* {swa.pendapatan_lainnya.map(
+                                                    (sk) => (
+                                                        totalPendapatan += sk.total
+                                                    )
+                                                )} */}
+                                                {new Intl.NumberFormat(
+                                                    "id-ID",
+                                                    {
+                                                        style: "currency",
+                                                        currency: "IDR",
+                                                        minimumFractionDigits: 0,
+                                                    }
+                                                ).format(
+                                                    swa.total +
+                                                    swa.pendapatan_lainnya.reduce(
+                                                            (acc, item) =>
+                                                                acc +
+                                                                item.total,
+                                                            0
+                                                        )
+                                                )}
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {swa.pembayaran ===
+                                                swa.total ? (
+                                                    "Lunas"
+                                                ) : (
+                                                    <>
+                                                        Termin{" - "}
+                                                        <RupiahFormat
+                                                            value={
+                                                                swa.pembayaran
+                                                            }
+                                                        />
+                                                    </>
+                                                )}
+                                                <br />
+                                                <i>({swa.metode} )</i>
+                                            </td>
+                                            <td className="px-1 py-2 flex justify-center space-x-2">
+                                                <a
+                                                    // href={route(
+                                                    //     "sewa.edit",
+                                                    //     swa.id
+                                                    // )}
+                                                    onClick={() =>
+                                                        handleShowEdit(swa.kode)
+                                                    }
+                                                    className="px-2 text-center hover:text-yellow-600"
+                                                >
+                                                    <IoPencil />
+                                                </a>
+                                                <button
+                                                    // onClick={() =>
+                                                    //     handleDelete(swa.id)
+                                                    // }
+                                                    onClick={() =>
+                                                        handleShowDelete(
+                                                            swa.kode
+                                                        )
+                                                    }
+                                                    className="px-2 text-center hover:text-red-600"
+                                                >
+                                                    <IoTrash />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div className="mt-6 flex justify-between">
+                    <div>
+                        <p className="text-gray-700">
+                            Menampilkan {sewa.from}-{sewa.to} dari {sewa.total}{" "}
+                            total data sewa kendaraan
+                        </p>
+                    </div>
+                    <div>
+                        {sewa.links.map((link, index) => (
+                            <Link
+                                key={index}
+                                href={link.url}
+                                className={`mx-1 px-3 py-2 hover:bg-slate-200 border rounded ${
+                                    link.active
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-white text-blue-500"
+                                }`}
+                            >
+                                {" "}
+                                {link.label === "&laquo; Previous"
+                                    ? "Sebelumnya"
+                                    : link.label === "Next &raquo;"
+                                    ? "Selanjutnya"
+                                    : link.label}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+
+                <MyModal show={showModal} handleClose={handleClose}>
+                    <Create
+                        handleClose={handleClose}
+                        kendaraans={kendaraans}
+                        lastKode={lastKode}
+                    />
+                </MyModal>
+
+                <MyModalEdit
+                    show={showModalEdit}
+                    handleCloseEdit={handleCloseEdit}
+                >
+                    <Edit
+                        handleCloseEdit={handleCloseEdit}
+                        kendaraans={kendaraans}
+                        lastKode={lastKode}
+                        kode={editId}
+                    />
+                </MyModalEdit>
+
+                <MyModalDelete
+                    show={showModalDelete}
+                    handleCloseDelete={handleCloseDelete}
+                    handleDelete={handleDelete}
+                    kode={editId}
+                />
+            </div>
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
@@ -156,296 +471,6 @@ export default function Index({
                 pauseOnHover
                 theme="light"
             />
-            <AuthenticatedLayout
-                user={auth.user}
-                header={
-                    <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight w-full">
-                        Tabel Sewa Kendaraan
-                    </h2>
-                }
-            >
-                <Head title="Sewa Kendaraan" />
-
-                <div className="py-4 2xl:py-8 text-xs 2xl:text-base">
-                    <div className="flex justify-between mb-2 2xl:mb-4">
-                        <div className="w-fit p-3 2xl:p-4 mb-4 bg-white rounded-md 2xl:rounded-xl shadow-md 2xl:shadow-lg">
-                            <form onSubmit={handleSearch} className="">
-                                <div className="flex items-end space-x-4">
-                                    <div className="w-fit">
-                                        <label
-                                            htmlFor="cari"
-                                            className="block mb-2 font-semibold text-gray-700"
-                                        >
-                                            Filter
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="cari"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-base rounded-md 2xl:rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2"
-                                            placeholder="Cari"
-                                            value={searchTerm}
-                                            onChange={(e) =>
-                                                setSearchTerm(e.target.value)
-                                            }
-                                        />
-                                    </div>
-
-                                    <div className="w-fit">
-                                        <div className="relative">
-                                            <input
-                                                type="text"
-                                                onClick={() =>
-                                                    setShowDateRangePicker(
-                                                        !showDateRangePicker
-                                                    )
-                                                }
-                                                value={formattedDateRange}
-                                                readOnly
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-base rounded-md 2xl:rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2"
-                                                placeholder="Tanggal"
-                                            />
-                                        </div>
-                                        {showDateRangePicker && (
-                                            <div className="absolute z-10 mt-2 drop-shadow-lg shadow-slate-500 ">
-                                                <div className="flex">
-                                                    <DateRange
-                                                        showDateDisplay={false}
-                                                        editableDateInputs={
-                                                            false
-                                                        }
-                                                        onChange={(item) =>
-                                                            setState([
-                                                                item.selection,
-                                                            ])
-                                                        }
-                                                        moveRangeOnFirstSelection={
-                                                            false
-                                                        }
-                                                        ranges={state}
-                                                        locale={id}
-                                                        value={
-                                                            formattedDateRange
-                                                        }
-                                                        startDatePlaceholder={
-                                                            "Tanggal Mulai"
-                                                        }
-                                                        endDatePlaceholder={
-                                                            "Tanggal Akhir"
-                                                        }
-                                                    />
-                                                    <div>
-                                                        <IoCloseCircleOutline
-                                                            onClick={
-                                                                handleXDateRange
-                                                            }
-                                                            className="text-4xl mt-4 ml-3 text-red-500 bg-white rounded-full"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="flex items-center space-x-2">
-                                        <button
-                                            type="button"
-                                            onClick={handleReset}
-                                            className="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
-                                        >
-                                            Reset
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className="bg-green-400 hover:bg-green-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
-                                        >
-                                            Submit
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        {!showDateRangePicker && (
-                            <div className="flex items-end">
-                                <a
-                                    href={route("sewa.create")}
-                                    className="flex items-center text-xl px-2 py-1 text-blue-500 hover:text-blue-700"
-                                >
-                                    <IoAddOutline />
-                                </a>
-
-                                <button
-                                    className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-                                    onClick={() => handleShow()}
-                                >
-                                    Add Post
-                                </button>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="overflow-x-auto">
-                        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                            <table className="w-full text-left rtl:text-right text-gray-500">
-                                <thead className="text-gray-700 uppercase bg-gray-200">
-                                    <tr>
-                                        <th
-                                            scope="col"
-                                            className="px-8 py-3 w-[1%]"
-                                        >
-                                            No
-                                        </th>
-                                        <th scope="col" className="px-3 py-2">
-                                            Kode
-                                        </th>
-                                        <th scope="col" className="px-3 py-2">
-                                            Tanggal
-                                        </th>
-                                        <th scope="col" className="px-3 py-2">
-                                            Nama Penyewa
-                                        </th>
-                                        <th scope="col" className="px-3 py-2">
-                                            Nama Kendaraan
-                                        </th>
-                                        <th scope="col" className="px-3 py-2">
-                                            Total
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="py-3 px-8 w-[1%]"
-                                        >
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {sewa.data.length === 0 ? (
-                                        <tr>
-                                            <td
-                                                colSpan="7"
-                                                className="px-6 py-4 text-center bg-white border-b hover:bg-gray-50"
-                                            >
-                                                Sewa Kendaraan tidak ditemukan
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        sewa.data.map((swa, index) => (
-                                            <tr
-                                                key={swa.id}
-                                                className="bg-white border-b hover:bg-gray-50 align-top"
-                                            >
-                                                <td className="px-8 py-2">
-                                                    {sewa.from + index}
-                                                </td>
-                                                <td className="px-3 py-2">
-                                                    {swa.kode}
-                                                </td>
-                                                <td className="px-3 py-2">
-                                                    <FormatDateRange
-                                                        startDateString={
-                                                            swa.mulai_tanggal
-                                                        }
-                                                        endDateString={
-                                                            swa.akhir_tanggal
-                                                        }
-                                                    />
-                                                </td>
-                                                <td className="px-3 py-2">
-                                                    {swa.nama}
-                                                </td>
-                                                <td className="px-3 py-2">
-                                                    <ul>
-                                                        {swa.sewa_kendaraan.map(
-                                                            (sk) => (
-                                                                <li key={sk.id}>
-                                                                    {"- "}
-                                                                    {
-                                                                        sk
-                                                                            .kendaraan
-                                                                            .nama
-                                                                    }{" "}
-                                                                    (
-                                                                    {
-                                                                        sk
-                                                                            .kendaraan
-                                                                            .no_registrasi
-                                                                    }
-                                                                    )
-                                                                </li>
-                                                            )
-                                                        )}
-                                                    </ul>
-                                                </td>
-                                                <td className="px-3 py-2">
-                                                    <RupiahFormat
-                                                        value={swa.total}
-                                                    />{" "}
-                                                    <br /> ({swa.metode} )
-                                                </td>
-                                                <td className="px-1 py-2 flex justify-center space-x-2">
-                                                    <a
-                                                        href={route(
-                                                            "sewa.edit",
-                                                            swa.id
-                                                        )}
-                                                        className="px-2 text-center hover:text-yellow-600"
-                                                    >
-                                                        <IoPencil />
-                                                    </a>
-                                                    <button
-                                                        onClick={() =>
-                                                            handleDelete(swa.id)
-                                                        }
-                                                        className="px-2 text-center hover:text-red-600"
-                                                    >
-                                                        <IoTrash />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="mt-6 flex justify-between">
-                        <div>
-                            <p className="text-gray-700">
-                                Menampilkan {sewa.from}-{sewa.to} dari{" "}
-                                {sewa.total} total data sewa kendaraan
-                            </p>
-                        </div>
-                        <div>
-                            {sewa.links.map((link, index) => (
-                                <Link
-                                    key={index}
-                                    href={link.url}
-                                    className={`mx-1 px-3 py-2 hover:bg-slate-200 border rounded ${
-                                        link.active
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-white text-blue-500"
-                                    }`}
-                                >
-                                    {" "}
-                                    {link.label === "&laquo; Previous"
-                                        ? "Sebelumnya"
-                                        : link.label === "Next &raquo;"
-                                        ? "Selanjutnya"
-                                        : link.label}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    <MyModal show={showModal} handleClose={handleClose}>
-                        <Create
-                            handleClose={handleClose}
-                            kendaraans={kendaraans}
-                            lastKode={lastKode}
-                            setSuccessMessage={setSuccessMessage}
-                        />
-                    </MyModal>
-                </div>
-            </AuthenticatedLayout>
-        </>
+        </AuthenticatedLayout>
     );
 }

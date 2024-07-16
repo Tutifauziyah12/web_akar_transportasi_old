@@ -17,6 +17,7 @@ class StoreSewaKendaraanRequest extends FormRequest
             'mulai_tanggal' => 'required|date',
             'akhir_tanggal' => 'required|date|after_or_equal:mulai_tanggal',
             'total' => 'required|numeric|min:0',
+            'pembayaran' => 'required|numeric|min:0',
             'metode' => 'required|string|in:Cash,Debit,Kredit',
         ];
     }
@@ -48,6 +49,10 @@ class StoreSewaKendaraanRequest extends FormRequest
             'total.required' => 'Total harus diisi.',
             'total.numeric' => 'Total harus berupa angka.',
             'total.min' => 'Total tidak boleh kurang dari :min.',
+
+            'pembayaran.required' => 'Pembayaran harus diisi.',
+            'pembayaran.numeric' => 'Pembayaran harus berupa angka.',
+            'pembayaran.min' => 'Pembayaran tidak boleh kurang dari :min.',
 
             'metode.required' => 'Metode pembayaran harus dipilih.',
             'metode.string' => 'Metode pembayaran harus berupa teks.',

@@ -22,14 +22,14 @@ class AdminController extends Controller
         $searchTerm = $request->input('search');
 
         $users = User::query()
-        ->when($searchTerm, function ($query, $searchTerm) {
-            return $query->where(function($q) use ($searchTerm) {
-                $q->where('name', 'like', "%{$searchTerm}%")
-                  ->orWhere('email', 'like', "%{$searchTerm}%")
-                  ->orWhere('level', 'like', "%{$searchTerm}%");
-            });
-        })
-        ->get();
+            ->when($searchTerm, function ($query, $searchTerm) {
+                return $query->where(function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', "%{$searchTerm}%")
+                        ->orWhere('email', 'like', "%{$searchTerm}%")
+                        ->orWhere('level', 'like', "%{$searchTerm}%");
+                });
+            })
+            ->get();
 
         return Inertia::render('Admin/Index', [
             'users' => $users,
@@ -74,6 +74,23 @@ class AdminController extends Controller
         }
     }
 
+    public function show(User $user, $id)
+    {
+        try {
+            $lastUser = User::where('id', $id)
+                ->orderByDesc('id')
+                ->first();
+
+            if (!$lastUser) {
+                return response()->json(['message' => 'User not found.'], 404);
+            }
+
+            return response()->json($lastUser);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function edit(User $user)
     {
         return Inertia::render('Admin/Edit', [
@@ -113,18 +130,11 @@ class AdminController extends Controller
 
     public function destroy(User $user)
     {
-        try {
-            DB::beginTransaction();
-            $user->delete();
+        $user->delete();
 
-            DB::commit();
-            return redirect()->route('admin.index')->with('message', sprintf(
-                "User dengan nama %s berhasil dihapus!",
-                $user->name
-            ));
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->withErrors(['message' => 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage()]);
-        }
+        return redirect()->route('admin.index')->with('message', sprintf(
+            "User dengan nama %s berhasil dihapus!",
+            $user->name
+        ));
     }
 }

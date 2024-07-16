@@ -26,10 +26,10 @@ class PengeluaranController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('kode', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('nama', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('keterangan', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('total', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('metode', 'like', '%' . $searchTerm . '%');
+                    ->orWhere('nama', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('keterangan', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('total', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('metode', 'like', '%' . $searchTerm . '%');
             });
         }
 
@@ -42,9 +42,10 @@ class PengeluaranController extends Controller
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
-
-
         $pengeluaran = $query->paginate(10);
+
+        $lastSewa = Pengeluaran::where('kode', 'like', 'P24%')->orderBy('kode', 'desc')->first();
+        $lastKode = $lastSewa ? $lastSewa->kode : "P24000";
 
         return Inertia::render('Pengeluaran/Index', [
             'pengeluaran' => $pengeluaran,
@@ -52,6 +53,7 @@ class PengeluaranController extends Controller
             'searchTerm' => $request->input('search'),
             'startDate' => $request->input('startDate'),
             'endDate' => $request->input('endDate'),
+            'lastKode' => $lastKode,
         ]);
     }
 
@@ -104,9 +106,13 @@ class PengeluaranController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pengeluaran $pengeluaran)
+    public function show(Pengeluaran $pengeluaran, $kode)
     {
-        //
+        $lastPengeluaran = Pengeluaran::where('kode', 'like', $kode)
+            ->orderBy('kode', 'desc')
+            ->first();
+
+        return response()->json($lastPengeluaran);
     }
 
     /**
@@ -122,39 +128,38 @@ class PengeluaranController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePengeluaranRequest $request, Pengeluaran $pengeluaran)
+    public function update(Pengeluaran $pengeluaran, UpdatePengeluaranRequest $request)
     {
-        $validated = $request->validated();
 
+        try {
+            DB::beginTransaction();
+            $validated = $request->validated();
+            $pengeluaran->update($validated);
+            DB::commit();
 
-        $pengeluaran->update([
-            'kode' => $validated['kode'],
-            'tanggal' => $validated['tanggal'],
-            'nama' => $validated['nama'],
-            'total' => $validated['total'],
-            'metode' => $validated['metode'],
-            'keterangan' => $validated['keterangan'],
-        ]);
+            return redirect()->route('pengeluaran.index')->with('message', 'Data pengeluaran berhasil diperbarui.');
+        } catch (\Exception $e) {
 
-        return redirect()->route('pengeluaran.index')->with('message', 'Data pengeluaran berhasil diperbarui.');
+            return redirect()->back()->withInput()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui data pengeluaran. Silakan coba lagi.']);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pengeluaran $pengeluaran)
+    public function destroy(Pengeluaran $pengeluaran, $kode)
     {
         try {
             DB::beginTransaction();
 
-            Kas::where('kode', $pengeluaran->kode)->delete();
+            Kas::where('kode', $kode)->delete();
             $pengeluaran->delete();
 
             DB::commit();
 
-            return redirect()->route('sewa.index')->with('message', sprintf(
+            return redirect()->route('pengeluaran.index')->with('message', sprintf(
                 "Data pengeluaran dengan code %s berhasil dihapus!",
-                $pengeluaran->kode
+                $kode
             ));
         } catch (\Exception $e) {
             DB::rollback();

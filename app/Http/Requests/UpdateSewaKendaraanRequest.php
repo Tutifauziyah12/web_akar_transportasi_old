@@ -27,6 +27,7 @@ class UpdateSewaKendaraanRequest extends FormRequest
             'mulai_tanggal' => 'required|date',
             'akhir_tanggal' => 'required|date|after_or_equal:mulai_tanggal',
             'total' => 'required|numeric|min:0',
+            'pembayaran' => 'required|numeric|min:0',
             'metode' => 'required|string|in:Cash,Debit,Kredit',
         ];
     }
@@ -43,7 +44,7 @@ class UpdateSewaKendaraanRequest extends FormRequest
             'nama.string' => 'Nama harus berupa teks.',
             'nama.max' => 'Nama tidak boleh lebih dari :max karakter',
             'nama.not_regex' => 'Format nama tidak valid',
-            
+
             'kode.required' => 'Kode harus diisi.',
             'kode.string' => 'Kode harus berupa teks.',
             'kode.max' => 'Kode tidak boleh lebih dari :max karakter.',
@@ -58,6 +59,10 @@ class UpdateSewaKendaraanRequest extends FormRequest
             'total.required' => 'Total harus diisi.',
             'total.numeric' => 'Total harus berupa angka.',
             'total.min' => 'Total tidak boleh kurang dari :min.',
+
+            'pembayaran.required' => 'Pembayaran harus diisi.',
+            'pembayaran.numeric' => 'Pembayaran harus berupa angka.',
+            'pembayaran.min' => 'Pembayaran tidak boleh kurang dari :min.',
 
             'metode.required' => 'Metode pembayaran harus dipilih.',
             'metode.string' => 'Metode pembayaran harus berupa teks.',

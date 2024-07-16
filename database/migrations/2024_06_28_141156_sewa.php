@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('mulai_tanggal');
             $table->date('akhir_tanggal');
             $table->bigInteger('total');
+            $table->bigInteger('pembayaran');
             $table->string('metode');
             $table->timestamps();
         

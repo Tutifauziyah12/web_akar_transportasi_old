@@ -51,16 +51,18 @@ Route::middleware(['auth', 'Owner'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
     Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
-    Route::get('/admin/{user}', [AdminController::class, 'edit'])->name('admin.storedite');
+    Route::get('/admin/{id}', [AdminController::class, 'show'])->name('admin.show');
+    Route::get('/admin/{user}/edit', [AdminController::class, 'edit'])->name('admin.edit');
     Route::put('/admin/{user}', [AdminController::class, 'update'])->name('admin.update');
     Route::delete('/admin/{user}', [AdminController::class, 'destroy'])->name('admin.destroy');
 
     Route::get('/kendaraan', [KendaraanController::class, 'index'])->name('kendaraan.index');
     Route::get('/kendaraan/create', [KendaraanController::class, 'create'])->name('kendaraan.create');
     Route::post('/kendaraan', [KendaraanController::class, 'store'])->name('kendaraan.store');
+    Route::get('/kendaraan/{id}', [KendaraanController::class, 'show'])->name('kendaraan.show');
     Route::get('/kendaraan/{kendaraan}/edit', [KendaraanController::class, 'edit'])->name('kendaraan.edit');
     Route::put('/kendaraan/{kendaraan}', [KendaraanController::class, 'update'])->name('kendaraan.update');
-    Route::delete('/kendaraan/{kendaraan}', [KendaraanController::class, 'destroy'])->name('kendaraan.destroy');
+    Route::delete('/kendaraan/{id}', [KendaraanController::class, 'destroy'])->name('kendaraan.destroy');
 
     Route::get('/kas/pendapatan', [KasController::class, 'indexPendapatan'])->name('kasPendapatan.index');
     Route::get('/kas/pengeluaran', [KasController::class, 'indexPengeluaran'])->name('kasPengeluaran.index');
@@ -73,15 +75,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pendapatan/sewa_lainnya', [SewaController::class, 'indexLainnya'])->name('sewaLainnya.index');
     Route::get('/pendapatan/sewa_kendaraan/create', [SewaController::class, 'create'])->name('sewa.create');
     Route::post('/pendapatan/sewa_kendaraan', [SewaController::class, 'store'])->name('sewa_kendaraan.store');
+    Route::get('/pendapatan/sewa_kendaraan/{kode}', [SewaController::class, 'show'])->name('sewa.show');;
     Route::get('/pendapatan/sewa_kendaraan/{sewa}/edit', [SewaController::class, 'edit'])->name('sewa.edit');
     Route::put('/pendapatan/sewa_kendaraan/{sewa}', [SewaController::class, 'update'])->name('sewa.update');
-    Route::delete('/pendapatan/sewa_kendaraan/{sewa}', [SewaController::class, 'destroy'])->name('sewa.destroy');
+    Route::delete('/pendapatan/sewa_kendaraan/{kode}', [SewaController::class, 'destroy'])->name('sewa.destroy');
 
     Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
     Route::get('/pengeluaran/create', [PengeluaranController::class, 'create'])->name('pengeluaran.create');
     Route::post('/pengeluaran', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+    Route::get('/pengeluaran/{kode}', [PengeluaranController::class, 'show'])->name('pengeluaran.show');;
     Route::get('/pengeluaran/{pengeluaran}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
     Route::put('/pengeluaran/{pengeluaran}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
-    Route::delete('/pengeluaran/{pengeluaran}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+    Route::delete('/pengeluaran/{kode}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
 });
 require __DIR__ . '/auth.php';

@@ -1,44 +1,67 @@
-import React, { useState, useEffect } from "react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { IoArrowBack } from "react-icons/io5";
+import React, { useState, useEffect, forwardRef } from "react";
 import { Head, router, useForm, usePage } from "@inertiajs/react";
 import RupiahInput from "@/Utils/RupiahInput";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Calendar } from "react-date-range";
 import { id } from "date-fns/locale";
 import { format } from "date-fns";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+
+registerLocale("id", id);
+setDefaultLocale("id");
+
 import { validationSchemaPengeluaran } from "@/Utils/validationSchema";
 
-export default function Edit({ auth, pengeluaran }) {
+export default function Edit({ kode, handleCloseEdit }) {
     const { data, setData, put, processing, reset } = useForm({
-        kode: pengeluaran.kode,
-        nama: pengeluaran.nama,
-        tanggal: pengeluaran.tanggal,
-        total: pengeluaran.total,
-        metode: pengeluaran.metode,
-        keterangan: pengeluaran.keterangan || "",
+        kode: "",
+        nama: "",
+        tanggal: "",
+        total: "",
+        metode: "",
+        keterangan: "",
     });
+
+    const [sewa, setSewa] = useState(null);
+
+    useEffect(() => {
+        if (kode) {
+            axios
+                .get(`/pengeluaran/${kode}`)
+                .then((response) => {
+                    const sewaData = response.data;
+                    setSewa(sewaData);
+
+                    setData((prevData) => ({
+                        ...prevData,
+                        kode: sewaData.kode,
+                        nama: sewaData.nama,
+                        tanggal: sewaData.tanggal,
+                        total: sewaData.total,
+                        metode: sewaData.metode,
+                        keterangan: sewaData.keterangan || "",
+                    }));
+                })
+                .catch((error) => {
+                    console.error("Error fetching sewa:", error);
+                });
+        }
+    }, [kode]);
 
     const [validationErrors, setValidationErrors] = useState({});
     const { flash } = usePage().props;
 
-    // DateRange
-    const [showCalendar, setShowCalendar] = useState(false);
-    const [displayedDate, setDisplayedDate] = useState("");
-
-    useEffect(() => {
-        if (data.tanggal) {
-            const formattedDate = format(new Date(data.tanggal), "yyyy/MM/dd");
-            setDisplayedDate(
-                format(new Date(data.tanggal), "d MMMM yyyy", { locale: id })
-            );
-            setData("tanggal", formattedDate);
-        }
-    }, [data.tanggal]);
+    const formatRupiah = (nilai) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+        }).format(nilai);
+    };
 
     const handleChange = (field, value) => {
         if (field === "tanggal") {
@@ -61,13 +84,41 @@ export default function Edit({ auth, pengeluaran }) {
         }
     }, [flash]);
 
-    const handleSelect = (date) => {
-        const formattedDate = format(date, "yyyy/MM/dd");
-        const displayedDate = format(date, "d MMMM yyyy", { locale: id });
-        handleChange("tanggal", formattedDate);
-        setDisplayedDate(displayedDate);
-        setShowCalendar(false);
+    const formatDateToYYYYMMDD = (date) => {
+        if (!date) return "";
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
     };
+
+    const [startDate, setStartDate] = useState(null);
+
+    useEffect(() => {
+        if (sewa && sewa.tanggal) {
+            setStartDate(new Date(sewa.tanggal));
+        }
+    }, [sewa]);
+
+    const onChange = (date) => {
+        setStartDate(date);
+    };
+
+    data.tanggal = formatDateToYYYYMMDD(startDate);
+
+    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
+        return (
+            <input
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-64 2xl:w-72 p-2 2xl:p-2.5"
+                onClick={onClick}
+                ref={ref}
+                placeholder="Pilih tanggal..."
+                value={value || ""}
+                readOnly
+            />
+        );
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -75,8 +126,11 @@ export default function Edit({ auth, pengeluaran }) {
             await validationSchemaPengeluaran.validate(data, {
                 abortEarly: false,
             });
-            put(`/pengeluaran/${pengeluaran.id}`, data, {
-                onSuccess: () => reset(),
+            put(`/pengeluaran/${sewa.id}`, {
+                onSuccess: () => {
+                    reset();
+                    handleCloseEdit();
+                },
             });
         } catch (err) {
             if (err.inner) {
@@ -91,25 +145,14 @@ export default function Edit({ auth, pengeluaran }) {
         }
     };
 
+    const today = new Date();
+
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={
-                <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight">
-                    <a
-                        href={route("pengeluaran.index")}
-                        className="flex items-center pr-4"
-                    >
-                        <IoArrowBack className="text-2xl mr-4" />
-                        Edit Biaya
-                    </a>
-                </h2>
-            }
-        >
+        <>
             <Head title="Edit Biaya" />
-            <div className="py-4 2xl:py-6 my-8 2xl:my-10 px-6 2xl:px-10 bg-slate-200 bg-opacity-70 rounded-lg">
+            <div className="py-4 2xl:py-6 px-6 2xl:px-10">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid gap-10 mb-6 md:grid-cols-3">
+                    <div className="grid gap-5 mb-6 md:grid-cols-1">
                         <div>
                             <label
                                 htmlFor="kode"
@@ -129,7 +172,7 @@ export default function Edit({ auth, pengeluaran }) {
                                 placeholder="Kode"
                             />
                             {validationErrors.kode && (
-                                <div className="text-red-700 text-xs mt-1 ml-1">
+                                <div className="text-red-700 text-xs mt-1 ml-1 italic">
                                     {validationErrors.kode}
                                 </div>
                             )}
@@ -160,7 +203,7 @@ export default function Edit({ auth, pengeluaran }) {
                                 }
                             />
                             {validationErrors.nama && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs mt-1 ml-1 italic">
                                     {validationErrors.nama}
                                 </p>
                             )}
@@ -173,39 +216,21 @@ export default function Edit({ auth, pengeluaran }) {
                             >
                                 Tanggal
                             </label>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    onClick={() =>
-                                        setShowCalendar(!showCalendar)
-                                    }
-                                    value={displayedDate}
-                                    readOnly
-                                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5 ${
-                                        validationErrors.tanggal &&
-                                        "border-red-500"
-                                    }`}
-                                    placeholder={
-                                        validationErrors.tanggal
-                                            ? validationErrors.tanggal
-                                            : data.tanggal
-                                            ? ""
-                                            : "Tanggal"
-                                    }
+
+                            <div>
+                                <DatePicker
+                                    selected={startDate}
+                                    onChange={onChange}
+                                    customInput={<ExampleCustomInput />}
+                                    dateFormat="dd MMMM yyyy"
+                                    locale={id}
+                                    placeholderText="Pilih tanggal..."
+                                    minDate={today}
                                 />
-                                {showCalendar && (
-                                    <div className="absolute z-10 mt-2 drop-shadow-lg shadow-slate-500">
-                                        <Calendar
-                                            date={new Date()}
-                                            onChange={handleSelect}
-                                            locale={id}
-                                            minDate={new Date()}
-                                        />
-                                    </div>
-                                )}
                             </div>
+
                             {validationErrors.tanggal && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-[10px] 2xl:text-xs mt-1 ml-1 italic">
                                     {validationErrors.tanggal}
                                 </p>
                             )}
@@ -218,14 +243,14 @@ export default function Edit({ auth, pengeluaran }) {
                             >
                                 Total
                             </label>
-                            <RupiahInput
-                                value={data.total.toString()}
-                                onChange={(value) => setData("total", value)}
-                                placeholder="Total"
-                                error={validationErrors.total}
+                            <input
+                                type="text"
+                                value={formatRupiah(data.total)}
+                                readOnly
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5"
                             />
                             {validationErrors.total && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs mt-1 ml-1 italic">
                                     {validationErrors.total}
                                 </p>
                             )}
@@ -242,7 +267,9 @@ export default function Edit({ auth, pengeluaran }) {
                                         checked={data.metode === "Cash"}
                                         className="mr-2"
                                     />
-                                    <span className="text-xs 2xl:text-sm">Cash</span>
+                                    <span className="text-xs 2xl:text-sm">
+                                        Cash
+                                    </span>
                                 </label>
                                 <label className="flex items-center">
                                     <input
@@ -256,25 +283,13 @@ export default function Edit({ auth, pengeluaran }) {
                                         checked={data.metode === "Debit"}
                                         className="mr-2"
                                     />
-                                    <span className="text-xs 2xl:text-sm">Debit</span>
+                                    <span className="text-xs 2xl:text-sm">
+                                        Debit
+                                    </span>
                                 </label>
-                                {/* <label className="flex items-center">
-                                    <input
-                                        type="radio"
-                                        id="Credit"
-                                        name="metodeSewa"
-                                        value="Credit"
-                                        onChange={(e) =>
-                                            setData("metode", e.target.value)
-                                        }
-                                        checked={data.metode === "Credit"}
-                                        className="mr-2"
-                                    />
-                                    <span className="text-xs 2xl:text-sm">Credit</span>
-                                </label> */}
                             </div>
                             {validationErrors.metode && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs mt-1 ml-1 italic">
                                     {validationErrors.metode}
                                 </p>
                             )}
@@ -304,34 +319,24 @@ export default function Edit({ auth, pengeluaran }) {
                                 }
                             />
                             {validationErrors.keterangan && (
-                                <p className="text-red-700 text-xs mt-1 ml-1">
+                                <p className="text-red-700 text-xs mt-1 ml-1 italic">
                                     {validationErrors.keterangan}
                                 </p>
                             )}
                         </div>
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-2 py-2 2xl:px-2.5 2xl:py-2.5 text-center"
-                    >
-                        Submit
-                    </button>
+                    <div className="flex justify-end space-x-2 pt-4">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-3 py-2 2xl:px-3.5 2xl:py-2.5 text-center"
+                        >
+                            Submit
+                        </button>
+                    </div>
                 </form>
             </div>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
-        </AuthenticatedLayout>
+        </>
     );
 }

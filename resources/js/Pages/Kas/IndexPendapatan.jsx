@@ -1,16 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, forwardRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import PrintPendapatanTable from "./PrintPendapatanTable";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
 import { format } from "date-fns";
-import { DateRange } from "react-date-range";
 import { id } from "date-fns/locale";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
 import { IoPrintSharp, IoCloseCircleOutline } from "react-icons/io5";
 import FormatDateRange from "@/Utils/FormatDateRange";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+
+registerLocale("id", id);
+setDefaultLocale("id");
 
 export default function IndexPendapatan({
     sewa,
@@ -20,13 +25,18 @@ export default function IndexPendapatan({
     endDate: initialEndDate,
     category: initialCategory,
 }) {
+    console.log(sewa)
     const componentRef = useRef();
+
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     });
 
     const [formattedDateRange, setFormattedDateRange] = useState("");
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm || "");
+    const [categoryInput, setCategoryInput] = useState(
+        initialCategory || "semua"
+    );
     const [state, setState] = useState([
         {
             startDate: initialStartDate ? new Date(initialStartDate) : null,
@@ -34,48 +44,78 @@ export default function IndexPendapatan({
             key: "selection",
         },
     ]);
-    const [showDateRangePicker, setShowDateRangePicker] = useState(false);
-    const [categoryInput, setCategoryInput] = useState(
-        initialCategory || "semua"
-    );
 
-    useEffect(() => {
-        setSearchTerm(initialSearchTerm || "");
+    const handleSearch = (e) => {
+        e.preventDefault();
+        const startDate = state[0].startDate
+            ? format(state[0].startDate, "yyyy-MM-dd")
+            : null;
+        const endDate = state[0].endDate
+            ? format(state[0].endDate, "yyyy-MM-dd")
+            : state[0].startDate
+            ? format(state[0].startDate, "yyyy-MM-dd")
+            : null;
+
+        const query = { search: searchTerm };
+        if (startDate) {
+            query.startDate = startDate;
+            query.endDate = endDate;
+        }
+
+        Inertia.get(route("kasBukuBesar.index"), query, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
+    const handleReset = () => {
+        setSearchTerm("");
         setState([
             {
-                startDate: initialStartDate ? new Date(initialStartDate) : null,
-                endDate: initialEndDate ? new Date(initialEndDate) : null,
+                startDate: null,
+                endDate: null,
                 key: "selection",
             },
         ]);
-        setCategoryInput(initialCategory || "semua");
-    }, [initialSearchTerm, initialStartDate, initialEndDate, initialCategory]);
-
-    const handleXDateRange = () => {
-        setShowDateRangePicker(false);
     };
 
-    const startDate = state[0].startDate
-        ? format(state[0].startDate, "yyyy-MM-dd")
-        : "";
-    const endDate = state[0].endDate
-        ? format(state[0].endDate, "yyyy-MM-dd")
-        : "";
+    const onChange = (dates) => {
+        const [start, end] = dates;
+        setState([{ startDate: start, endDate: end, key: "selection" }]);
+    };
 
-    useEffect(() => {
-        if (startDate && endDate) {
-            const formattedRange = FormatDateRange({
-                startDateString: startDate,
-                endDateString: endDate,
-            });
-            setFormattedDateRange(formattedRange);
-        } else {
-            setFormattedDateRange("");
-        }
-    }, [startDate, endDate]);
+    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
+        const renderedValues = () => {
+            const [start, end] = value.split(" - ");
+            if (!end || start === end) {
+                return start;
+            }
+            return `${start} - ${end}`;
+        };
+        return (
+            <input
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-64 2xl:w-72 p-2 2xl:p-2.5"
+                onClick={onClick}
+                ref={ref}
+                placeholder="Pilih tanggal..."
+                value={renderedValues()}
+                readOnly
+            />
+        );
+    });
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const startDate = state[0].startDate
+            ? format(state[0].startDate, "yyyy-MM-dd")
+            : null;
+        const endDate = state[0].endDate
+            ? format(state[0].endDate, "yyyy-MM-dd")
+            : state[0].startDate
+            ? format(state[0].startDate, "yyyy-MM-dd")
+            : null;
+
         const filterParams = {
             search: searchTerm,
             startDate,
@@ -84,18 +124,6 @@ export default function IndexPendapatan({
         };
 
         Inertia.get(route("kasPendapatan.index"), filterParams);
-    };
-
-    const handleReset = () => {
-        setSearchTerm("");
-        setCategoryInput("semua");
-        setState([
-            {
-                startDate: null,
-                endDate: null,
-                key: "selection",
-            },
-        ]);
     };
 
     return (
@@ -108,9 +136,10 @@ export default function IndexPendapatan({
                     </h2>
                     <button
                         onClick={handlePrint}
-                        className="flex bg-slate-500 hover:bg-slate-700 text-sm 2xl:md text-white font-medium py-1.5 px-2 2xl:py-2 2xl:px-4 rounded"
+                        className="flex bg-slate-500 hover:bg-slate-700 text-xs 2xl:sm text-white font-medium py-1.5 px-2 2xl:py-2 2xl:px-4 rounded"
                     >
-                        <IoPrintSharp className="text-lg 2xl:text-lg mr-2" />Cetak
+                        <IoPrintSharp className="text-sm 2xl:text-md mr-1" />
+                        Cetak
                     </button>
                 </div>
             }
@@ -141,56 +170,17 @@ export default function IndexPendapatan({
                                     />
                                 </div>
 
-                                <div className="w-fit">
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            onClick={() =>
-                                                setShowDateRangePicker(
-                                                    !showDateRangePicker
-                                                )
-                                            }
-                                            value={formattedDateRange}
-                                            readOnly
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-base rounded-md 2xl:rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2"
-                                            placeholder="Tanggal"
-                                        />
-                                    </div>
-                                    {showDateRangePicker && (
-                                        <div className="absolute z-10 mt-2 drop-shadow-lg shadow-slate-500">
-                                            <div className="flex">
-                                                <DateRange
-                                                    showDateDisplay={false}
-                                                    editableDateInputs={false}
-                                                    onChange={(item) =>
-                                                        setState([
-                                                            item.selection,
-                                                        ])
-                                                    }
-                                                    moveRangeOnFirstSelection={
-                                                        false
-                                                    }
-                                                    ranges={state}
-                                                    locale={id}
-                                                    value={formattedDateRange}
-                                                    startDatePlaceholder={
-                                                        "Tanggal Mulai"
-                                                    }
-                                                    endDatePlaceholder={
-                                                        "Tanggal Akhir"
-                                                    }
-                                                />
-                                                <div>
-                                                    <IoCloseCircleOutline
-                                                        onClick={
-                                                            handleXDateRange
-                                                        }
-                                                        className="text-4xl mt-4 ml-3 text-red-500 bg-white rounded-full"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
+                                <div>
+                                    <DatePicker
+                                        selected={state[0].startDate}
+                                        onChange={onChange}
+                                        startDate={state[0].startDate}
+                                        endDate={state[0].endDate}
+                                        selectsRange
+                                        customInput={<ExampleCustomInput />}
+                                        dateFormat="dd MMMM yyyy"
+                                        locale="id"
+                                    />
                                 </div>
 
                                 <div className="w-36 2xl:w-48">
@@ -218,13 +208,13 @@ export default function IndexPendapatan({
                                     <button
                                         type="button"
                                         onClick={handleReset}
-                                        className="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-2 2xl:px-4 rounded-md"
+                                        className="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
                                     >
                                         Reset
                                     </button>
                                     <button
                                         type="submit"
-                                        className="bg-green-400 hover:bg-green-500 text-white font-medium py-2 px-2 2xl:px-4 rounded-md"
+                                        className="bg-green-400 hover:bg-green-500 text-white font-medium py-2 px-3 2xl:px-4 rounded-md"
                                     >
                                         Submit
                                     </button>

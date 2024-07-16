@@ -312,7 +312,7 @@ export default function Authenticated({ user, header, children }) {
                                         <IoExitOutline className="text-sm 2xl:text-xl mr-2" />
                                         Logout
                                     </button>
-                                </div>
+                                </div>  
                             </div>
                         </div>
                         <div className="w-full m-8">

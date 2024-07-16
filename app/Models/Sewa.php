@@ -17,6 +17,7 @@ class Sewa extends Model
         'mulai_tanggal',
         'akhir_tanggal',
         'total',
+        'pembayaran',
         'metode',
         'kas_kode',
     ];

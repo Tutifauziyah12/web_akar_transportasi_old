@@ -10,7 +10,7 @@ const PrintPengeluaranTable = React.forwardRef(
         });
 
         return (
-            <div ref={ref} className="print:m-1">
+            <div ref={ref} className="print:my-10 print:mx-20 print:text-[9px]">
                 <div className="text-center font-semibold mb-6 text-xl 2xl:text-2xl">
                     <span className="block">Laporan Pengeluran Kas</span>
 
