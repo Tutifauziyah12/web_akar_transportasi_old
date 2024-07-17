@@ -21,8 +21,11 @@ setDefaultLocale("id");
 import MyModal from "./MyModal";
 import MyModalEdit from "./MyModalEdit";
 import MyModalDelete from "./MyModalDelete";
+import MyModalCetak from "./MyModalCetak";
 import Create from "./Create";
 import Edit from "./Edit";
+import Cetak from "./Cetak";
+
 
 export default function Index({
     auth,
@@ -108,6 +111,7 @@ export default function Index({
     const [showModal, setShowModal] = useState(false);
     const [showModalEdit, setShowModalEdit] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
+    const [showModalCetak, setShowModalCetak] = useState(false);
     const [editId, setEditId] = useState(null);
 
     useEffect(() => {
@@ -143,8 +147,21 @@ export default function Index({
         setShowModalDelete(false);
     };
 
+    const handleShowCetak = (kode) => {
+        setEditId(kode);
+        setShowModalCetak(true);
+    };
+
+    const handleCloseCetak = () => {
+        setShowModalCetak(false);
+    };
+
     const handleDelete = (kode) => {
         Inertia.delete(route("sewa.destroy", kode));
+    };
+
+    const handleCetak = (kode) => {
+        Inertia.get(route("sewa.show", kode));
     };
 
     const totalPendapatan = 0;
@@ -398,11 +415,16 @@ export default function Index({
                                                 >
                                                     <IoPencil />
                                                 </a>
-                                                <button className="px-2 text-center hover:text-green-600" onClick={() =>
-                                                        handleCetak(swa.kode)
-                                                    }>
+                                                <a
+                                                    className="px-2 text-center hover:text-green-600"
+                                                    onClick={() =>
+                                                        handleShowCetak(
+                                                            swa.kode
+                                                        )
+                                                    }
+                                                >
                                                     <IoPrintSharp className="text-sm 2xl:text-md mr-1" />
-                                                </button>
+                                                </a>
                                                 <button
                                                     // onClick={() =>
                                                     //     handleDelete(swa.id)
@@ -480,6 +502,20 @@ export default function Index({
                     handleDelete={handleDelete}
                     kode={editId}
                 />
+
+                <MyModalCetak
+                    show={showModalCetak}
+                    handleCloseCetak={handleCloseCetak}
+                    kode={editId}
+                    kendaraans={kendaraans}
+                >
+                    <Cetak
+                        handleCloseEdit={handleCloseEdit}
+                        kendaraans={kendaraans}
+                        lastKode={lastKode}
+                        kode={editId}
+                    />
+                </MyModalCetak>
             </div>
             <ToastContainer
                 position="top-right"

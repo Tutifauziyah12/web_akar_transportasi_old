@@ -110,7 +110,7 @@ export default function Edit({
         if (data.pendapatanLainnya.length === 0) {
             setData("pendapatanLainnya", [
                 ...data.pendapatanLainnya,
-                { nama: "", jumlah: 0, total: 0, metode: data.metode },
+                { nama: "", jumlah: 0, total: 0, metode: data.metode || "" },
             ]);
         } else {
             const isAnyFieldEmpty = data.pendapatanLainnya.some(
@@ -133,7 +133,7 @@ export default function Edit({
 
             setData("pendapatanLainnya", [
                 ...data.pendapatanLainnya,
-                { nama: "", jumlah: 0, total: 0, metode: "" },
+                { nama: "", jumlah: 0, total: 0, metode: data.metode || "" },
             ]);
         }
     };

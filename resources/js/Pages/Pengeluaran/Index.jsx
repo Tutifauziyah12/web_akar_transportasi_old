@@ -268,7 +268,7 @@ export default function Index({
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="leading-relaxed">
                                 {pengeluaran.data.length === 0 ? (
                                     <tr>
                                         <td
@@ -304,10 +304,14 @@ export default function Index({
                                                 {kendaraan.nama}
                                             </td>
                                             <td className="px-3 py-2">
+                                                <span className="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                    {kendaraan.metode}
+                                                </span>
+                                                <br />
                                                 <RupiahFormat
                                                     value={kendaraan.total}
-                                                />{" "}
-                                                <br /> ({kendaraan.metode} )
+                                                />
+                                                
                                             </td>
                                             <td className="px-3 py-2">
                                                 {kendaraan.keterangan}

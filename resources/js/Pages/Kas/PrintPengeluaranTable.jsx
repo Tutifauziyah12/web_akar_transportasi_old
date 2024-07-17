@@ -38,7 +38,7 @@ const PrintPengeluaranTable = React.forwardRef(
                     </thead>
                     <tbody className="leading-relaxed">
                         {pengeluaran && pengeluaran.length > 0 ? (
-                            pengeluaran.map((item, index) => (  
+                            pengeluaran.map((item, index) => (
                                 <React.Fragment key={item.id}>
                                     <tr className="bg-white border-b hover:bg-gray-50 align-top">
                                         <td className="px-8 py-2">
@@ -57,15 +57,17 @@ const PrintPengeluaranTable = React.forwardRef(
                                                 {item.nama}
                                             </span>
                                             <br />
-                                            detail : {item.keterangan}
+                                            Detail : {item.keterangan}
                                         </td>
 
                                         <td className="px-3 py-2">
-                                            <RupiahFormat value={item.total} />{" "}
-                                            <br />{" "}
-                                            <span className="italic">
-                                                ({item.metode})
+                                            <span className="bg-indigo-100 text-indigo-800 font-medium me-2 px-2.5 py-0.5 rounded">
+                                                {item.metode}
                                             </span>
+                                            <br />
+                                            <RupiahFormat
+                                                value={item.total}
+                                            />
                                         </td>
                                     </tr>
                                 </React.Fragment>

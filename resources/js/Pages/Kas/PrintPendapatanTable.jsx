@@ -109,11 +109,11 @@ const PrintPendapatanTable = React.forwardRef(
                                                         0
                                                     ) ===
                                                 item.pembayaran ? (
-                                                    <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                    <span className="bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded">
                                                         Lunas
                                                     </span>
                                                 ) : (
-                                                    <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                    <span className="bg-yellow-100 text-yellow-800 font-medium me-2 px-2.5 py-0.5 rounded">
                                                         Termin
                                                     </span>
                                                 )}
@@ -182,36 +182,36 @@ const PrintPendapatanTable = React.forwardRef(
                                                     ) ===
                                                 item.pembayaran ? (
                                                     <>
+                                                        <span className="bg-indigo-100 text-indigo-800 font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            {item.metode}
+                                                        </span>
+                                                        <br />
                                                         <RupiahFormat
                                                             value={item.total}
                                                         />{" "}
-                                                        <br />{" "}
-                                                        <span className="italic">
-                                                            ({item.metode})
-                                                        </span>
                                                     </>
                                                 ) : item.pembayaran >
                                                   item.total ? (
                                                     <>
+                                                        <span className="bg-indigo-100 text-indigo-800 font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            {item.metode}
+                                                        </span>
+                                                        <br />
                                                         <RupiahFormat
                                                             value={item.total}
-                                                        />{" "}
-                                                        <br />{" "}
-                                                        <span className="italic">
-                                                            ({item.metode})
-                                                        </span>
+                                                        />
                                                     </>
                                                 ) : (
                                                     <>
+                                                        <span className="bg-indigo-100 text-indigo-800 font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            {item.metode}
+                                                        </span>
+                                                        <br />
                                                         <RupiahFormat
                                                             value={
                                                                 item.pembayaran
                                                             }
-                                                        />{" "}
-                                                        <br />{" "}
-                                                        <span className="italic">
-                                                            ({item.metode})
-                                                        </span>
+                                                        />
                                                     </>
                                                 )}
                                             </td>
@@ -265,11 +265,11 @@ const PrintPendapatanTable = React.forwardRef(
                                                                 0
                                                             ) ===
                                                         item.pembayaran ? (
-                                                            <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            <span className="bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded">
                                                                 Lunas
                                                             </span>
                                                         ) : (
-                                                            <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            <span className="bg-yellow-100 text-yellow-800 font-medium me-2 px-2.5 py-0.5 rounded">
                                                                 Termin
                                                             </span>
                                                         )}
@@ -297,7 +297,7 @@ const PrintPendapatanTable = React.forwardRef(
                                                           item.total ? (
                                                             <>
                                                                 <span className="italic">
-                                                                    <br/>
+                                                                    <br />
                                                                     Details :
                                                                     Sisa
                                                                     Pembayaran{" "}
@@ -338,37 +338,33 @@ const PrintPendapatanTable = React.forwardRef(
                                                             ) ===
                                                         item.pembayaran ? (
                                                             <>
+                                                                <span className="bg-indigo-100 text-indigo-800 font-medium me-2 px-2.5 py-0.5 rounded">
+                                                                    {
+                                                                        item.metode
+                                                                    }
+                                                                </span>
+                                                                <br />
                                                                 <RupiahFormat
                                                                     value={
                                                                         pendapatan.total
                                                                     }
-                                                                />{" "}
-                                                                <br />{" "}
-                                                                <span className="italic">
-                                                                    (
-                                                                    {
-                                                                        pendapatan.metode
-                                                                    }
-                                                                    )
-                                                                </span>
+                                                                />
                                                             </>
                                                         ) : item.pembayaran >
                                                           item.total ? (
                                                             <>
+                                                                <span className="bg-indigo-100 text-indigo-800 font-medium me-2 px-2.5 py-0.5 rounded">
+                                                                    {
+                                                                        item.metode
+                                                                    }
+                                                                </span>
+                                                                <br />
                                                                 <RupiahFormat
                                                                     value={
                                                                         item.pembayaran -
                                                                         item.total
                                                                     }
-                                                                />{" "}
-                                                                <br />{" "}
-                                                                <span className="italic">
-                                                                    (
-                                                                    {
-                                                                        pendapatan.metode
-                                                                    }
-                                                                    )
-                                                                </span>
+                                                                />
                                                             </>
                                                         ) : (
                                                             <></>

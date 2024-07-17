@@ -78,12 +78,12 @@ const PrintBukuBesarTable = React.forwardRef(
                                                         ) ===
                                                     item.sewa.pembayaran ? (
                                                         <>
-                                                            <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                            <span className="bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded">
                                                                 Lunas
                                                             </span>
                                                         </>
                                                     ) : (
-                                                        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                        <span className="bg-yellow-100 text-yellow-800 font-medium me-2 px-2.5 py-0.5 rounded">
                                                             Termin
                                                         </span>
                                                     )}
@@ -217,12 +217,12 @@ const PrintBukuBesarTable = React.forwardRef(
                                                                 item.sewa
                                                                     .pembayaran ? (
                                                                     <>
-                                                                        <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                                        <span className="bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded">
                                                                             Lunas
                                                                         </span>
                                                                     </>
                                                                 ) : (
-                                                                    <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                                    <span className="bg-yellow-100 text-yellow-800 font-medium me-2 px-2.5 py-0.5 rounded">
                                                                         Termin
                                                                     </span>
                                                                 )}
@@ -237,7 +237,7 @@ const PrintBukuBesarTable = React.forwardRef(
                                                                 {
                                                                     pendapatan.nama
                                                                 }
-                                                                <span className="text-[12px] 2xl:text-xs">
+                                                                <span>
                                                                     {" "}
                                                                     dengan
                                                                     jumlah{" "}
@@ -383,7 +383,7 @@ const PrintBukuBesarTable = React.forwardRef(
                                                 <br />
                                                 {item.pengeluaran.nama}
                                                 <br />
-                                                <span className="text-[12px] 2xl:text-xs">
+                                                <span className="">
                                                     Detail :{" "}
                                                     {
                                                         item.pengeluaran
