@@ -321,11 +321,8 @@ export default function Edit({
         );
     });
 
-    console.log("data : ", data)
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("dataSubmit : ", data)
         try {
             await validationSchema.validate(data, { abortEarly: false });
             put(`/pendapatan/sewa_kendaraan/${sewa.id}`, {
@@ -335,7 +332,6 @@ export default function Edit({
                 },
             });
         } catch (err) {
-            console.log(err)
             if (err.inner) {
                 const newErrors = {};
                 err.inner.forEach((error) => {

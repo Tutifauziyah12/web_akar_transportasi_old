@@ -85,8 +85,6 @@ const Cetak = React.forwardRef(({ kendaraans, handleCloseEdit, kode }, ref) => {
         }
     }, [data.tipe_pembayaran, pembayaranTotal]);
 
-    console.log("data : ", data);
-
     return (
         <>
             <Head title="Tambah Sewa Kendaraan" />

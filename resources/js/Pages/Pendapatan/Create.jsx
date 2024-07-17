@@ -267,9 +267,6 @@ export default function Create({
         );
     });
 
-    console.log("metode :", data.metode);
-    console.log("data", data);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {

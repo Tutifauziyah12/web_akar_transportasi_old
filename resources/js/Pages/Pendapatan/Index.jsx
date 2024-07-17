@@ -45,8 +45,6 @@ export default function Index({
         },
     ]);
 
-    console.log(sewa.data);
-
     const handleSearch = (e) => {
         e.preventDefault();
         const startDate = state[0].startDate
@@ -115,7 +113,6 @@ export default function Index({
     const [editId, setEditId] = useState(null);
 
     useEffect(() => {
-        console.log("Flash message:", flash.message);
         if (flash && flash.message) {
             toast.success(flash.message);
         }
