@@ -20,11 +20,7 @@ import axios from "axios";
 
 import { validationSchema } from "@/Utils/validationSchema";
 
-export default function Edit({
-    kendaraans,
-    handleCloseEdit,
-    kode,
-}) {
+export default function Edit({ kendaraans, handleCloseEdit, kode }) {
     const [sewa, setSewa] = useState(null);
 
     useEffect(() => {
@@ -287,6 +283,9 @@ export default function Edit({
 
     const handleRupiahInputChange = (event) => {
         const { value } = event.target;
+        if (pembayaranTotal > value) {
+            dataBayar;
+        }
         setData((prevData) => ({
             ...prevData,
             pembayaran: parseRupiah(value),
@@ -320,6 +319,15 @@ export default function Edit({
             />
         );
     });
+
+    const [isDisabled, setIsDisabled] = useState(false);
+    useEffect(() => {
+        if (pembayaranTotal > data.pembayaran) {
+            setIsDisabled(true);
+        } else {
+            setIsDisabled(false);
+        }
+    }, [pembayaranTotal, data.pembayaran]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -761,6 +769,15 @@ export default function Edit({
                             onChange={handleRupiahInputChange}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-xs 2xl:text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 2xl:p-2.5"
                         />
+                        {pembayaranTotal < data.pembayaran ? (
+                            <>
+                            <p className="text-red-700 text-[10px] 2xl:text-xs italic mt-1 ml-1 mb-2">
+                                Pembayaran Melebihi total pembayaran
+                            </p>
+                        </>
+                        ) : (
+                            <></>
+                        )}
 
                         <label
                             htmlFor="Total Pembayaran"
@@ -820,9 +837,8 @@ export default function Edit({
 
                     <div className="flex justify-end space-x-2 border-t pt-4">
                         <button
-                            type="submit"
-                            disabled={processing}
-                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-3 py-2 2xl:px-3.5 2xl:py-2.5 text-center"
+                            disabled={processing ?? (pembayaranTotal < data.pembayaran)}
+                            className={`text-white  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md 2xl:rounded-lg text-xs 2xl:text-sm w-full sm:w-auto px-3 py-2 2xl:px-3.5 2xl:py-2.5 text-center ${pembayaranTotal < data.pembayaran ? "bg-slate-500 cursor-not-allowed" : "bg-blue-700 hover:bg-blue-800"}`}
                         >
                             Submit
                         </button>

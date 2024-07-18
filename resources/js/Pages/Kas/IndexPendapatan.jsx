@@ -25,7 +25,6 @@ export default function IndexPendapatan({
     endDate: initialEndDate,
     category: initialCategory,
 }) {
-    console.log(sewa)
     const componentRef = useRef();
 
     const handlePrint = useReactToPrint({

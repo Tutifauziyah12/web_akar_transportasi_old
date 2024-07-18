@@ -358,7 +358,7 @@ const PrintPendapatanTable = React.forwardRef(
                                                                         item.metode
                                                                     }
                                                                 </span>
-                                                                <br />
+                                                                <br />hllo
                                                                 <RupiahFormat
                                                                     value={
                                                                         item.pembayaran -
