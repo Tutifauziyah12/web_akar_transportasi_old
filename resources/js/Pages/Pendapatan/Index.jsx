@@ -311,10 +311,12 @@ export default function Index({
                                             <td className="px-3 py-2">
                                                 <FormatDateRange
                                                     startDateString={
-                                                        swa.mulai_tanggal
+                                                        swa.updated_at
+
                                                     }
                                                     endDateString={
-                                                        swa.akhir_tanggal
+                                                        swa.updated_at
+
                                                     }
                                                 />
                                             </td>

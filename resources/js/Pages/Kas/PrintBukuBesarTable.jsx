@@ -70,11 +70,13 @@ const PrintBukuBesarTable = React.forwardRef(
                                                     <FormatDateRange
                                                         startDateString={
                                                             item.sewa
-                                                                .mulai_tanggal
+                                                                .updated_at
+
                                                         }
                                                         endDateString={
                                                             item.sewa
-                                                                .akhir_tanggal
+                                                                .updated_at
+
                                                         }
                                                     />
                                                 </td>

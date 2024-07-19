@@ -44,29 +44,6 @@ export default function IndexPendapatan({
         },
     ]);
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        const startDate = state[0].startDate
-            ? format(state[0].startDate, "yyyy-MM-dd")
-            : null;
-        const endDate = state[0].endDate
-            ? format(state[0].endDate, "yyyy-MM-dd")
-            : state[0].startDate
-            ? format(state[0].startDate, "yyyy-MM-dd")
-            : null;
-
-        const query = { search: searchTerm };
-        if (startDate) {
-            query.startDate = startDate;
-            query.endDate = endDate;
-        }
-
-        Inertia.get(route("kasBukuBesar.index"), query, {
-            preserveState: true,
-            preserveScroll: true,
-        });
-    };
-
     const handleReset = () => {
         setSearchTerm("");
         setState([

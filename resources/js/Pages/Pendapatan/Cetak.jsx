@@ -31,6 +31,8 @@ const Cetak = React.forwardRef(({ kendaraans, handleCloseEdit, kode }, ref) => {
                         tipe_pembayaran: sewaData.tipe_pembayaran,
                         pembayaran: sewaData.pembayaran,
                         pendapatanLainnya: sewaData.pendapatan_lainnya,
+                        updated_at:sewaData.updated_at
+                        
                     });
                 })
                 .catch((error) => {
@@ -50,6 +52,7 @@ const Cetak = React.forwardRef(({ kendaraans, handleCloseEdit, kode }, ref) => {
         tipe_pembayaran: "",
         pembayaran: 0,
         pendapatanLainnya: [],
+        updated_at:""
     });
 
     const [pembayaranTotal, setPembayaranTotal] = useState(0);
@@ -128,6 +131,15 @@ const Cetak = React.forwardRef(({ kendaraans, handleCloseEdit, kode }, ref) => {
                                 <td className="font-semibold py-1">Kode</td>
                                 <td className="w-10"></td>
                                 <td>{data.kode}</td>
+                            </tr>
+
+                            <tr>
+                                <td className="font-semibold py-1">Tanggal</td>
+                                <td className="w-10"></td>
+                                <td><FormatDateRange
+                                        startDateString={data.updated_at}
+                                        endDateString={data.updated_at}
+                                    /></td>
                             </tr>
 
                             <tr>

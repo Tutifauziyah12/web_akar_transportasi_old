@@ -106,10 +106,12 @@ const PrintPendapatanTable = React.forwardRef(
                                             <td className="px-3 py-2">
                                                 <FormatDateRange
                                                     startDateString={
-                                                        item.mulai_tanggal
+                                                        item.updated_at
+
                                                     }
                                                     endDateString={
-                                                        item.akhir_tanggal
+                                                        item.updated_at
+
                                                     }
                                                 />
                                             </td>
@@ -257,10 +259,11 @@ const PrintPendapatanTable = React.forwardRef(
                                                             <span className="">
                                                                 <FormatDateRange
                                                                     startDateString={
-                                                                        item.mulai_tanggal
+                                                                        item.updated_at
+
                                                                     }
                                                                     endDateString={
-                                                                        item.akhir_tanggal
+                                                                        item.updated_at
                                                                     }
                                                                 />
                                                             </span>

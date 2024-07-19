@@ -239,11 +239,13 @@ export default function IndexLainnya({
                                                 <FormatDateRange
                                                     startDateString={
                                                         kendaraan.sewa
-                                                            .mulai_tanggal
+                                                            .updated_at
+
                                                     }
                                                     endDateString={
                                                         kendaraan.sewa
-                                                            .akhir_tanggal
+                                                            .updated_at
+
                                                     }
                                                 />
                                             </td>
