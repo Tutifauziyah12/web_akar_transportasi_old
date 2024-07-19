@@ -1,14 +1,30 @@
-import React from 'react';
+import React from "react";
 
-const formatDate = (dateString) => {
+const formatDate = (dateString, includeYear = true) => {
     const date = new Date(dateString);
-    const options = { day: "2-digit", month: "long", year: "numeric" };
-    return date.toLocaleDateString("id-ID", options);
+    const day = date.getDate(); // Ini akan mengembalikan angka tanpa nol di depan
+    const monthOptions = { month: "long" };
+    const month = date.toLocaleDateString("id-ID", monthOptions);
+    const year = date.getFullYear();
+
+    return includeYear ? `${day} ${month} ${year}` : `${day} ${month}`;
 };
 
 const FormatDateRange = ({ startDateString, endDateString }) => {
+    if (!startDateString) {
+        return null; // Jangan tampilkan apapun jika tanggal mulai belum diinput
+    }
+
     const startDate = new Date(startDateString);
-    const endDate = new Date(endDateString);
+    const endDate = endDateString ? new Date(endDateString) : null;
+
+    if (isNaN(startDate.getTime()) || (endDate && isNaN(endDate.getTime()))) {
+        return null;
+    }
+
+    if (!endDateString) {
+        return formatDate(startDateString);
+    }
 
     if (startDate.getTime() === endDate.getTime()) {
         return formatDate(startDateString);
@@ -16,22 +32,18 @@ const FormatDateRange = ({ startDateString, endDateString }) => {
         startDate.getMonth() === endDate.getMonth() &&
         startDate.getFullYear() === endDate.getFullYear()
     ) {
-        const startOptions = { day: "2-digit" };
-        const endOptions = { day: "2-digit", month: "long" };
-        const startFormatted = startDate.toLocaleDateString("id-ID", startOptions);
-        const endFormatted = endDate.toLocaleDateString("id-ID", endOptions);
-        return `${startFormatted} - ${endFormatted} ${endDate.getFullYear()}`;
+        const startDay = startDate.getDate();
+        const endDay = endDate.getDate();
+        const month = startDate.toLocaleDateString("id-ID", { month: "long" });
+        const year = startDate.getFullYear();
+        return `${startDay} - ${endDay} ${month} ${year}`;
     } else if (startDate.getFullYear() === endDate.getFullYear()) {
-        const startOptions = { day: "2-digit", month: "long" };
-        const endOptions = { day: "2-digit", month: "long" };
-        const startFormatted = startDate.toLocaleDateString("id-ID", startOptions);
-        const endFormatted = endDate.toLocaleDateString("id-ID", endOptions);
+        const startFormatted = formatDate(startDateString);
+        const endFormatted = formatDate(endDateString, false);
         return `${startFormatted} - ${endFormatted} ${endDate.getFullYear()}`;
     } else {
-        const startOptions = { day: "2-digit", month: "long", year: "numeric" };
-        const endOptions = { day: "2-digit", month: "long", year: "numeric" };
-        const startFormatted = startDate.toLocaleDateString("id-ID", startOptions);
-        const endFormatted = endDate.toLocaleDateString("id-ID", endOptions);
+        const startFormatted = formatDate(startDateString);
+        const endFormatted = formatDate(endDateString);
         return `${startFormatted} - ${endFormatted}`;
     }
 };

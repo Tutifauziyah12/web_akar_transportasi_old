@@ -104,7 +104,7 @@ export default function IndexLainnya({
             user={auth.user}
             header={
                 <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight w-full">
-                    Tabel Sewa Lainnya
+                    Daftar Sewa Lainnya
                 </h2>
             }
         >
@@ -173,15 +173,6 @@ export default function IndexLainnya({
                                 </div>
                             </div>
                         </form>
-                    </div>
-                    <div className="flex items-end">
-                        <a
-                            // href={route("sewa.create")}
-                            onClick={() => handleShow()}
-                            className="flex items-center text-xl px-2 py-1 text-blue-500 hover:text-blue-700"
-                        >
-                            <IoAddOutline />
-                        </a>
                     </div>
                 </div>
 

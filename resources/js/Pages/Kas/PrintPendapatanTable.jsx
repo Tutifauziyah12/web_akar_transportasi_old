@@ -3,7 +3,7 @@ import RupiahFormat from "@/Utils/RupiahFormat";
 import FormatDateRange from "@/Utils/FormatDateRange";
 
 const PrintPendapatanTable = React.forwardRef(
-    ({ sewa, category, formattedDateRange }, ref) => {
+    ({ sewa, category, formattedDateRange, date }, ref) => {
         let number = 1;
 
         let totalPendapatan = 0;
@@ -60,7 +60,19 @@ const PrintPendapatanTable = React.forwardRef(
                     </span>
 
                     <span className="block">
-                        Priode {formattedDateRange ? formattedDateRange : "..."}
+                        {date[0].startDate === null ? (
+                            <></>
+                        ) : (
+                            <>
+                                <div className="text-base">
+                                    <span>Periode </span>
+                                    <FormatDateRange
+                                        startDateString={date[0].startDate}
+                                        endDateString={date[0].endDate}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </span>
                 </div>
 

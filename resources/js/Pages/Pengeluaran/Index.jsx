@@ -23,8 +23,8 @@ import { registerLocale, setDefaultLocale } from "react-datepicker";
 registerLocale("id", id);
 setDefaultLocale("id");
 
-import MyModal from "../Pendapatan/MyModal";
-import MyModalEdit from "../Pendapatan/MyModalEdit";
+import MyModal from "./MyModal";
+import MyModalEdit from "./MyModalEdit";
 import MyModalDelete from "../Pendapatan/MyModalDelete";
 import Create from "./Create";
 import Edit from "./Edit";
@@ -153,7 +153,7 @@ export default function Index({
             user={auth.user}
             header={
                 <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight w-full">
-                    Tabel Biaya
+                    Daftar Biaya
                 </h2>
             }
         >

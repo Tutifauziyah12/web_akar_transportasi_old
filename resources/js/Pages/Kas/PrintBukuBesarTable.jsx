@@ -3,8 +3,7 @@ import RupiahFormat from "@/Utils/RupiahFormat";
 import FormatDateRange from "@/Utils/FormatDateRange";
 
 const PrintBukuBesarTable = React.forwardRef(
-    ({ kasList, formattedDateRange }, ref) => {
-
+    ({ kasList, formattedDateRange, date }, ref) => {
         let number = 1;
 
         let totalPendapatan = 0;
@@ -15,7 +14,19 @@ const PrintBukuBesarTable = React.forwardRef(
                     <span className="block">Laporan Buku Besar Kas</span>
 
                     <span className="block">
-                        Priode {formattedDateRange ? formattedDateRange : "..."}
+                        {date[0].startDate === null ? (
+                            <></>
+                        ) : (
+                            <>
+                                <div className="text-base">
+                                    <span>Periode </span>
+                                    <FormatDateRange
+                                        startDateString={date[0].startDate}
+                                        endDateString={date[0].endDate}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </span>
                 </div>
 
@@ -415,7 +426,7 @@ const PrintBukuBesarTable = React.forwardRef(
                             <tr>
                                 <td
                                     colSpan="6"
-                                    className="px-3 py-2 text-center"
+                                    className="px-3 py-2 text-center h-14 bg-white"
                                 >
                                     Tidak ada data pendapatan untuk ditampilkan.
                                 </td>

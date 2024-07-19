@@ -230,8 +230,8 @@ export default function IndexPendapatan({
                     sewa={sewa}
                     category={categoryInput}
                     formattedDateRange={formattedDateRange}
-                />{" "}
-                {/* Menggunakan categoryInput */}
+                    date={state}
+                />
             </div>
         </AuthenticatedLayout>
     );

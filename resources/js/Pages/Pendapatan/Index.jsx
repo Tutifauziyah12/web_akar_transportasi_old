@@ -168,7 +168,7 @@ export default function Index({
             user={auth.user}
             header={
                 <h2 className="font-semibold text-2xl 2xl:text-4xl text-gray-800 leading-tight w-full">
-                    Tabel Sewa Kendaraan
+                    Daftar Sewa Kendaraan
                 </h2>
             }
         >

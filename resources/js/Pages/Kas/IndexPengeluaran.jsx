@@ -96,6 +96,8 @@ export default function IndexPengeluaran({
         Inertia.get(route("kasPengeluaran.index"), filterParams);
     };
 
+    console.log(state)
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -180,6 +182,7 @@ export default function IndexPengeluaran({
                     ref={componentRef}
                     pengeluaran={pengeluaran}
                     formattedDateRange={formattedDateRange}
+                    date={state}
                 />{" "}
             </div>
         </AuthenticatedLayout>

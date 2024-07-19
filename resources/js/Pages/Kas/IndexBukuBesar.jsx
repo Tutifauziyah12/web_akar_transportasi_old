@@ -172,7 +172,8 @@ export default function IndexPengeluaran({
                     ref={componentRef}
                     kasList={kasList}
                     formattedDateRange={formattedDateRange}
-                />{" "}
+                    date={state}
+                />
             </div>
         </AuthenticatedLayout>
     );

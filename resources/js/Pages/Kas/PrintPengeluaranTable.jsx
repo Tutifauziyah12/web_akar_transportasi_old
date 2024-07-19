@@ -3,7 +3,7 @@ import RupiahFormat from "@/Utils/RupiahFormat";
 import FormatDateRange from "@/Utils/FormatDateRange";
 
 const PrintPengeluaranTable = React.forwardRef(
-    ({ pengeluaran, formattedDateRange }, ref) => {
+    ({ pengeluaran, formattedDateRange, date }, ref) => {
         let totalPengeluaran = 0;
         pengeluaran.forEach((item) => {
             totalPengeluaran += item.total;
@@ -15,7 +15,19 @@ const PrintPengeluaranTable = React.forwardRef(
                     <span className="block">Laporan Pengeluran Kas</span>
 
                     <span className="block">
-                        Priode {formattedDateRange ? formattedDateRange : "..."}
+                        {date[0].startDate === null ? (
+                            <></>
+                        ) : (
+                            <>
+                                <div className="text-base">
+                                    <span>Periode </span>
+                                    <FormatDateRange
+                                        startDateString={date[0].startDate}
+                                        endDateString={date[0].endDate}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </span>
                 </div>
 
@@ -65,9 +77,7 @@ const PrintPengeluaranTable = React.forwardRef(
                                                 {item.metode}
                                             </span>
                                             <br />
-                                            <RupiahFormat
-                                                value={item.total}
-                                            />
+                                            <RupiahFormat value={item.total} />
                                         </td>
                                     </tr>
                                 </React.Fragment>

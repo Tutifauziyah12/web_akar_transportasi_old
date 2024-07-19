@@ -6,8 +6,8 @@ import { IoAddOutline, IoPencil, IoTrash } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import MyModal from "../Pendapatan/MyModal";
-import MyModalEdit from "../Pendapatan/MyModalEdit";
+import MyModal from "./MyModal";
+import MyModalEdit from "./MyModalEdit";
 import MyModalDelete from "./MyModalDelete";
 import Create from "./Create";
 import Edit from "./Edit";
